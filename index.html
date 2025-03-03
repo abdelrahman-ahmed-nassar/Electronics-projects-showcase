@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electronics Engineering Student Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#0a192f',
+            'electric-blue': '#4d94ff',
+            'mint-green': '#64ffda',
+            amber: '#ffb300',
+            magenta: '#ff3366',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans m-0 p-0 bg-navy text-white">
+  <!-- Circuit board background pattern - requires custom CSS due to the specific pattern -->
+  <div class="absolute inset-0 opacity-10 -z-10" style="background-image: radial-gradient(#4d94ff 1px, transparent 1px), linear-gradient(to right, #4d94ff 1px, transparent 1px), linear-gradient(to bottom, #4d94ff 1px, transparent 1px); background-size: 20px 20px, 40px 40px, 40px 40px; background-position: 0 0, 0 0, 0 0; background-blend-mode: soft-light;"></div>
+  
+  <header class="flex justify-between items-center p-5 border-b border-electric-blue relative">
+    <div class="text-mint-green font-bold text-2xl">ElectroShowcase</div>
+    
+    <!-- Mobile menu button -->
+    <div class="lg:hidden flex flex-col gap-1.5 cursor-pointer z-[101]" id="hamburger">
+      <span class="block w-6 h-0.5 bg-white transition-all"></span>
+      <span class="block w-6 h-0.5 bg-white transition-all"></span>
+      <span class="block w-6 h-0.5 bg-white transition-all"></span>
+    </div>
+    
+    <nav class="hidden lg:flex items-center">
+      <ul class="flex gap-5 list-none p-0 m-0">
+        <li><a href="#" class="text-white no-underline text-base relative hover:text-mint-green after:content-[''] after:absolute after:w-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-mint-green after:transition-all hover:after:w-full">Home</a></li>
+        <li><a href="#" class="text-white no-underline text-base relative hover:text-mint-green after:content-[''] after:absolute after:w-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-mint-green after:transition-all hover:after:w-full">Projects</a></li>
+        <li><a href="#" class="text-white no-underline text-base relative hover:text-mint-green after:content-[''] after:absolute after:w-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-mint-green after:transition-all hover:after:w-full">Students</a></li>
+        <li><a href="#" class="text-white no-underline text-base relative hover:text-mint-green after:content-[''] after:absolute after:w-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-mint-green after:transition-all hover:after:w-full">Teams</a></li>
+        <li><a href="#" class="text-white no-underline text-base relative hover:text-mint-green after:content-[''] after:absolute after:w-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-mint-green after:transition-all hover:after:w-full">About</a></li>
+        <li><a href="#" class="text-white no-underline text-base relative hover:text-mint-green after:content-[''] after:absolute after:w-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-mint-green after:transition-all hover:after:w-full">Contact</a></li>
+      </ul>
+      <div class="flex items-center gap-4 ml-8">
+        <a href="#" class="py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10 no-underline">Log In</a>
+        <a href="#" class="py-2 px-4 bg-mint-green text-navy border-none rounded text-sm cursor-pointer transition-all hover:bg-electric-blue hover:text-white no-underline">Register</a>
+      </div>
+    </nav>
+    
+    <!-- Mobile navigation menu -->
+    <div class="fixed inset-0 bg-black/50 z-[99] hidden" id="mobileOverlay"></div>
+    <nav class="fixed top-0 -right-[300px] bg-navy flex-col w-[250px] h-screen p-20 pt-20 transition-all shadow-lg z-[100] lg:hidden" id="mobileNav">
+      <ul class="flex flex-col gap-5 list-none p-0 m-0">
+        <li><a href="#" class="text-white no-underline text-base">Home</a></li>
+        <li><a href="#" class="text-white no-underline text-base">Projects</a></li>
+        <li><a href="#" class="text-white no-underline text-base">Students</a></li>
+        <li><a href="#" class="text-white no-underline text-base">Teams</a></li>
+        <li><a href="#" class="text-white no-underline text-base">About</a></li>
+        <li><a href="#" class="text-white no-underline text-base">Contact</a></li>
+      </ul>
+      <div class="fixed bottom-8 flex flex-col gap-4 w-[200px]" id="mobileAuth">
+        <a href="#" class="py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-center text-sm cursor-pointer transition-all hover:bg-electric-blue/10 no-underline">Log In</a>
+        <a href="#" class="py-2 px-4 bg-mint-green text-navy border-none rounded text-center text-sm cursor-pointer transition-all hover:bg-electric-blue hover:text-white no-underline">Register</a>
+      </div>
+    </nav>
+  </header>
+  
+  <section class="flex flex-col justify-center items-center text-center relative overflow-hidden p-5 h-[80vh]">
+    <div class="absolute inset-0 opacity-10 -z-10" style="background-image: radial-gradient(#4d94ff 1px, transparent 1px), linear-gradient(to right, #4d94ff 1px, transparent 1px), linear-gradient(to bottom, #4d94ff 1px, transparent 1px); background-size: 20px 20px, 40px 40px, 40px 40px; background-position: 0 0, 0 0, 0 0; background-blend-mode: soft-light;"></div>
+    <h1 class="text-4xl md:text-5xl mb-5 text-white z-10">Electronics Engineering Student Showcase</h1>
+    <p class="text-lg md:text-xl max-w-3xl mb-8 z-10">Discover innovative projects and technical excellence from the next generation of electronics engineers.</p>
+    <a href="#" class="py-3 px-6 bg-mint-green text-navy border-none rounded font-bold cursor-pointer no-underline transition-all hover:bg-electric-blue hover:text-white hover:-translate-y-0.5 hover:shadow-lg z-10">Explore Projects</a>
+  </section>
+  
+  <!-- Most Featured Project Spotlight -->
+  <section class="py-16 px-5 bg-white/[0.02]">
+    <h2 class="text-3xl text-center mb-10 text-mint-green">Project of the Month</h2>
+    <div class="flex flex-col lg:flex-row max-w-6xl mx-auto gap-10 items-center">
+      <div class="flex-1 min-w-[300px] h-[300px] md:h-[400px] bg-[#172a45] rounded-lg overflow-hidden relative">
+        <img src="/api/placeholder/600/400" alt="Featured project image" class="w-full h-full object-cover">
+      </div>
+      <div class="flex-1">
+        <div class="inline-block py-1.5 px-3 bg-magenta text-white rounded text-sm font-bold mb-4">Industry Award Winner</div>
+        <h3 class="text-3xl mt-0 mb-4 text-white">Neural-Enhanced Prosthetic Hand</h3>
+        <p class="text-lg text-white/80 mb-5 leading-relaxed">An advanced prosthetic hand system with integrated neural feedback mechanisms that provide tactile sensation to users. The system incorporates machine learning algorithms to adapt to individual user patterns and improve control accuracy over time.</p>
+        <div class="flex gap-4 mb-5 text-electric-blue text-sm">
+          <span>Biomedical Engineering</span>
+          <span>•</span>
+          <span>12 weeks development</span>
+        </div>
+        <div class="flex gap-2.5 mb-6">
+          <div class="w-10 h-10 rounded-full bg-[#172a45] border-2 border-mint-green"></div>
+          <div class="w-10 h-10 rounded-full bg-[#172a45] border-2 border-mint-green"></div>
+          <div class="w-10 h-10 rounded-full bg-[#172a45] border-2 border-mint-green"></div>
+        </div>
+        <a href="#" class="py-3 px-6 bg-mint-green text-navy border-none rounded font-bold cursor-pointer no-underline transition-all hover:bg-electric-blue hover:text-white hover:-translate-y-0.5 hover:shadow-lg">View Full Project</a>
+      </div>
+    </div>
+  </section>
+  
+  <section class="py-16 px-5">
+    <h2 class="text-3xl text-center mb-10 text-mint-green">Featured Projects</h2>
+    
+    <!-- Project Filters -->
+    <div class="flex flex-wrap justify-center gap-2.5 mb-8 max-w-6xl mx-auto">
+      <button class="py-2 px-4 bg-transparent border border-electric-blue text-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10 bg-electric-blue text-white">All</button>
+      <button class="py-2 px-4 bg-transparent border border-electric-blue text-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10">Embedded Systems</button>
+      <button class="py-2 px-4 bg-transparent border border-electric-blue text-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10">Robotics</button>
+      <button class="py-2 px-4 bg-transparent border border-electric-blue text-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10">IoT</button>
+      <button class="py-2 px-4 bg-transparent border border-electric-blue text-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10">Signal Processing</button>
+      <button class="py-2 px-4 bg-transparent border border-electric-blue text-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10">Renewable Energy</button>
+      <button class="py-2 px-4 bg-transparent border border-electric-blue text-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10">Medical Devices</button>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div class="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:-translate-y-1 hover:shadow-xl hover:border-electric-blue h-full flex flex-col">
+        <div class="h-[200px] bg-[#172a45] bg-cover bg-center" style="background-image: url('/api/placeholder/300/200');">
+        </div>
+        <div class="p-5 flex-grow flex flex-col">
+          <h3 class="text-xl mt-0 mb-2.5 text-white">Smart Home Energy Monitor</h3>
+          <p class="text-base text-white/80 mb-4 flex-grow">A real-time power consumption analyzer with machine learning for device recognition and efficiency recommendations.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="py-1 px-2.5 bg-mint-green/10 rounded text-xs text-mint-green">IoT</span>
+            <span class="py-1 px-2.5 bg-mint-green/10 rounded text-xs text-mint-green">Machine Learning</span>
+            <span class="py-1 px-2.5 bg-mint-green/10 rounded text-xs text-mint-green">PCB Design</span>
+          </div>
+          <a href="#" class="self-start py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10 no-underline">View Project</a>
+        </div>
+      </div>
+      
+      <div class="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:-translate-y-1 hover:shadow-xl hover:border-electric-blue h-full flex flex-col">
+        <div class="h-[200px] bg-[#172a45] bg-cover bg-center" style="background-image: url('/api/placeholder/300/200');">
+        </div>
+        <div class="p-5 flex-grow flex flex-col">
+          <h3 class="text-xl mt-0 mb-2.5 text-white">Biomedical Signal Processor</h3>
+          <p class="text-base text-white/80 mb-4 flex-grow">A wearable ECG monitor with advanced filtering algorithms and wireless data transmission to medical professionals.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="py-1 px-2.5 bg-mint-green/10 rounded text-xs text-mint-green">Medical Devices</span>
+            <span class="py-1 px-2.5 bg-mint-green/10 rounded text-xs text-mint-green">Signal Processing</span>
+            <span class="py-1 px-2.5 bg-mint-green/10 rounded text-xs text-mint-green">Embedded Systems</span>
+          </div>
+          <a href="#" class="self-start py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10 no-underline">View Project</a>
+        </div>
+      </div>
+      
+      <div class="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:-translate-y-1 hover:shadow-xl hover:border-electric-blue h-full flex flex-col">
+        <div class="h-[200px] bg-[#172a45] bg-cover bg-center" style="background-image: url('/api/placeholder/300/200');">
+        </div>
+        <div class="p-5 flex-grow flex flex-col">
+          <h3 class="text-xl mt-0 mb-2.5 text-white">Autonomous Drone Navigation</h3>
+          <p class="text-base text-white/80 mb-4 flex-grow">A vision-based navigation system for drones with obstacle avoidance and path planning algorithms.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="py-1 px-2.5 bg-mint-green/10 rounded text-xs text-mint-green">Computer Vision</span>
+            <span class="py-1 px-2.5 bg-mint-green/10 rounded text-xs text-mint-green">Robotics</span>
+            <span class="py-1 px-2.5 bg-mint-green/10 rounded text-xs text-mint-green">Control Systems</span>
+          </div>
+          <a href="#" class="self-start py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10 no-underline">View Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="py-16 px-5 bg-white/[0.03]">
+    <div class="flex justify-around flex-wrap max-w-6xl mx-auto gap-5">
+      <div class="text-center flex-1 min-w-[200px]">
+        <div class="text-4xl font-bold text-electric-blue mb-2.5">237</div>
+        <div class="text-lg text-white/80">Student Projects</div>
+      </div>
+      <div class="text-center flex-1 min-w-[200px]">
+        <div class="text-4xl font-bold text-electric-blue mb-2.5">42</div>
+        <div class="text-lg text-white/80">Industry Partners</div>
+      </div>
+      <div class="text-center flex-1 min-w-[200px]">
+        <div class="text-4xl font-bold text-electric-blue mb-2.5">18</div>
+        <div class="text-lg text-white/80">Award Winners</div>
+      </div>
+      <div class="text-center flex-1 min-w-[200px]">
+        <div class="text-4xl font-bold text-electric-blue mb-2.5">5</div>
+        <div class="text-lg text-white/80">Patents Filed</div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Teams Section -->
+  <section class="py-16 px-5">
+    <h2 class="text-3xl text-center mb-10 text-mint-green">Meet Our Teams</h2>
+    <div class="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto">
+      <div class="w-[280px] bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:-translate-y-1 hover:shadow-xl hover:border-electric-blue">
+        <div class="p-5 text-center border-b border-electric-blue/20">
+          <h3 class="text-xl m-0 mb-1 text-white">Circuit Innovators</h3>
+          <div class="text-sm text-mint-green">Analog Electronics</div>
+        </div>
+        <div class="p-5">
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">Sarah Johnson</div>
+              <div class="text-xs text-white/70">Team Lead</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">Michael Chen</div>
+              <div class="text-xs text-white/70">Circuit Designer</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">Alex Rodriguez</div>
+              <div class="text-xs text-white/70">PCB Specialist</div>
+            </div>
+          </div>
+        </div>
+        <div class="text-sm text-electric-blue text-center px-5 pb-5">
+          <a href="#">View 4 Projects</a>
+        </div>
+      </div>
+      
+      <div class="w-[280px] bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:-translate-y-1 hover:shadow-xl hover:border-electric-blue">
+        <div class="p-5 text-center border-b border-electric-blue/20">
+          <h3 class="text-xl m-0 mb-1 text-white">BioTech Solutions</h3>
+          <div class="text-sm text-mint-green">Medical Electronics</div>
+        </div>
+        <div class="p-5">
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">Emma Patel</div>
+              <div class="text-xs text-white/70">Team Lead</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">David Kim</div>
+              <div class="text-xs text-white/70">Sensor Specialist</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">Olivia Wilson</div>
+              <div class="text-xs text-white/70">Software Engineer</div>
+            </div>
+          </div>
+        </div>
+        <div class="text-sm text-electric-blue text-center px-5 pb-5">
+          <a href="#">View 3 Projects</a>
+        </div>
+      </div>
+      
+      <div class="w-[280px] bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:-translate-y-1 hover:shadow-xl hover:border-electric-blue">
+        <div class="p-5 text-center border-b border-electric-blue/20">
+          <h3 class="text-xl m-0 mb-1 text-white">RoboCore</h3>
+          <div class="text-sm text-mint-green">Robotics & Automation</div>
+        </div>
+        <div class="p-5">
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">James Taylor</div>
+              <div class="text-xs text-white/70">Team Lead</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">Aisha Hassan</div>
+              <div class="text-xs text-white/70">Control Systems</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">Lucas Garcia</div>
+              <div class="text-xs text-white/70">Mechanical Design</div>
+            </div>
+          </div>
+        </div>
+        <div class="text-sm text-electric-blue text-center px-5 pb-5">
+          <a href="#">View 5 Projects</a>
+        </div>
+      </div>
+      
+      <div class="w-[280px] bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:-translate-y-1 hover:shadow-xl hover:border-electric-blue">
+        <div class="p-5 text-center border-b border-electric-blue/20">
+          <h3 class="text-xl m-0 mb-1 text-white">PowerGrid</h3>
+          <div class="text-sm text-mint-green">Renewable Energy</div>
+        </div>
+        <div class="p-5">
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">Tara Williams</div>
+              <div class="text-xs text-white/70">Team Lead</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">Ryan Park</div>
+              <div class="text-xs text-white/70">Power Systems</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-full bg-[#172a45]"></div>
+            <div class="flex-grow">
+              <div class="text-base m-0 mb-1 text-white">Mia Sánchez</div>
+              <div class="text-xs text-white/70">Hardware Engineer</div>
+            </div>
+          </div>
+        </div>
+        <div class="text-sm text-electric-blue text-center px-5 pb-5">
+          <a href="#">View 2 Projects</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <footer class="bg-black/20 py-10 px-5 text-center border-t border-electric-blue/30">
+    <div class="max-w-6xl mx-auto flex flex-col items-center">
+      <div class="flex gap-5 mb-5">
+        <a href="#" class="text-white/70 no-underline hover:text-mint-green">About</a>
+        <a href="#" class="text-white/70 no-underline hover:text-mint-green">Projects</a>
+        <a href="#" class="text-white/70 no-underline hover:text-mint-green">Students</a>
+        <a href="#" class="text-white/70 no-underline hover:text-mint-green">Teams</a>
+        <a href="#" class="text-white/70 no-underline hover:text-mint-green">Contact</a>
+      </div>
+      <div class="text-white/50 text-sm">
+        &copy; 2025 ElectroShowcase. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu functionality
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileAuth = document.getElementById('mobileAuth');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      if (mobileNav.style.right === '0px') {
+        mobileNav.style.right = '-300px';
+        mobileAuth.style.right = '-300px';
+        mobileOverlay.style.display = 'none';
+      } else {
+        mobileNav.style.right = '0px';
+        mobileAuth.style.right = '30px';
+        mobileOverlay.style.display = 'block';
+      }
+    });
+    
+    mobileOverlay.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      mobileNav.style.right = '-300px';
+      mobileAuth.style.right = '-300px';
+      mobileOverlay.style.display = 'none';
+    });
+    
+    // For the active hamburger animation
+    document.addEventListener('DOMContentLoaded', () => {
+      hamburger.innerHTML = `
+        <span class="block w-6 h-0.5 bg-white transition-all"></span>
+        <span class="block w-6 h-0.5 bg-white transition-all"></span>
+        <span class="block w-6 h-0.5 bg-white transition-all"></span>
+      `;
+      
+      // Hacky way to add active styles since we can't add them to tailwind classes dynamically
+      const style = document.createElement('style');
+      style.textContent = `
+        #hamburger.active span:nth-child(1) {
+          transform: translateY(8px) rotate(45deg);
+        }
+        #hamburger.active span:nth-child(2) {
+          opacity: 0;
+        }
+        #hamburger.active span:nth-child(3) {
+          transform: translateY(-8px) rotate(-45deg);
+        }
+      `;
+      document.head.appendChild(style);
+    });
+  </script>
+</body>
+</html>
