@@ -162,12 +162,12 @@ const Header = ({ children }) => {
 const NavItem = ({ href, label }) => {
   return (
     <li>
-      <a
+      <Link
         href={href}
         className="text-white no-underline text-base relative hover:text-mint-green after:content-[''] after:absolute after:w-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-mint-green after:transition-all hover:after:w-full"
       >
         {label}
-      </a>
+      </Link>
     </li>
   );
 };

@@ -60,9 +60,9 @@ const LoginPage = () => {
                 <label htmlFor="password" className="block text-sm font-medium text-white">
                   Password
                 </label>
-                <a href="#" className="text-sm text-electric-blue hover:text-mint-green">
+                <Link href="#" className="text-sm text-electric-blue hover:text-mint-green">
                   Forgot password?
-                </a>
+                </Link>
               </div>
               <input
                 id="password"
@@ -101,9 +101,9 @@ const LoginPage = () => {
             {/* Register Link */}
             <div className="text-center mt-4">
               <span className="text-white/70 text-sm">Don't have an account? </span>
-              <a href="register" className="text-sm text-electric-blue hover:text-mint-green">
+              <Link href="register" className="text-sm text-electric-blue hover:text-mint-green">
                 Register now
-              </a>
+              </Link>
             </div>
           </form>
           

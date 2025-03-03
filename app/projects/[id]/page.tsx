@@ -1,5 +1,7 @@
 import React from "react";
 
+
+
 const CourseDetailsPage = () => {
   const courseDetails = {
     title: "Advanced Electronics Engineering",

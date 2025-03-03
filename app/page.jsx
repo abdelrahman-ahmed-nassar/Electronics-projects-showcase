@@ -80,6 +80,7 @@ const ProjectOfTheMonth = () => {
             src="https://www.allaboutcircuits.com/uploads/articles/Don_9_15_2024_Figure_7.jpg"
             alt="Featured project image"
             className="w-full h-full object-cover"
+            width={"auto"}
           />
         </div>
         <div className="flex-1">
@@ -103,17 +104,32 @@ const ProjectOfTheMonth = () => {
           <div className="flex gap-2.5 mb-6">
             <div className="w-10 h-10 rounded-full bg-[#172a45] border-2 border-mint-green">
               <div className="w-full h-full rounded-full">
-                <img className="w-full h-full rounded-full" src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg" alt="person image" />
+                <img
+                  className="w-full h-full rounded-full"
+                  src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg"
+                  alt="person image"
+                  width={"auto"}
+                />
               </div>
             </div>
             <div className="w-10 h-10 rounded-full bg-[#172a45] border-2 border-mint-green">
               <div className="w-full h-full rounded-full">
-                <img className="w-full h-full rounded-full" src="https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg" alt="person image" />
+                <img
+                  className="w-full h-full rounded-full"
+                  src="https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg"
+                  alt="person image"
+                  width={"auto"}
+                />
               </div>
             </div>
             <div className="w-10 h-10 rounded-full bg-[#172a45] border-2 border-mint-green">
               <div className="w-full h-full rounded-full">
-                <img className="w-full h-full rounded-full" src="https://media.istockphoto.com/id/1372641618/photo/portrait-of-a-businessman-on-gray-background.jpg?s=612x612&w=0&k=20&c=dr9mAhOR4Nu826FRDcMojzObpbswEEMMGrWoLA2iz4w=" alt="person image" />
+                <img
+                  className="w-full h-full rounded-full"
+                  src="https://media.istockphoto.com/id/1372641618/photo/portrait-of-a-businessman-on-gray-background.jpg?s=612x612&w=0&k=20&c=dr9mAhOR4Nu826FRDcMojzObpbswEEMMGrWoLA2iz4w="
+                  alt="person image"
+                  width={"auto"}
+                />
               </div>
             </div>
           </div>
@@ -380,6 +396,5 @@ const TeamCard = ({ team }) => {
 };
 
 // Footer Component
-
 
 export default App;

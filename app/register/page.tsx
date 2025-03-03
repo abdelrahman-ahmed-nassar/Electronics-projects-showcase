@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
+
 // Interface for form data
 interface FormData {
   firstName: string;
@@ -293,7 +294,7 @@ const RegisterPage = () => {
                     className="mt-1"
                   />
                   <label htmlFor="agreeTerms" className="ml-2 text-white/80">
-                    I agree to the <a href="#" className="text-electric-blue hover:text-mint-green no-underline">Terms and Conditions</a> and <a href="#" className="text-electric-blue hover:text-mint-green no-underline">Privacy Policy</a>
+                    I agree to the <Link href="#" className="text-electric-blue hover:text-mint-green no-underline">Terms and Conditions</Link> and <Link href="#" className="text-electric-blue hover:text-mint-green no-underline">Privacy Policy</Link>
                   </label>
                 </div>
                 {errors.agreeTerms && <p className="mt-1 text-magenta text-sm">{errors.agreeTerms}</p>}
