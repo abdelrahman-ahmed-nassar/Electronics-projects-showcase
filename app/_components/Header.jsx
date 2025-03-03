@@ -12,7 +12,7 @@ const Header = ({ children }) => {
 
   return (
     <div className="font-sans m-0 p-0 bg-navy text-white">
-      <header className="flex justify-between items-center p-5 border-b border-electric-blue relative z-20">
+      <header className="flex justify-between items-center p-5 border-b border-electric-blue relative z-50">
         <Link href={"/"} className="text-mint-green font-bold text-2xl">
           ElectroShowcase
         </Link>
