@@ -40,10 +40,14 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public files (public/*)
-     * - API routes (/api/*)
+     * - Certain API routes (like auth routes that shouldn't be blocked)
      * - Static assets
+     *
+     * Include API routes that require authentication (e.g., /api/projects)
      */
-    "/((?!_next/static|_next/image|favicon.ico|api|public).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/auth|public).*)", // Exclude public, static, and auth API routes
+    "/api/projects/:path*", // Explicitly include project API routes
+    // Add other specific API routes that need session updates here
     // "/me",
     // "/me/user",
     // "/login",

@@ -59,7 +59,7 @@ function Page() {
                   <FiMail className="text-lg" />
                 </div>
                 <div className="mr-4">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 ml-">
                     Email
                   </p>
                   <p className="font-medium text-dark-800 dark:text-white">
