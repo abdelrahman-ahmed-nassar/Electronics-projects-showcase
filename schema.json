@@ -1,0 +1,2189 @@
+[
+  {
+    "Table": "auth.audit_log_entries",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.audit_log_entries",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.audit_log_entries",
+    "Column": "instance_id",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.audit_log_entries",
+    "Column": "ip_address",
+    "Data Type": "character varying",
+    "Nullable": "NO",
+    "Default": "''::character varying",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.audit_log_entries",
+    "Column": "payload",
+    "Data Type": "json",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "auth_code",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "auth_code_issued_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "authentication_method",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "code_challenge",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "code_challenge_method",
+    "Data Type": "USER-DEFINED",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "provider_access_token",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "provider_refresh_token",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "provider_type",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.flow_state",
+    "Column": "user_id",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.identities",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.identities",
+    "Column": "email",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.identities",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": "gen_random_uuid()",
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.identities",
+    "Column": "identity_data",
+    "Data Type": "jsonb",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.identities",
+    "Column": "last_sign_in_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.identities",
+    "Column": "provider",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.identities",
+    "Column": "provider_id",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.identities",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.identities",
+    "Column": "user_id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → users.id"
+  },
+  {
+    "Table": "auth.instances",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.instances",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.instances",
+    "Column": "raw_base_config",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.instances",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.instances",
+    "Column": "uuid",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_amr_claims",
+    "Column": "authentication_method",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_amr_claims",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_amr_claims",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_amr_claims",
+    "Column": "session_id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → sessions.id"
+  },
+  {
+    "Table": "auth.mfa_amr_claims",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_challenges",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_challenges",
+    "Column": "factor_id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → mfa_factors.id"
+  },
+  {
+    "Table": "auth.mfa_challenges",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_challenges",
+    "Column": "ip_address",
+    "Data Type": "inet",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_challenges",
+    "Column": "otp_code",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_challenges",
+    "Column": "verified_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_challenges",
+    "Column": "web_authn_session_data",
+    "Data Type": "jsonb",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "factor_type",
+    "Data Type": "USER-DEFINED",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "friendly_name",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "last_challenged_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "phone",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "secret",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "status",
+    "Data Type": "USER-DEFINED",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "user_id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → users.id"
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "web_authn_aaguid",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.mfa_factors",
+    "Column": "web_authn_credential",
+    "Data Type": "jsonb",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.one_time_tokens",
+    "Column": "created_at",
+    "Data Type": "timestamp without time zone",
+    "Nullable": "NO",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.one_time_tokens",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.one_time_tokens",
+    "Column": "relates_to",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.one_time_tokens",
+    "Column": "token_hash",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.one_time_tokens",
+    "Column": "token_type",
+    "Data Type": "USER-DEFINED",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.one_time_tokens",
+    "Column": "updated_at",
+    "Data Type": "timestamp without time zone",
+    "Nullable": "NO",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.one_time_tokens",
+    "Column": "user_id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → users.id"
+  },
+  {
+    "Table": "auth.refresh_tokens",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.refresh_tokens",
+    "Column": "id",
+    "Data Type": "bigint",
+    "Nullable": "NO",
+    "Default": "nextval('auth.refresh_tokens_id_seq'::regclass)",
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.refresh_tokens",
+    "Column": "instance_id",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.refresh_tokens",
+    "Column": "parent",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.refresh_tokens",
+    "Column": "revoked",
+    "Data Type": "boolean",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.refresh_tokens",
+    "Column": "session_id",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → sessions.id"
+  },
+  {
+    "Table": "auth.refresh_tokens",
+    "Column": "token",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.refresh_tokens",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.refresh_tokens",
+    "Column": "user_id",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_providers",
+    "Column": "attribute_mapping",
+    "Data Type": "jsonb",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_providers",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_providers",
+    "Column": "entity_id",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_providers",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_providers",
+    "Column": "metadata_url",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_providers",
+    "Column": "metadata_xml",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_providers",
+    "Column": "name_id_format",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_providers",
+    "Column": "sso_provider_id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → sso_providers.id"
+  },
+  {
+    "Table": "auth.saml_providers",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_relay_states",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_relay_states",
+    "Column": "flow_state_id",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → flow_state.id"
+  },
+  {
+    "Table": "auth.saml_relay_states",
+    "Column": "for_email",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_relay_states",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_relay_states",
+    "Column": "redirect_to",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_relay_states",
+    "Column": "request_id",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.saml_relay_states",
+    "Column": "sso_provider_id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → sso_providers.id"
+  },
+  {
+    "Table": "auth.saml_relay_states",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.schema_migrations",
+    "Column": "version",
+    "Data Type": "character varying",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.schema_migrations",
+    "Column": "version",
+    "Data Type": "character varying",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sessions",
+    "Column": "aal",
+    "Data Type": "USER-DEFINED",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sessions",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sessions",
+    "Column": "factor_id",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sessions",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sessions",
+    "Column": "ip",
+    "Data Type": "inet",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sessions",
+    "Column": "not_after",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sessions",
+    "Column": "refreshed_at",
+    "Data Type": "timestamp without time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sessions",
+    "Column": "tag",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sessions",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sessions",
+    "Column": "user_agent",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sessions",
+    "Column": "user_id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → users.id"
+  },
+  {
+    "Table": "auth.sso_domains",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sso_domains",
+    "Column": "domain",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sso_domains",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sso_domains",
+    "Column": "sso_provider_id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → sso_providers.id"
+  },
+  {
+    "Table": "auth.sso_domains",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sso_providers",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sso_providers",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sso_providers",
+    "Column": "resource_id",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.sso_providers",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "aud",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "banned_until",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "confirmation_sent_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "confirmation_token",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "confirmed_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "deleted_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "email",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "email_change",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "email_change_confirm_status",
+    "Data Type": "smallint",
+    "Nullable": "YES",
+    "Default": "0",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "email_change_sent_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "email_change_token_current",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": "''::character varying",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "email_change_token_new",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "email_confirmed_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "encrypted_password",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "instance_id",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "invited_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "is_anonymous",
+    "Data Type": "boolean",
+    "Nullable": "NO",
+    "Default": "false",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "is_sso_user",
+    "Data Type": "boolean",
+    "Nullable": "NO",
+    "Default": "false",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "is_super_admin",
+    "Data Type": "boolean",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "last_sign_in_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "phone",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": "NULL::character varying",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "phone_change",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": "''::character varying",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "phone_change_sent_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "phone_change_token",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": "''::character varying",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "phone_confirmed_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "raw_app_meta_data",
+    "Data Type": "jsonb",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "raw_user_meta_data",
+    "Data Type": "jsonb",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "reauthentication_sent_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "reauthentication_token",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": "''::character varying",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "recovery_sent_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "recovery_token",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "role",
+    "Data Type": "character varying",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "auth.users",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "about",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "avatarImage",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": "gen_random_uuid()",
+    "Key": "",
+    "Relationship": "FK → users.id"
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "isGraduated",
+    "Data Type": "boolean",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "name",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "nationalId",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "phone",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "role",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "skills",
+    "Data Type": "ARRAY",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "specialization",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "team",
+    "Data Type": "bigint",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → teams.id"
+  },
+  {
+    "Table": "public.profiles",
+    "Column": "yearId",
+    "Data Type": "smallint",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.projects",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "NO",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.projects",
+    "Column": "description",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.projects",
+    "Column": "id",
+    "Data Type": "bigint",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.projects",
+    "Column": "image",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.projects",
+    "Column": "link",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.projects",
+    "Column": "period",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.projects",
+    "Column": "tags",
+    "Data Type": "ARRAY",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.projects",
+    "Column": "teamId",
+    "Data Type": "bigint",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → teams.id"
+  },
+  {
+    "Table": "public.projects",
+    "Column": "title",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.teams",
+    "Column": "achivements",
+    "Data Type": "ARRAY",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.teams",
+    "Column": "createdAt",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "NO",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.teams",
+    "Column": "description",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.teams",
+    "Column": "id",
+    "Data Type": "bigint",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.teams",
+    "Column": "name",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "public.teams",
+    "Column": "specialty",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.messages",
+    "Column": "event",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.messages",
+    "Column": "extension",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.messages",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": "gen_random_uuid()",
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.messages",
+    "Column": "inserted_at",
+    "Data Type": "timestamp without time zone",
+    "Nullable": "NO",
+    "Default": "now()",
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.messages",
+    "Column": "payload",
+    "Data Type": "jsonb",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.messages",
+    "Column": "private",
+    "Data Type": "boolean",
+    "Nullable": "YES",
+    "Default": "false",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.messages",
+    "Column": "topic",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.messages",
+    "Column": "updated_at",
+    "Data Type": "timestamp without time zone",
+    "Nullable": "NO",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.schema_migrations",
+    "Column": "inserted_at",
+    "Data Type": "timestamp without time zone",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.schema_migrations",
+    "Column": "version",
+    "Data Type": "bigint",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.schema_migrations",
+    "Column": "version",
+    "Data Type": "bigint",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.subscription",
+    "Column": "claims",
+    "Data Type": "jsonb",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.subscription",
+    "Column": "claims_role",
+    "Data Type": "regrole",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.subscription",
+    "Column": "created_at",
+    "Data Type": "timestamp without time zone",
+    "Nullable": "NO",
+    "Default": "timezone('utc'::text, now())",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.subscription",
+    "Column": "entity",
+    "Data Type": "regclass",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.subscription",
+    "Column": "filters",
+    "Data Type": "ARRAY",
+    "Nullable": "NO",
+    "Default": "'{}'::realtime.user_defined_filter[]",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.subscription",
+    "Column": "id",
+    "Data Type": "bigint",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "realtime.subscription",
+    "Column": "subscription_id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.buckets",
+    "Column": "allowed_mime_types",
+    "Data Type": "ARRAY",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.buckets",
+    "Column": "avif_autodetection",
+    "Data Type": "boolean",
+    "Nullable": "YES",
+    "Default": "false",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.buckets",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.buckets",
+    "Column": "file_size_limit",
+    "Data Type": "bigint",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.buckets",
+    "Column": "id",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.buckets",
+    "Column": "name",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.buckets",
+    "Column": "owner",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.buckets",
+    "Column": "owner_id",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.buckets",
+    "Column": "public",
+    "Data Type": "boolean",
+    "Nullable": "YES",
+    "Default": "false",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.buckets",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.migrations",
+    "Column": "executed_at",
+    "Data Type": "timestamp without time zone",
+    "Nullable": "YES",
+    "Default": "CURRENT_TIMESTAMP",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.migrations",
+    "Column": "hash",
+    "Data Type": "character varying",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.migrations",
+    "Column": "id",
+    "Data Type": "integer",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.migrations",
+    "Column": "name",
+    "Data Type": "character varying",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "bucket_id",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → buckets.id"
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": "gen_random_uuid()",
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "last_accessed_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "metadata",
+    "Data Type": "jsonb",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "name",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "owner",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "owner_id",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "path_tokens",
+    "Data Type": "ARRAY",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "YES",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "user_metadata",
+    "Data Type": "jsonb",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.objects",
+    "Column": "version",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads",
+    "Column": "bucket_id",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → buckets.id"
+  },
+  {
+    "Table": "storage.s3_multipart_uploads",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "NO",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads",
+    "Column": "id",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads",
+    "Column": "in_progress_size",
+    "Data Type": "bigint",
+    "Nullable": "NO",
+    "Default": "0",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads",
+    "Column": "key",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads",
+    "Column": "owner_id",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads",
+    "Column": "upload_signature",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads",
+    "Column": "user_metadata",
+    "Data Type": "jsonb",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads",
+    "Column": "version",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads_parts",
+    "Column": "bucket_id",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → buckets.id"
+  },
+  {
+    "Table": "storage.s3_multipart_uploads_parts",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "NO",
+    "Default": "now()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads_parts",
+    "Column": "etag",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads_parts",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": "gen_random_uuid()",
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads_parts",
+    "Column": "key",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads_parts",
+    "Column": "owner_id",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads_parts",
+    "Column": "part_number",
+    "Data Type": "integer",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads_parts",
+    "Column": "size",
+    "Data Type": "bigint",
+    "Nullable": "NO",
+    "Default": "0",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "storage.s3_multipart_uploads_parts",
+    "Column": "upload_id",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": "FK → s3_multipart_uploads.id"
+  },
+  {
+    "Table": "storage.s3_multipart_uploads_parts",
+    "Column": "version",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "vault.secrets",
+    "Column": "created_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "NO",
+    "Default": "CURRENT_TIMESTAMP",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "vault.secrets",
+    "Column": "description",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": "''::text",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "vault.secrets",
+    "Column": "id",
+    "Data Type": "uuid",
+    "Nullable": "NO",
+    "Default": "gen_random_uuid()",
+    "Key": "PRIMARY KEY",
+    "Relationship": ""
+  },
+  {
+    "Table": "vault.secrets",
+    "Column": "key_id",
+    "Data Type": "uuid",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "vault.secrets",
+    "Column": "name",
+    "Data Type": "text",
+    "Nullable": "YES",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "vault.secrets",
+    "Column": "nonce",
+    "Data Type": "bytea",
+    "Nullable": "YES",
+    "Default": "vault._crypto_aead_det_noncegen()",
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "vault.secrets",
+    "Column": "secret",
+    "Data Type": "text",
+    "Nullable": "NO",
+    "Default": null,
+    "Key": "",
+    "Relationship": ""
+  },
+  {
+    "Table": "vault.secrets",
+    "Column": "updated_at",
+    "Data Type": "timestamp with time zone",
+    "Nullable": "NO",
+    "Default": "CURRENT_TIMESTAMP",
+    "Key": "",
+    "Relationship": ""
+  }
+]

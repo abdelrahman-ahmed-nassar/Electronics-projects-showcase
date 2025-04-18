@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "Sarah Johnson",
+    "isGraduated": true,
+    "specialization": "Analog Electronics",
+    "role": "Team Lead",
+    "about": "Specializing in high-frequency analog circuit design with a focus on medical applications. Sarah has received multiple awards for her innovative approaches to signal integrity problems.",
+    "avatarImage": "/api/placeholder/150/150"
+  },
+  {
+    "id": 2,
+    "name": "Michael Chen",
+    "isGraduated": true,
+    "specialization": "PCB Design",
+    "role": "Circuit Designer",
+    "about": "Focused on advanced PCB design techniques for high-density electronics. Michael has expertise in complex multi-layer boards and signal integrity optimization.",
+    "avatarImage": "/api/placeholder/150/150"
+  },
+  {
+    "id": 3,
+    "name": "Emma Patel",
+    "isGraduated": true,
+    "specialization": "Medical Electronics",
+    "role": "Team Lead",
+    "about": "Researching innovative solutions for non-invasive medical monitoring devices. Emma's work focuses on the intersection of electronics and healthcare accessibility.",
+    "avatarImage": "/api/placeholder/150/150"
+  },
+  {
+    "id": 4,
+    "name": "James Taylor",
+    "isGraduated": false,
+    "specialization": "Robotics & Automation",
+    "role": "Team Lead",
+    "about": "Passionate about autonomous systems and control theory. James has participated in multiple robotics competitions and leads the university's autonomous vehicle research group.",
+    "avatarImage": "/api/placeholder/150/150"
+  },
+  {
+    "id": 5,
+    "name": "Tara Williams",
+    "isGraduated": true,
+    "specialization": "Renewable Energy",
+    "role": "Team Lead",
+    "about": "Working on innovative power management systems for renewable energy applications. Tara's research focuses on maximizing efficiency in solar and wind energy conversion.",
+    "avatarImage": "/api/placeholder/150/150"
+  },
+  {
+    "id": 6,
+    "name": "Alex Rodriguez",
+    "isGraduated": false,
+    "specialization": "PCB Design",
+    "role": "PCB Specialist",
+    "about": "Focused on high-speed digital PCB design with expertise in DDR memory routing and high-speed serializer/deserializer interfaces.",
+    "avatarImage": "/api/placeholder/150/150"
+  },
+  {
+    "id": 7,
+    "name": "Sophia Martinez",
+    "isGraduated": true,
+    "specialization": "Power Electronics",
+    "role": "Research Engineer",
+    "about": "Expert in designing efficient power converters for industrial applications. Sophia has published several papers on wide-bandgap semiconductor devices.",
+    "avatarImage": "/api/placeholder/150/150"
+  },
+  {
+    "id": 8,
+    "name": "Liam Brown",
+    "isGraduated": false,
+    "specialization": "Embedded Systems",
+    "role": "Firmware Developer",
+    "about": "Specializing in real-time operating systems and low-power embedded designs. Liam is passionate about IoT and edge computing.",
+    "avatarImage": "/api/placeholder/150/150"
+  },
+  {
+    "id": 9,
+    "name": "Olivia Davis",
+    "isGraduated": true,
+    "specialization": "Signal Processing",
+    "role": "Signal Processing Engineer",
+    "about": "Focused on advanced algorithms for audio and image processing. Olivia has contributed to open-source projects in the field of digital signal processing.",
+    "avatarImage": "/api/placeholder/150/150"
+  },
+  {
+    "id": 10,
+    "name": "Ethan Wilson",
+    "isGraduated": false,
+    "specialization": "Wireless Communications",
+    "role": "Research Assistant",
+    "about": "Exploring next-generation wireless communication protocols and antenna design. Ethan is actively involved in 5G and IoT research.",
+    "avatarImage": "/api/placeholder/150/150"
+  }
+]

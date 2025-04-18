@@ -31,9 +31,8 @@
     "app/teams/page.jsx",
     "app/students/page.jsx",
     "app/projects/page.jsx",
-    "app/login/page.jsx",
     "app/contact/page.jsx",
-    "app/about/page.ksx"
-, "app/_components/Header.jsx"  ],
+    "app/about/page.jsx"
+  ],
   "exclude": ["node_modules"]
 }

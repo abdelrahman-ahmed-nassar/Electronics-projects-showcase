@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer className="bg-black/20 py-10 px-5 text-center border-t border-electric-blue/30">
       <div className="max-w-6xl mx-auto flex flex-col items-center">
-        <div className="flex gap-5 mb-5">
+        <div className="flex gap-5 mb-5 flex-wrap items-center justify-center">
           <Link
             href="about"
             className="text-white/70 no-underline hover:text-mint-green"
