@@ -7,6 +7,7 @@ import { useAuth } from "@/app/_lib/context/AuthenticationContext";
 import { ProjectInterface } from "@/app/Types";
 import Link from "next/link";
 
+import CourseImage from "@/public/images/default-project-image.png";
 function Page() {
   const authContext = useAuth();
   const [teamProjects, setTeamProjects] = useState<ProjectInterface[]>([]);
@@ -30,12 +31,27 @@ function Page() {
         }
 
         const data = await response.json();
-        setTeamProjects(data);
+        // Ensure data is an array before setting state
+        if (Array.isArray(data)) {
+          setTeamProjects(data);
+        } else if (
+          data &&
+          typeof data === "object" &&
+          Array.isArray(data.projects)
+        ) {
+          // Handle case where API returns { projects: [...] }
+          setTeamProjects(data.projects);
+        } else {
+          console.error("API returned unexpected data format:", data);
+          setTeamProjects([]);
+          setError("Received invalid data format from server");
+        }
       } catch (err) {
         console.error("Error fetching team projects:", err);
         setError(
           err instanceof Error ? err.message : "Failed to load team projects"
         );
+        setTeamProjects([]); // Reset to empty array on error
       } finally {
         setLoading(false);
       }
@@ -167,9 +183,11 @@ function Page() {
                   {project.image ? (
                     <div className="h-48 overflow-hidden">
                       <Image
-                        src={project.image}
+                        src={project.image || CourseImage}
                         alt={project.title || "Project Image"}
                         className="w-full h-full object-cover"
+                        width={400}
+                        height={200}
                       />
                     </div>
                   ) : (

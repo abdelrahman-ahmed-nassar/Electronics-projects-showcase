@@ -140,7 +140,6 @@ export default function UploadProjectForm() {
     setLoading(true);
 
     try {
-      console.log("Submitting form data:", formData);
       const response = await fetch("/api/projects", {
         method: "POST",
         headers: {
@@ -159,7 +158,6 @@ export default function UploadProjectForm() {
         );
       }
 
-      console.log("Upload successful:", result);
       toast.success("Project uploaded successfully!");
 
       setTimeout(() => {

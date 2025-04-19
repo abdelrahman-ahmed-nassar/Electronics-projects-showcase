@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { getProfileById } from "@/utils/supabase/data-services";
 
 export async function GET() {
   const supabase = await createClient();
@@ -29,20 +30,27 @@ export async function GET() {
       return NextResponse.json({ user: null }, { status: 200 });
     }
 
-    // Fetch additional user data from profile table with correct id column
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .maybeSingle();
+    // Use getProfileById from data-services instead of direct Supabase query
+    const profile = await getProfileById(user.id);
+
 
     // Combine user data
     const userData = {
       id: user.id,
-      email: user.email,
-      // ...user.user_metadata,
-      ...(profile || {}),
+      email: user.email, // Email comes from auth, not profiles table
+      name: profile?.name,
+      phone: profile?.phone,
+      nationalId: profile?.nationalId,
+      yearId: profile?.yearId,
+      avatarImage: profile?.avatarImage,
+      isGraduated: profile?.isGraduated,
+      about: profile?.about,
+      specialization: profile?.specialization,
+      role: profile?.role,
+      team: profile?.team,
+      skills: profile?.skills,
     };
+
 
     return NextResponse.json({ user: userData });
   } catch (error) {

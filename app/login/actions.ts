@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
+import { getProfileById } from "@/utils/supabase/data-services";
+import { UserInterface } from "@/app/Types";
 
 export async function login(formData: FormData) {
   const supabase = await createClient();
@@ -12,7 +14,6 @@ export async function login(formData: FormData) {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   };
-  console.log(loginData)
   const { error, data } = await supabase.auth.signInWithPassword(loginData);
 
   if (error) {
@@ -36,27 +37,30 @@ export async function login(formData: FormData) {
   }
 
   // Create comprehensive user data by fetching profile information
-  let userData = {
+  // Use a type compatible with both initial data and profile data
+  let userData: Partial<UserInterface> = {
     id: data.user?.id,
-    email: data.user?.email,
+    email: data.user?.email || null, // Make sure email is compatible with UserInterface
   };
 
   try {
     if (data.user?.id) {
-      const { data: profiles, error: profileError } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", data.user.id)
-        .single();
+      // Use getProfileById from data-services instead of direct Supabase query
+      const profile = await getProfileById(data.user.id);
 
-      if (!profileError && profiles) {
+      if (profile) {
         userData = {
           ...userData,
-          ...profiles,
+          ...profile,
           // Ensure id is from auth, not profile table
           id: data.user.id,
         };
+      } else {
+        console.log("No profile found for user ID:", data.user.id);
       }
+
+      // Log the final userData being returned
+      console.log("Final userData being returned:", userData);
     }
   } catch (err) {
     console.error("Error fetching user profile:", err);

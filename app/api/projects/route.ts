@@ -11,11 +11,9 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    console.log("API Route: No user found, returning 401");
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  console.log(`API Route: User ${user.id} authenticated.`);
 
   try {
     const rawData = await request.json();
@@ -41,7 +39,6 @@ export async function POST(request: Request) {
       // user_id: user.id, // You can now reliably add the user ID
     };
 
-    console.log("API Route: Received project data for upload:", projectData);
 
     if (!projectData.title || !projectData.description) {
       return NextResponse.json(
@@ -53,7 +50,6 @@ export async function POST(request: Request) {
     // uploadProject internally uses createServiceClient (service role) for the insert
     const newProject = await uploadProject(projectData);
 
-    console.log("API Route: Successfully uploaded project:", newProject);
     return NextResponse.json(newProject, { status: 201 });
   } catch (error) {
     console.error("API Route: Error during project upload:", error);

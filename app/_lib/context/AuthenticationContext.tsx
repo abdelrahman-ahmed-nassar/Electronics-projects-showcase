@@ -53,7 +53,23 @@ export const AuthenticationProvider: React.FC<{
             secure: window.location.protocol === "https:",
           };
           Cookies.set("isAuthenticated", "true", cookieOptions);
-          Cookies.set("user", JSON.stringify(data.user), cookieOptions);
+          // Ensure all user profile fields are included in the cookie
+          const userDataForCookie = {
+            id: data.user.id,
+            email: data.user.email,
+            name: data.user.name,
+            phone: data.user.phone,
+            nationalId: data.user.nationalId,
+            yearId: data.user.yearId,
+            avatarImage: data.user.avatarImage,
+            isGraduated: data.user.isGraduated,
+            about: data.user.about,
+            specialization: data.user.specialization,
+            role: data.user.role,
+            team: data.user.team,
+            skills: data.user.skills,
+          };
+          Cookies.set("user", JSON.stringify(userDataForCookie), cookieOptions);
         } else {
           // Clear cookies if session is invalid
           Cookies.remove("isAuthenticated");
@@ -86,8 +102,10 @@ export const AuthenticationProvider: React.FC<{
         }
 
         const userWithDefaults = {
+          id: userData.id,
           name: userData.name,
           phone: userData.phone,
+          nationalId: userData.nationalId,
           yearId: userData.yearId,
           email: userData.email,
           avatarImage: userData.avatarImage,
@@ -133,7 +151,6 @@ export const AuthenticationProvider: React.FC<{
       setUser(null);
       Cookies.remove("isAuthenticated");
       Cookies.remove("user");
-      
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -173,14 +190,45 @@ export const AuthenticationProvider: React.FC<{
       if (data.user) {
         setIsAuthenticated(true);
         setUser(data.user);
+
+        // Update the cookie with the refreshed user data
+        const cookieOptions = {
+          expires: 7,
+          sameSite: "strict" as const,
+          secure: window.location.protocol === "https:",
+        };
+
+        // Ensure all user profile fields are included in the cookie when refreshing
+        const userDataForCookie = {
+          id: data.user.id,
+          email: data.user.email,
+          name: data.user.name,
+          phone: data.user.phone,
+          nationalId: data.user.nationalId,
+          yearId: data.user.yearId,
+          avatarImage: data.user.avatarImage,
+          isGraduated: data.user.isGraduated,
+          about: data.user.about,
+          specialization: data.user.specialization,
+          role: data.user.role,
+          team: data.user.team,
+          skills: data.user.skills,
+        };
+
+        Cookies.set("isAuthenticated", "true", cookieOptions);
+        Cookies.set("user", JSON.stringify(userDataForCookie), cookieOptions);
       } else {
         setIsAuthenticated(false);
         setUser(null);
+        Cookies.remove("isAuthenticated");
+        Cookies.remove("user");
       }
     } catch (error) {
       console.error("Error refreshing user session:", error);
       setIsAuthenticated(false);
       setUser(null);
+      Cookies.remove("isAuthenticated");
+      Cookies.remove("user");
     }
   }, []);
 

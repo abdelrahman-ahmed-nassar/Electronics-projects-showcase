@@ -11,7 +11,7 @@ export interface UserInterface {
   avatarImage: string | null; // text
   isGraduated: boolean | null; // bool
   about: string | null; // text
-  skills: string[] | null; // text array (as requested)
+  skills: string | null; // text array (as requested)
   specialization: string | null; // text
   role: string | null; // text
   team: number | null; // int8
