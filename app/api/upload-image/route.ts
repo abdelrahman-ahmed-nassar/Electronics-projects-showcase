@@ -24,8 +24,9 @@ export async function POST(request: Request) {
     const { data, error } = await supabase.storage
       .from("projects-images")
       .upload(fileName, imageFile);
+      
 
-    if (error) {
+    if (error || !data) {
       console.error("Storage upload error:", error);
       return NextResponse.json(
         { message: `Error uploading image: ${error.message}` },

@@ -4,6 +4,7 @@ import { useAuth } from "@/app/_lib/context/AuthenticationContext";
 import { TeamInterface, UserInterface, ProjectInterface } from "@/app/Types";
 import Link from "next/link";
 import { FiExternalLink, FiUser, FiCalendar, FiTag } from "react-icons/fi";
+import Image from "next/image";
 
 export default function MyTeamPage() {
   const { user } = useAuth();
@@ -184,7 +185,7 @@ export default function MyTeamPage() {
             {teamProjects.length === 0 ? (
               <div className="bg-gray-50 dark:bg-dark-700 p-6 rounded-lg text-center">
                 <p className="text-gray-500 dark:text-gray-400 mb-4">
-                  Your team hasn't uploaded any projects yet.
+                  Your team hasn&apos;t uploaded any projects yet.
                 </p>
                 <Link
                   href="/profile/projects"
@@ -202,10 +203,11 @@ export default function MyTeamPage() {
                   >
                     {project.image ? (
                       <div className="h-40 overflow-hidden">
-                        <img
+                        <Image
                           src={project.image}
                           alt={project.title || "Project Image"}
                           className="w-full h-full object-cover"
+                          fill
                         />
                       </div>
                     ) : (

@@ -1,11 +1,18 @@
 import Link from "next/link";
-
-import React from "react";
+import React, { Suspense } from "react";
 import LoginForm from "./LoginForm";
-
 import { login } from "./actions";
-
 import CircuitBackground from "../_components/UI/CircuitBackground";
+
+// Loading component to show while LoginForm is loading
+const LoginFormSkeleton = () => (
+  <div className="p-6 space-y-6 animate-pulse">
+    <div className="h-10 bg-navy/30 rounded mb-4"></div>
+    <div className="h-10 bg-navy/30 rounded mb-4"></div>
+    <div className="h-5 w-1/4 bg-navy/30 rounded mb-6"></div>
+    <div className="h-12 bg-navy/30 rounded"></div>
+  </div>
+);
 
 const LoginPage = () => {
   return (
@@ -24,13 +31,13 @@ const LoginPage = () => {
               Sign in to access your ElectroShowcase account
             </p>
           </div>
-          <LoginForm submitHandler={login} />
+          <Suspense fallback={<LoginFormSkeleton />}>
+            <LoginForm submitHandler={login} />
+          </Suspense>
         </div>
       </main>
     </div>
   );
 };
-
-
 
 export default LoginPage;

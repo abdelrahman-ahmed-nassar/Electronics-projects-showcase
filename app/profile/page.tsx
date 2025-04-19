@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { FiPhone, FiMail, FiMapPin, FiUsers } from "react-icons/fi";
+import { FiPhone, FiMail, FiUsers } from "react-icons/fi";
 import ProfileCard from "@/public/images/default-user-profile-image.svg";
 import { useAuth } from "@/app/_lib/context/AuthenticationContext";
 import { ProjectInterface } from "@/app/Types";
@@ -166,7 +166,7 @@ function Page() {
                 >
                   {project.image ? (
                     <div className="h-48 overflow-hidden">
-                      <img
+                      <Image
                         src={project.image}
                         alt={project.title || "Project Image"}
                         className="w-full h-full object-cover"
