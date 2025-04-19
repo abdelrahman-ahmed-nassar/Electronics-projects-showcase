@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ProjectInterface, TeamInterface } from "@/app/Types";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Image from "next/image";
 
 // Define the type for the form data, omitting auto-generated fields
 type ProjectFormData = Omit<ProjectInterface, "id" | "created_at">;
@@ -12,9 +13,12 @@ type ProjectFormData = Omit<ProjectInterface, "id" | "created_at">;
 export default function UploadProjectForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
   const [teams, setTeams] = useState<TeamInterface[]>([]);
   const [teamsLoading, setTeamsLoading] = useState(true);
   const [teamsError, setTeamsError] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState<ProjectFormData>({
     title: "",
@@ -64,6 +68,71 @@ export default function UploadProjectForm() {
       ...prevData,
       [name]: name === "teamId" ? (value ? parseInt(value, 10) : null) : value,
     }));
+  };
+
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type and size
+    const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    if (!validTypes.includes(file.type)) {
+      toast.error("Please upload a valid image file (JPEG, PNG, GIF, WEBP)");
+      return;
+    }
+
+    // 5MB max size
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size should be less than 5MB");
+      return;
+    }
+
+    // Create a preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImagePreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // Upload the image to Supabase
+    try {
+      setImageUploading(true);
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch("/api/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to upload image");
+      }
+
+      const { imageUrl } = await response.json();
+
+      // Update form data with the new image URL
+      setFormData((prev) => ({
+        ...prev,
+        image: imageUrl,
+      }));
+
+      toast.success("Image uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to upload image"
+      );
+      // Reset the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      setImagePreview(null);
+    } finally {
+      setImageUploading(false);
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -158,19 +227,53 @@ export default function UploadProjectForm() {
           />
         </div>
 
+        {/* Replace Image URL input with File Upload */}
         <div>
           <label className="block text-gray-300 font-bold mb-1" htmlFor="image">
-            Image URL
+            Project Image
           </label>
-          <input
-            type="text"
-            id="image"
-            name="image"
-            value={formData.image ?? ""}
-            onChange={handleChange}
-            className="bg-gray-700 text-white px-3 py-2 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="https://example.com/image.png"
-          />
+          <div className="flex flex-col space-y-2">
+            <input
+              type="file"
+              id="image"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+            <div className="flex items-center space-x-2">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                disabled={imageUploading}
+              >
+                {imageUploading ? "Uploading..." : "Choose Image"}
+              </button>
+              {formData.image && (
+                <span className="text-green-500 text-sm">✓ Image uploaded</span>
+              )}
+            </div>
+
+            {/* Image Preview */}
+            {imagePreview && (
+              <div className="mt-2 relative h-40 w-full max-w-sm overflow-hidden rounded-lg border border-gray-600">
+                <Image
+                  src={imagePreview}
+                  alt="Preview"
+                  fill
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
+            )}
+
+            {/* Show URL (optional) */}
+            {formData.image && (
+              <p className="text-xs text-gray-400 truncate mt-1">
+                {formData.image}
+              </p>
+            )}
+          </div>
         </div>
 
         <div>
@@ -264,7 +367,7 @@ export default function UploadProjectForm() {
           <button
             type="submit"
             className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={loading}
+            disabled={loading || imageUploading}
           >
             {loading ? "Uploading..." : "Upload Project"}
           </button>
