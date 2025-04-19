@@ -10,7 +10,7 @@ const Header = ({ children }) => {
     <div className="font-sans m-0 p-0 bg-navy text-white">
       <header className="flex justify-between items-center p-5 border-b border-electric-blue relative z-50">
         <div className="flex items-center gap-4 md:gap-8">
-          <Image src={logoImage} className="w-16  md:w-28" alt="logo"/>
+          <Image src={logoImage} className="w-16  md:w-20" alt="logo"/>
         </div>
 
         {/* Desktop Navigation */}

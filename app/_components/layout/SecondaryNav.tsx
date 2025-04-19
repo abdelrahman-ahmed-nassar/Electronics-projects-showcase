@@ -18,6 +18,10 @@ const NavLinks = [
     href: "/profile/projects",
     label: "Projects",
   },
+  {
+    href: "/profile/my-team",
+    label: "My Team",
+  },
 ];
 const SecondaryNav = ({ children }: { children: React.ReactNode }) => {
   const pathName = usePathname();
