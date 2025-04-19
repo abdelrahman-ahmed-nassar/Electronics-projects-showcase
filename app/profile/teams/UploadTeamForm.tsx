@@ -75,7 +75,6 @@ export default function UploadTeamForm() {
         throw new Error(error.message || "Failed to upload image");
       }
 
-      const { imageUrl } = await response.json();
 
       toast.success("Team logo uploaded successfully!");
 

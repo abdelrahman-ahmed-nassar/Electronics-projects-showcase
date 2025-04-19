@@ -160,7 +160,7 @@ const EditProjectPage = () => {
           setProject(mockProject);
 
           // Check if user belongs to the team that owns this project
-          if (user && user.team && user.team.id === mockProject.team.id) {
+          if (user && user.team && String(user.team) === mockProject.team.id) {
             setHasPermission(true);
 
             // Populate form data

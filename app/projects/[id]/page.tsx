@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useAuth } from "@/app/_lib/context/AuthenticationContext";
 
 // Define types for better TypeScript support
@@ -38,7 +38,6 @@ interface Project {
 
 const ProjectDetailsPage = () => {
   const { id } = useParams();
-  const router = useRouter();
   const { user, isAuthenticated } = useAuth();
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -103,7 +102,7 @@ const ProjectDetailsPage = () => {
 
           // Check if user can edit this project (if they are on the team)
           if (isAuthenticated && user && user.team) {
-            const canEdit = user.team.id === mockProject.team.id;
+            const canEdit = String(user.team) ===  mockProject.team.id;
             setUserCanEdit(canEdit);
           }
         }, 1000);
