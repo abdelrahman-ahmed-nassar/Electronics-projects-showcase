@@ -18,6 +18,10 @@ const NavLinks = [
     href: "/profile/projects",
     label: "Create a Project",
   },
+  {
+    href: "/profile/teams",
+    label: "Manage Teams",
+  },
 
 ];
 const SecondaryNav = ({ children }: { children: React.ReactNode }) => {
