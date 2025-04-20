@@ -17,19 +17,6 @@ export async function POST(request: Request) {
     // Get profile data from request body
     const profileData = await request.json();
 
-    // Ensure skills is properly formatted as an array
-    let skillsArray = profileData.skills;
-    if (typeof profileData.skills === "string") {
-      // Convert comma-separated string to array
-      skillsArray = profileData.skills
-        .split(",")
-        .map((skill: string) => skill.trim())
-        .filter(Boolean);
-    } else if (!Array.isArray(profileData.skills)) {
-      // Default to empty array if not provided or invalid format
-      skillsArray = [];
-    }
-
     // Use service client for admin operations
     const serviceClient = createServiceClient();
 
@@ -57,7 +44,7 @@ export async function POST(request: Request) {
               ? profileData.isGraduated
               : false,
           about: profileData.about || null,
-          skills: skillsArray, // Use the properly formatted array
+          skills: profileData.skills || null, // Use the properly formatted array
           specialization: profileData.specialization || null,
           role: profileData.role || null,
           team: profileData.team || null,
@@ -88,7 +75,7 @@ export async function POST(request: Request) {
                 ? profileData.isGraduated
                 : false,
             about: profileData.about || null,
-            skills: skillsArray, // Use the properly formatted array
+            skills: profileData.skills || null, // Use the properly formatted array
             specialization: profileData.specialization || null,
             role: profileData.role || null,
             team: profileData.team || null,

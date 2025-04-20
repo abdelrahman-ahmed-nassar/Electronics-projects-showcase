@@ -602,30 +602,9 @@ export async function getStudentsForDisplay(): Promise<
           ? allProjects.filter((project) => project.teamId === profile.team)
           : [];
 
-        // Handle skills array correctly
-        let userSkills: string[] = [];
+    
 
-        if (profile.skills) {
-          // If skills is already an array in the database
-          if (Array.isArray(profile.skills)) {
-            userSkills = profile.skills;
-          }
-          // Handle string case (though this shouldn't happen with proper types)
-          else if (typeof profile.skills === "string") {
-            // Type assertion to help TypeScript understand this is a string
-            const skillsString = profile.skills as string;
-            userSkills = skillsString
-              .split(",")
-              .map((skill: string) => skill.trim())
-              .filter(Boolean);
-          }
-        }
-
-        // Set a default skill if no skills are found
-        if (userSkills.length === 0) {
-          userSkills = ["General Electronics"];
-        }
-
+    
         // Transform to format expected by the student page
         return {
           id: profile.id,
@@ -635,7 +614,7 @@ export async function getStudentsForDisplay(): Promise<
           team: teamInfo?.name || "Independent",
           role: profile.role || "Team Member",
           bio: profile.about || "No bio available",
-          skills: userSkills,
+          skills: profile.skills || "", // Join the skills array into a comma-separated string
           projects: studentProjects.map((project) => ({
             id: project.id,
             title: project.title || "Untitled Project",

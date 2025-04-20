@@ -26,7 +26,7 @@ export interface StudentDisplayInterface {
   team: string;
   role: string;
   bio: string;
-  skills: string[];
+  skills: string;
   projects: {
     id: number;
     title: string;

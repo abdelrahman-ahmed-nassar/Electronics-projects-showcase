@@ -2,21 +2,20 @@
 
 import { useState, ChangeEvent, FormEvent, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ProjectInterface, TeamInterface } from "@/app/Types";
+import { ProjectInterface } from "@/app/Types";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
+import { useAuth } from "@/app/_lib/context/AuthenticationContext";
 
 // Define the type for the form data, omitting auto-generated fields
 type ProjectFormData = Omit<ProjectInterface, "id" | "created_at">;
 
 export default function UploadProjectForm() {
   const router = useRouter();
+  const { user } = useAuth(); // Get the authenticated user
   const [loading, setLoading] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
-  const [teams, setTeams] = useState<TeamInterface[]>([]);
-  const [teamsLoading, setTeamsLoading] = useState(true);
-  const [teamsError, setTeamsError] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -27,46 +26,36 @@ export default function UploadProjectForm() {
     tags: [""],
     period: "",
     link: "",
-    teamId: null,
+    teamId: user?.team || null,
   });
 
-  // Fetch teams on component mount
+  // Update teamId when user changes or on component mount
   useEffect(() => {
-    async function fetchTeams() {
-      try {
-        setTeamsLoading(true);
-        const response = await fetch("/api/teams");
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch teams: ${response.status}`);
-        }
-
-        const teamsData = await response.json();
-        setTeams(teamsData);
-        setTeamsError(null);
-      } catch (error) {
-        console.error("Error fetching teams:", error);
-        setTeamsError(
-          error instanceof Error ? error.message : "Failed to load teams"
-        );
-        toast.error(
-          "Could not load teams. You can still submit without selecting a team."
-        );
-      } finally {
-        setTeamsLoading(false);
-      }
+    if (user?.team) {
+      setFormData((prevData) => ({
+        ...prevData,
+        teamId: user.team,
+      }));
     }
+  }, [user?.team]);
 
-    fetchTeams();
-  }, []);
+  // Redirect if user has no team
+  useEffect(() => {
+    if (user && !user.team) {
+      toast.error("You must be a member of a team to upload projects.");
+      setTimeout(() => {
+        router.push("/profile");
+      }, 3000);
+    }
+  }, [user, router]);
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === "teamId" ? (value ? parseInt(value, 10) : null) : value,
+      [name]: value,
     }));
   };
 
@@ -137,15 +126,28 @@ export default function UploadProjectForm() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    // Check if user has a team
+    if (!user?.team) {
+      toast.error("You must be a member of a team to upload projects.");
+      return;
+    }
+
     setLoading(true);
 
     try {
+      // Ensure teamId is set to the user's team
+      const projectData = {
+        ...formData,
+        teamId: user.team,
+      };
+
       const response = await fetch("/api/projects", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(projectData),
       });
 
       const result = await response.json();
@@ -173,6 +175,41 @@ export default function UploadProjectForm() {
       setLoading(false);
     }
   };
+
+  // If user has no team, show message and don't render the form
+  if (user && !user.team) {
+    return (
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+        <div className="text-center py-8">
+          <h2 className="text-2xl font-bold text-white mb-4">
+            Unable to Upload Project
+          </h2>
+          <p className="text-gray-300 mb-6">
+            You must be a member of a team to upload projects. Please join a
+            team or contact your administrator.
+          </p>
+          <button
+            onClick={() => router.push("/profile")}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
+          >
+            Return to Profile
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
@@ -322,50 +359,20 @@ export default function UploadProjectForm() {
           />
         </div>
 
-        <div>
-          <label
-            className="block text-gray-300 font-bold mb-1"
-            htmlFor="teamId"
-          >
-            Team (Optional)
-          </label>
-
-          {teamsLoading ? (
-            <div className="bg-gray-700 text-gray-400 px-3 py-2 border border-gray-600 rounded-lg w-full">
-              Loading teams...
-            </div>
-          ) : (
-            <select
-              id="teamId"
-              name="teamId"
-              value={formData.teamId ?? ""}
-              onChange={handleChange}
-              className="bg-gray-700 text-white px-3 py-2 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">-- Select a team --</option>
-              {teams.length > 0 ? (
-                teams.map((team) => (
-                  <option key={team.id} value={team.id}>
-                    {team.name || `Team ${team.id}`}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  {teamsError ? "Error loading teams" : "No teams available"}
-                </option>
-              )}
-            </select>
-          )}
-          {teamsError && (
-            <p className="mt-1 text-xs text-red-400">{teamsError}</p>
-          )}
+        {/* Removed teams selection dropdown */}
+        <div className="bg-gray-700 p-3 rounded-lg border border-gray-600 my-4">
+          <p className="text-white mb-1 font-medium">Team Assignment</p>
+          <p className="text-gray-300 text-sm">
+            This project will be assigned to your team:{" "}
+            {user?.team ? `Team #${user.team}` : "Loading..."}
+          </p>
         </div>
 
         <div className="flex items-center justify-end pt-2">
           <button
             type="submit"
             className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={loading || imageUploading}
+            disabled={loading || imageUploading || !user?.team}
           >
             {loading ? "Uploading..." : "Upload Project"}
           </button>

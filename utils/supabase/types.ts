@@ -14,7 +14,7 @@ export type Database = {
           specialization: string | null;
           role: string | null;
           team: number | null; // int8 (bigint)
-          skills: string[] | null; // array
+          skills: string | null; // array
         };
         Insert: {
           id?: string; // uuid
@@ -28,7 +28,7 @@ export type Database = {
           specialization?: string | null;
           role?: string | null;
           team?: number | null;
-          skills?: string[] | null;
+          skills?: string | null;
         };
         Update: {
           id?: string;
@@ -42,7 +42,7 @@ export type Database = {
           specialization?: string | null;
           role?: string | null;
           team?: number | null;
-          skills?: string[] | null;
+          skills?: string | null;
         };
       };
       projects: {

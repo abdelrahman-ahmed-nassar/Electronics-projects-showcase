@@ -44,16 +44,13 @@ const ProfileSettingsPage = () => {
     // Set form data from user if available
     if (user) {
       // Convert skills array to comma-separated string if it's an array
-      const skillsString = Array.isArray(user.skills)
-        ? user.skills.join(", ")
-        : user.skills || "";
 
       setFormData({
         name: user.name || "",
         phone: user.phone || "",
         nationalId: user.nationalId || "",
         about: user.about || "",
-        skills: skillsString,
+        skills: user.skills || "",
         specialization: user.specialization || "",
         role: user.role || "",
         team: user.team ? String(user.team) : "",
@@ -132,11 +129,6 @@ const ProfileSettingsPage = () => {
       const profileData = {
         ...formData,
         avatarImage: imageUrl,
-        // Convert the comma-separated skills string to an array
-        skills: formData.skills
-          .split(",")
-          .map((skill) => skill.trim())
-          .filter(Boolean),
         team: formData.team ? parseInt(formData.team, 10) : null,
         yearId: user?.yearId || null,
       };
@@ -317,6 +309,9 @@ const ProfileSettingsPage = () => {
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-dark-700 text-gray-900 dark:text-white"
               placeholder="e.g. Web Development, Data Science"
             />
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              Separate multiple skills with commas
+            </p>
           </div>
 
           <div>

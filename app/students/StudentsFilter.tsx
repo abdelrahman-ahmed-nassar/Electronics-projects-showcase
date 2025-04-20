@@ -89,7 +89,7 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
       student.name.toLowerCase().includes(searchTermLower) ||
       studentSpecializations.some((spec) => spec.includes(searchTermLower)) ||
       student.team.toLowerCase().includes(searchTermLower) ||
-      student.skills.some((skill) =>
+      student.skills.split(",").some((skill) =>
         skill.toLowerCase().includes(searchTermLower)
       );
 
@@ -107,7 +107,7 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
           );
           break;
         case "Skill":
-          matchesFilter = student.skills.some(
+          matchesFilter = student.skills.split(",").some(
             (skill) => skill.toLowerCase() === activeFilter.toLowerCase()
           );
           break;
@@ -266,7 +266,7 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
 
                     {/* Skills */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {student.skills.map((skill, index) => (
+                      {student.skills.split(",").map((skill, index) => (
                         <span
                           key={index}
                           className="py-1 px-2 bg-electric-blue/10 rounded text-xs text-electric-blue cursor-pointer hover:bg-electric-blue/20"
