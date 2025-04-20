@@ -3,10 +3,10 @@ import { getProjectsByTeam } from "@/utils/supabase/data-services";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const teamId = params.id;
+    const teamId = (await params).id;
 
     if (!teamId) {
       return NextResponse.json(
@@ -16,7 +16,7 @@ export async function GET(
     }
 
     // Get team projects
-    const projects = await getProjectsByTeam(teamId);
+    const projects = await getProjectsByTeam(parseInt(teamId, 10));
 
     // Return 404 if no projects were found for this team
     if (!projects || projects.length === 0) {

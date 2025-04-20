@@ -1,16 +1,12 @@
 import { NextResponse } from "next/server";
-import {
-  getTeamById,
-  getProfilesByTeam,
-  getProjectsByTeam,
-} from "@/utils/supabase/data-services";
+import { getTeamById, getProfilesByTeam } from "@/utils/supabase/data-services";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const teamId = params.id;
+    const teamId = (await params).id;
 
     if (!teamId) {
       return NextResponse.json(
@@ -20,14 +16,14 @@ export async function GET(
     }
 
     // Get team data
-    const team = await getTeamById(teamId);
+    const team = await getTeamById(parseInt(teamId));
 
     if (!team) {
       return NextResponse.json({ error: "Team not found" }, { status: 404 });
     }
 
     // Get team members
-    const members = await getProfilesByTeam(teamId);
+    const members = await getProfilesByTeam(parseInt(teamId));
 
     // Process team data for frontend
     let achievementsList: string[] = [];
