@@ -73,7 +73,7 @@ const MobileNav = () => {
           </li>
           <li>
             <Link
-              href="projects"
+              href="/projects"
               className="text-white no-underline text-base block py-2"
             >
               Projects
@@ -81,7 +81,7 @@ const MobileNav = () => {
           </li>
           <li>
             <Link
-              href="students"
+              href="/students"
               className="text-white no-underline text-base block py-2"
             >
               Students
@@ -89,7 +89,7 @@ const MobileNav = () => {
           </li>
           <li>
             <Link
-              href="teams"
+              href="/teams"
               className="text-white no-underline text-base block py-2"
             >
               Teams
@@ -97,7 +97,7 @@ const MobileNav = () => {
           </li>
           <li>
             <Link
-              href="about"
+              href="/about"
               className="text-white no-underline text-base block py-2"
             >
               About
@@ -105,7 +105,7 @@ const MobileNav = () => {
           </li>
           <li>
             <Link
-              href="contact"
+              href="/contact"
               className="text-white no-underline text-base block py-2"
             >
               Contact
@@ -131,7 +131,7 @@ const MobileNav = () => {
           ) : (
             <>
               <Link
-                href="login"
+                href="/login"
                 className="py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-center text-sm cursor-pointer transition-all hover:bg-electric-blue/10 no-underline"
               >
                 Log In

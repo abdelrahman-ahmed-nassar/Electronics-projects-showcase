@@ -37,7 +37,7 @@ const DesktopLoginMenu = () => {
       ) : (
         <>
           <Link
-            href="login"
+            href="/login"
             className="py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10 no-underline"
           >
             Log In
