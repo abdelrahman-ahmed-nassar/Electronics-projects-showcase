@@ -22,6 +22,7 @@ export default function UploadTeamForm() {
     description: "",
     achievements: "",
     specialty: "",
+    image: null,
   });
 
   const handleChange = (
@@ -75,11 +76,14 @@ export default function UploadTeamForm() {
         throw new Error(error.message || "Failed to upload image");
       }
 
+      const data = await response.json();
 
       toast.success("Team logo uploaded successfully!");
 
-      // Note: We're not setting the image in formData since TeamInterface doesn't have an image field
-      // If you want to add an image field to teams, you'll need to update your database schema and Types.ts
+      setFormData((prevData) => ({
+        ...prevData,
+        image: data.imageUrl,
+      }));
     } catch (error) {
       console.error("Error uploading image:", error);
       toast.error(

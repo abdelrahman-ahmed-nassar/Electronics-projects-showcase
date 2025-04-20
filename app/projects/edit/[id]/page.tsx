@@ -306,7 +306,6 @@ const EditProjectPage = () => {
       // In a real app, this would be an API call to update the project
       // For now, simulate a delay
       setTimeout(() => {
-        console.log("Project data to save:", formData);
         setIsSaving(false);
 
         // Redirect to the project details page after successful update

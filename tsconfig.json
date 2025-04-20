@@ -27,10 +27,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/page.jsx",
+    "app/page.tsx",
     "app/teams/page.jsx",
     "app/students/page.jsx",
-    "app/projects/page.jsx",
+    "app/projects/page.tsx",
     "app/contact/page.jsx",
     "app/about/page.jsx"
   ],

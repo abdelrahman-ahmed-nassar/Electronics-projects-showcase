@@ -1,345 +1,371 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
+import { notFound } from "next/navigation";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useAuth } from "@/app/_lib/context/AuthenticationContext";
+import Image from "next/image";
+import { getProjectDisplayById } from "@/utils/supabase/data-services";
+import { ProjectDisplayInterface } from "@/app/Types";
 
-// Define types for better TypeScript support
-interface TeamMember {
-  id: string;
-  name: string;
-  role: string;
-}
-
-interface Team {
-  id: string;
-  name: string;
-  members: TeamMember[];
-}
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  longDescription: string;
-  thumbnail: string;
-  fullImage: string;
-  category: string;
-  tags: string[];
-  dateCreated: string;
-  featured: boolean;
-  award: string | null;
-  team: Team;
-  technicalDetails: string[];
-  developmentTime: string;
-  videoDemo: boolean;
-}
-
-const ProjectDetailsPage = () => {
-  const { id } = useParams();
-  const { user, isAuthenticated } = useAuth();
-  const [project, setProject] = useState<Project | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [userCanEdit, setUserCanEdit] = useState(false);
-
-  useEffect(() => {
-    // In a real app, fetch the project from an API
-    // For now, we'll simulate fetching a single project
-    const fetchProject = async () => {
-      setIsLoading(true);
-      try {
-        // Simulate API call
-        setTimeout(() => {
-          const mockProject: Project = {
-            id: parseInt(id as string),
-            title: "Neural-Enhanced Prosthetic Hand",
-            description:
-              "An advanced prosthetic hand system with integrated neural feedback mechanisms that provide tactile sensation to users.",
-            longDescription:
-              "This project addresses the limitations of traditional prosthetic devices by incorporating a sophisticated neural interface that translates electrical signals from residual muscles into precise hand movements. The system features 15 degrees of freedom, allowing for complex grasping patterns and fine motor control.",
-            thumbnail: "/api/placeholder/300/200",
-            fullImage: "/api/placeholder/800/450",
-            category: "Medical Devices",
-            tags: [
-              "Biomedical Engineering",
-              "Neural Interfaces",
-              "Machine Learning",
-              "Tactile Sensors",
-            ],
-            dateCreated: "2024-10-15",
-            featured: true,
-            award: "Industry Award Winner",
-            team: {
-              id: "team-123",
-              name: "BioTech Solutions",
-              members: [
-                { id: "user-1", name: "Emma Patel", role: "Team Lead" },
-                {
-                  id: "user-2",
-                  name: "David Kim",
-                  role: "Neural Interface Specialist",
-                },
-                {
-                  id: "user-3",
-                  name: "Olivia Wilson",
-                  role: "Machine Learning Engineer",
-                },
-              ],
-            },
-            technicalDetails: [
-              "16-bit microcontroller with 120MHz processing capabilities",
-              "Advanced EMG signal processing with 99.2% pattern recognition accuracy",
-              "Battery life of 14 hours under normal usage conditions",
-              "Wireless charging and data synchronization",
-              "Waterproof to IP67 standards",
-            ],
-            developmentTime: "12 weeks",
-            videoDemo: true,
-          };
-          setProject(mockProject);
-          setIsLoading(false);
-
-          // Check if user can edit this project (if they are on the team)
-          if (isAuthenticated && user && user.team) {
-            const canEdit = String(user.team) ===  mockProject.team.id;
-            setUserCanEdit(canEdit);
-          }
-        }, 1000);
-      } catch (error) {
-        console.error("Error fetching project:", error);
-        setIsLoading(false);
-      }
-    };
-
-    if (id) {
-      fetchProject();
-    }
-  }, [id, isAuthenticated, user]);
-
-  // Format date to more readable format
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric" as const,
-      month: "long" as const,
-      day: "numeric" as const,
-    };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+// Format date to more readable format
+const formatDate = (dateString: string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+};
 
-  if (isLoading) {
-    return (
-      <div className="font-sans bg-navy text-white min-h-screen flex justify-center items-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mint-green"></div>
-      </div>
-    );
+// Extract main category from tags
+const getMainCategory = (project: ProjectDisplayInterface) => {
+  if (!project?.tags || project.tags.length === 0) return "Uncategorized";
+  return project.tags[0];
+};
+
+export default async function ProjectPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const projectId = parseInt((await params).id, 10);
+
+  if (isNaN(projectId)) {
+    notFound();
   }
 
+  // Fetch project data from server
+  const project = await getProjectDisplayById(projectId);
+
   if (!project) {
-    return (
-      <div className="font-sans bg-navy text-white min-h-screen flex justify-center items-center">
-        <div className="text-center p-8">
-          <h2 className="text-2xl mb-4 text-mint-green">Project Not Found</h2>
-          <p className="mb-6 text-white/80">
-            The project you&apos;re looking for doesn&apos;t exist or has been
-            removed.
-          </p>
-          <Link
-            href="/projects"
-            className="py-2 px-4 bg-electric-blue hover:bg-electric-blue/80 text-white rounded-md"
-          >
-            Back to Projects
-          </Link>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   return (
-    <div className="font-sans bg-navy text-white min-h-screen">
-      {/* Project Header */}
-      <section className="relative py-16 px-5 bg-white/[0.03] border-b border-electric-blue/20">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-start">
-            <div>
-              <div className="flex gap-3 mb-3">
-                <span className="py-1 px-2 bg-mint-green/10 rounded text-sm text-mint-green">
-                  {project.category}
-                </span>
-                {project.award && (
-                  <span className="py-1 px-2 bg-magenta text-white text-sm font-medium rounded">
-                    {project.award}
+    <div className="bg-navy text-white min-h-screen font-sans">
+      {/* Header */}
+      <section className="relative">
+        {/* Hero Image */}
+        <div className="w-full h-[40vh] relative bg-gradient-to-b from-black/50 to-navy">
+          {project.image ? (
+            <div className="absolute inset-0 opacity-50">
+              <Image
+                src={project.image}
+                alt={project.title || "Project image"}
+                fill
+                style={{ objectFit: "cover" }}
+                priority
+              />
+            </div>
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-r from-electric-blue/30 to-magenta/30"></div>
+          )}
+
+          {/* Decorative elements */}
+          <div className="absolute inset-0 bg-circuit-pattern opacity-20"></div>
+
+          {/* Content overlay */}
+          <div className="absolute inset-0 flex items-center">
+            <div className="container mx-auto px-5">
+              <div className="max-w-4xl">
+                {/* Tags/Categories */}
+                <div className="flex flex-wrap gap-2 mb-5">
+                  {project.tags?.map((tag, i) => (
+                    <span
+                      key={i}
+                      className="py-1 px-3 bg-mint-green/20 text-mint-green text-sm rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Project Title */}
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
+                  {project.title}
+                </h1>
+
+                {/* Project meta */}
+                <div className="flex items-center text-white/70 gap-4 text-sm">
+                  <span className="flex items-center gap-1">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      ></path>
+                    </svg>
+                    {formatDate(project.dateCreated)}
                   </span>
-                )}
-                {project.featured && (
-                  <span className="py-1 px-2 bg-mint-green text-navy text-sm font-medium rounded">
-                    Featured
-                  </span>
-                )}
-              </div>
-              <h1 className="text-4xl md:text-5xl mb-3 text-mint-green">
-                {project.title}
-              </h1>
-              <p className="text-lg md:text-xl max-w-3xl mb-4 text-white/80">
-                {project.description}
-              </p>
-              <div className="text-white/70">
-                Created on: {formatDate(project.dateCreated)}
+
+                  {project.team && (
+                    <Link
+                      href={`/teams/${project.team.id}`}
+                      className="flex items-center gap-1 hover:text-electric-blue transition-colors"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        ></path>
+                      </svg>
+                      {project.team.name}
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
-
-            {/* Edit button for team members */}
-            {userCanEdit && (
-              <Link
-                href={`/projects/edit/${project.id}`}
-                className="py-2 px-4 bg-electric-blue hover:bg-electric-blue/80 text-white rounded-md flex items-center gap-2"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-                Edit Project
-              </Link>
-            )}
           </div>
         </div>
       </section>
 
-      {/* Project Content */}
-      <section className="py-10 px-5">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Main Content */}
+      <section className="container mx-auto px-5 py-12">
+        <div className="flex flex-col lg:flex-row gap-10">
           {/* Main Content */}
-          <div className="md:col-span-2">
-            {/* Project Image */}
-            <div
-              className="w-full h-[400px] bg-cover bg-center rounded-lg mb-8"
-              style={{ backgroundImage: `url(${project.fullImage})` }}
-            />
-
+          <div className="lg:w-2/3">
             {/* Project Description */}
-            <div className="mb-8">
-              <h2 className="text-2xl mb-4 text-mint-green">Overview</h2>
-              <p className="text-white/90 mb-4 leading-relaxed">
-                {project.longDescription}
-              </p>
+            <div className="mb-10">
+              <h2 className="text-2xl text-mint-green mb-4">
+                Project Overview
+              </h2>
+              <div className="prose prose-invert max-w-none">
+                <p className="text-lg text-white/90">
+                  {project.description || "No description available"}
+                </p>
+              </div>
             </div>
+
+            {/* Project Gallery or Image */}
+            {project.image && (
+              <div className="mb-10">
+                <h2 className="text-2xl text-mint-green mb-4">
+                  Project Gallery
+                </h2>
+                <div className="bg-white/5 border border-electric-blue/20 rounded-lg overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={project.title || "Project image"}
+                    width={1000}
+                    height={600}
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Technical Details */}
-            <div className="mb-8">
-              <h2 className="text-2xl mb-4 text-mint-green">
+            <div className="mb-10">
+              <h2 className="text-2xl text-mint-green mb-4">
                 Technical Details
               </h2>
-              <ul className="list-disc pl-5 text-white/90">
-                {project.technicalDetails.map(
-                  (detail: string, index: number) => (
-                    <li key={index} className="mb-2">
-                      {detail}
+              <div className="bg-white/5 border border-electric-blue/20 rounded-lg p-6">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {project.tags?.map((tag, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <svg
+                        className="w-5 h-5 text-electric-blue flex-shrink-0 mt-0.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                      </svg>
+                      <span>{tag}</span>
                     </li>
-                  )
-                )}
-              </ul>
+                  ))}
+                </ul>
+              </div>
             </div>
+
+            {/* Project Link */}
+            {project.link && (
+              <div className="mb-10">
+                <h2 className="text-2xl text-mint-green mb-4">
+                  Project Resources
+                </h2>
+                <div className="bg-white/5 border border-electric-blue/20 rounded-lg p-6">
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-electric-blue hover:text-mint-green transition-colors"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      ></path>
+                    </svg>
+                    View Project Resources
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
-          <div className="md:col-span-1">
+          <div className="lg:w-1/3">
             {/* Team Information */}
-            <div className="bg-white/5 rounded-lg p-5 mb-6">
-              <h3 className="text-xl mb-4 text-mint-green">Team</h3>
-              <div className="mb-3">
-                <div className="text-white font-medium">
-                  {project.team.name}
-                </div>
-              </div>
-              <div className="space-y-3">
-                {project.team.members.map(
-                  (member: TeamMember, index: number) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#172a45] border-2 border-navy flex items-center justify-center text-white font-medium">
-                        {member.name.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="text-white">{member.name}</div>
-                        <div className="text-white/70 text-sm">
-                          {member.role}
-                        </div>
+            {project.team && (
+              <div className="bg-white/5 border border-electric-blue/20 rounded-lg overflow-hidden mb-6">
+                <div className="p-6">
+                  <h3 className="text-xl text-mint-green mb-4">Team</h3>
+                  <div className="mb-4">
+                    <Link
+                      href={`/teams/${project.team.id}`}
+                      className="font-medium text-white hover:text-electric-blue transition-colors"
+                    >
+                      {project.team.name}
+                    </Link>
+                  </div>
+
+                  {/* Team Members */}
+                  {project.team.members.length > 0 && (
+                    <div>
+                      <h4 className="text-white/90 text-sm mb-3">
+                        Team Members
+                      </h4>
+                      <div className="flex flex-col gap-3">
+                        {project.team.members.map((member, index) => (
+                          <div key={index} className="flex items-center gap-3">
+                            <Link
+                              href={`/students/${member.id}`}
+                              className="w-10 h-10 bg-navy-light rounded-full overflow-hidden flex-shrink-0 block"
+                            >
+                              <Image
+                                src={
+                                  member.image ||
+                                  "/images/default-user-profile-image.svg"
+                                }
+                                alt={member.name || "Team member"}
+                                width={40}
+                                height={40}
+                                className="w-full h-full object-cover"
+                              />
+                            </Link>
+                            <div>
+                              <Link
+                                href={`/students/${member.id}`}
+                                className="text-white font-medium hover:text-electric-blue transition-colors"
+                              >
+                                {member.name}
+                              </Link>
+                              <div className="text-white/70 text-sm">
+                                {member.role}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  )
-                )}
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Project Details */}
-            <div className="bg-white/5 rounded-lg p-5 mb-6">
-              <h3 className="text-xl mb-4 text-mint-green">Project Details</h3>
-              <div className="space-y-3">
-                <div>
-                  <div className="text-white/70 text-sm">Category</div>
-                  <div className="text-white">{project.category}</div>
-                </div>
-                <div>
-                  <div className="text-white/70 text-sm">Development Time</div>
-                  <div className="text-white">{project.developmentTime}</div>
-                </div>
-                <div>
-                  <div className="text-white/70 text-sm">Date Created</div>
-                  <div className="text-white">
-                    {formatDate(project.dateCreated)}
+            <div className="bg-white/5 border border-electric-blue/20 rounded-lg overflow-hidden mb-6">
+              <div className="p-6">
+                <h3 className="text-xl text-mint-green mb-4">
+                  Project Details
+                </h3>
+                <div className="divide-y divide-white/10">
+                  <div className="py-3 flex justify-between">
+                    <span className="text-white/70">Category</span>
+                    <span className="text-white">
+                      {getMainCategory(project)}
+                    </span>
+                  </div>
+                  <div className="py-3 flex justify-between">
+                    <span className="text-white/70">Date</span>
+                    <span className="text-white">
+                      {formatDate(project.dateCreated)}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Tags */}
-            <div className="bg-white/5 rounded-lg p-5">
-              <h3 className="text-xl mb-4 text-mint-green">Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {project.tags.map((tag: string, index: number) => (
-                  <span
-                    key={index}
-                    className="py-1 px-2 bg-mint-green/10 rounded text-xs text-mint-green"
+            {/* Navigation */}
+            <div className="bg-white/5 border border-electric-blue/20 rounded-lg overflow-hidden">
+              <div className="p-6">
+                <h3 className="text-xl text-mint-green mb-4">Navigation</h3>
+                <div className="flex flex-col gap-2">
+                  <Link
+                    href="/projects"
+                    className="py-2 px-4 bg-navy-light hover:bg-navy-lighter text-white rounded-md flex items-center gap-2 transition-colors"
                   >
-                    {tag}
-                  </span>
-                ))}
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M11 17l-5-5m0 0l5-5m-5 5h12"
+                      ></path>
+                    </svg>
+                    Back to Projects
+                  </Link>
+                  {project.team && (
+                    <Link
+                      href={`/teams/${project.team.id}`}
+                      className="py-2 px-4 bg-electric-blue/30 hover:bg-electric-blue/50 text-white rounded-md flex items-center gap-2 transition-colors"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        ></path>
+                      </svg>
+                      View Team
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
-
-            {/* Demo Video Button */}
-            {project.videoDemo && (
-              <button className="w-full py-3 px-4 mt-6 bg-magenta hover:bg-magenta/80 text-white rounded-md flex items-center justify-center gap-2 transition-all">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-                Watch Demo Video
-              </button>
-            )}
           </div>
         </div>
       </section>
     </div>
   );
-};
-
-export default ProjectDetailsPage;
+}

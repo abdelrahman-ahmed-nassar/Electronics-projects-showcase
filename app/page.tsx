@@ -6,7 +6,6 @@ import ProjectOfTheMonth from "./_components/layout/ProjectOfTheMonth";
 import FeaturedProjects from "./_components/layout/FeaturedProjects";
 import StatsSection from "./_components/layout/StatsSection";
 import TeamsSection from "./_components/layout/teamsSection";
-import { getProfileById } from "@/utils/supabase/data-services";
 
 // Main App Component
 const Page = async () => {

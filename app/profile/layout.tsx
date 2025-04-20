@@ -1,6 +1,8 @@
 import SecondaryNav from "@/app/_components/layout/SecondaryNav";
 
-export default function RootLayout({ children }) {
+import { ReactNode } from "react";
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <div className="mt-10 h-full w-full px-5 pb-10 md:pb-20 ">
       <div className="h-72 rounded-lg bg-courseBannerGradient"></div>
