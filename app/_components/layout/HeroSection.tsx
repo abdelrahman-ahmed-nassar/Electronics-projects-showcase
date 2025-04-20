@@ -11,7 +11,7 @@ const HeroSection = () => {
 
   useEffect(() => {
     // Check if we're in a browser environment
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     // Trigger animations after component mounts
     setTimeout(() => setAnimateCircuit(true), 300);
@@ -37,7 +37,7 @@ const HeroSection = () => {
   // Create electronic particles animation
   const createParticles = () => {
     // Check if we're in a browser environment
-    if (typeof window === 'undefined' || !particlesRef.current) return;
+    if (typeof window === "undefined" || !particlesRef.current) return;
 
     const container = particlesRef.current;
     // Clear existing particles
