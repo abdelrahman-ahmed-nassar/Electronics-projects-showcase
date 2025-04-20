@@ -7,23 +7,32 @@ import NoData from "../UI/NoData";
 
 const NavLinks = [
   {
+    id: "profile",
     href: "/profile",
     label: "User Profile",
   },
   {
+    id: "notifications",
     href: "/profile/notifications",
     label: "Notifications",
   },
   {
+    id: "projects",
     href: "/profile/projects",
     label: "Create a Project",
   },
   {
+    id: "teams",
     href: "/profile/teams",
-    label: "Manage Teams",
+    label: "Create Team",
   },
-
+  {
+    id: "update-profile",
+    href: "/profile/settings",
+    label: "Update Profile",
+  },
 ];
+
 const SecondaryNav = ({ children }: { children: React.ReactNode }) => {
   const pathName = usePathname();
   return (
@@ -60,7 +69,7 @@ const SecondaryNav = ({ children }: { children: React.ReactNode }) => {
             <nav className="flex flex-col">
               {NavLinks.map((link) => (
                 <NavigationItem
-                  key={link.href}
+                  key={link.id}
                   href={link.href}
                   isActive={link.href === pathName}
                 >

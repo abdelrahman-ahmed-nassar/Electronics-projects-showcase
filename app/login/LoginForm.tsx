@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 
-import Link from "next/link";
 import { toast } from "react-toastify";
 import { translateSupabaseErrors } from "../_lib/helpers/translateSupabaseErrors";
 import { useAuth } from "../_lib/context/AuthenticationContext";
@@ -36,9 +35,7 @@ const LoginForm = ({
 
       if (!result.success) {
         // Handle other errors
-        toast.error(
-          translateSupabaseErrors(result.error || "Login error")
-        );
+        toast.error(translateSupabaseErrors(result.error || "Login error"));
 
         setIsLoading(false);
         return;
@@ -91,12 +88,6 @@ const LoginForm = ({
           >
             Password
           </label>
-          <Link
-            href="#"
-            className="text-sm text-electric-blue hover:text-mint-green"
-          >
-            Forgot password?
-          </Link>
         </div>
         <input
           id="password"
@@ -130,7 +121,6 @@ const LoginForm = ({
       >
         {isLoading ? "Signing in..." : "Sign In"}
       </button>
-
     </form>
   );
 };
