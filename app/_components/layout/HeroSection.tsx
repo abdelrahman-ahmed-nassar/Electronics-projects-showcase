@@ -191,7 +191,7 @@ const HeroSection = () => {
       <div className="absolute bottom-[15%] right-[8%] w-12 h-12 border-2 border-electric-blue rounded-full opacity-20 flex items-center justify-center text-[8px] text-electric-blue">
         10μF
       </div>
-      <div className="absolute top-[25%] right-[12%] border-l-2 border-t-2 border-b-2 border-amber w-8 h-6 opacity-20 after:content-[''] after:absolute after:border-r-2 after:border-t-2 after:border-b-2 after:border-amber after:right-[-8px] after:top-0 after:bottom-0 after:skew-x-[20deg]"></div>
+      <div className="absolute top-[25%] right-[12%] border-l-2 border-t-2 border-b-2 border-amber w-8 h-6 opacity-20 after:content-[''] after:absolute after:border-r-2 after:border-t-2 after:border-b-2 after:border-amber after:right-0 after:top-0 after:bottom-0  text-[10px] flex items-center justify-center text-amber"> 22 Ω</div>
 
       {/* Main content with parallax effect */}
       <div
