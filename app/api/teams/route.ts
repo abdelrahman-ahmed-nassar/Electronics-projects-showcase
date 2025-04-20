@@ -1,19 +1,95 @@
 import { NextResponse } from "next/server";
-import { getAllTeams } from "@/utils/supabase/data-services";
+import {
+  getAllTeams,
+  getProfilesByTeam,
+  getProjectsByTeam,
+} from "@/utils/supabase/data-services";
 import { createClient } from "@/utils/supabase/server";
 import { createServiceClient } from "@/utils/supabase/server-service";
 
 export async function GET() {
   try {
+    // Get all teams from the database
     const teams = await getAllTeams();
-    return NextResponse.json(teams);
+
+
+    // For each team, get members and projects
+    const teamsWithData = await Promise.all(
+      teams.map(async (team) => {
+        try {
+          // Get team members
+          const members = await getProfilesByTeam(team.id);
+
+          // Get team projects
+          const projects = await getProjectsByTeam(team.id);
+
+          // Handle achievements - stored as comma-separated values
+          let achievementsList: string[] = [];
+
+  
+
+          if (team.achievements) {
+            // Check if it's already an array
+            if (Array.isArray(team.achievements)) {
+              achievementsList = team.achievements;
+            }
+            // Handle string format
+            else if (typeof team.achievements === "string") {
+              // Split by commas and trim each value
+              achievementsList = team.achievements
+                .split(",")
+                .map((a) => a.trim())
+                .filter((a) => a.length > 0);
+            }
+          }
+
+          // Ensure each team has at least one achievement for display purposes
+          if (achievementsList.length === 0) {
+            achievementsList = [
+              "Established research team in electronics engineering",
+            ];
+          }
+
+          // Transform members to the format expected by the UI
+          const formattedMembers = members.map((member) => ({
+            name: member.name || "Unknown",
+            role: member.role || member.specialization || "Team Member",
+            bio: member.about || "No bio available",
+            image:
+              member.avatarImage || "/images/default-user-profile-image.svg",
+          }));
+
+          // Return the team with enhanced data
+          return {
+            ...team,
+            achievements: achievementsList,
+            members: formattedMembers,
+            projects: projects.map((p) => p.title || "Untitled Project"),
+            image: team.image || "/images/default-team-image.png",
+            specialty: team.specialty || "Electronics Research",
+          };
+        } catch (error) {
+          console.error(`Error enhancing team ${team.id}:`, error);
+          return {
+            ...team,
+            achievements: [
+              "Established research team in electronics engineering",
+            ],
+            members: [],
+            projects: [],
+            image: "/images/default-team-image.png",
+            specialty: team.specialty || "Electronics Research",
+          };
+        }
+      })
+    );
+
+
+    return NextResponse.json(teamsWithData);
   } catch (error) {
     console.error("Error fetching teams:", error);
     return NextResponse.json(
-      {
-        message:
-          error instanceof Error ? error.message : "Failed to fetch teams",
-      },
+      { error: "Failed to fetch teams" },
       { status: 500 }
     );
   }

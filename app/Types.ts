@@ -18,7 +18,6 @@ export interface UserInterface {
   projects: ProjectInterface[] | null;
 }
 
-
 /**
  * Interface for teams
  */
@@ -29,7 +28,8 @@ export interface TeamInterface {
   description: string | null;
   achievements: string | null;
   specialty: string | null;
-  image: string | null; 
+  image: string | null;
+  isFeatured?: boolean | null; // Assuming this is a boolean field
 }
 
 /**
@@ -46,24 +46,25 @@ export interface ProjectInterface {
   period: string | null; // e.g., "Jan 2023 - Mar 2023"
   link: string | null; // URL to project
   teamId: number | null; // Foreign key to teams table
+  isFeatured?: boolean | null; // Flag for featured projects
 }
 
 export interface ProjectDisplayInterface {
-    id: number;
-    title: string;
-    description: string;
-    image: string;
-    tags: string[];
-    dateCreated: string;
-    link: string | null;
-    team: {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  dateCreated: string;
+  link: string | null;
+  team: {
+    name: string;
+    id: number | null;
+    members: {
       name: string;
-      id: number | null;
-      members: {
-        name: string;
-        role: string;
-        image: string | null; 
-        id: string;
-      }[];
-    };
-  }
+      role: string;
+      image: string | null;
+      id: string;
+    }[];
+  };
+}

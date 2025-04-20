@@ -4,6 +4,7 @@ import TeamCard from "../UI/TeamCard";
 const TeamsSection = () => {
   const teams = [
     {
+      id: 1, // Added id property
       name: "Circuit Innovators",
       specialty: "Analog Electronics",
       members: [
@@ -14,6 +15,7 @@ const TeamsSection = () => {
       projectCount: 4,
     },
     {
+      id: 2, // Added id property
       name: "BioTech Solutions",
       specialty: "Medical Electronics",
       members: [
@@ -24,6 +26,7 @@ const TeamsSection = () => {
       projectCount: 3,
     },
     {
+      id: 3, // Added id property
       name: "RoboCore",
       specialty: "Robotics & Automation",
       members: [
@@ -34,6 +37,7 @@ const TeamsSection = () => {
       projectCount: 5,
     },
     {
+      id: 4, // Added id property
       name: "PowerGrid",
       specialty: "Renewable Energy",
       members: [

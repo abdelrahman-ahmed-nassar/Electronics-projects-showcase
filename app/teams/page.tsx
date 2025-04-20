@@ -3,24 +3,35 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+// Define types for team data
+interface TeamMember {
+  name: string;
+  role: string;
+  bio: string;
+  image: string;
+}
+
+interface Team {
+  id: number;
+  name: string;
+  description: string;
+  specialty: string;
+  image: string;
+  members: TeamMember[];
+  projects: string[];
+  achievements: string[];
+}
+
 // Teams Page Component
 const TeamsPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("All");
-  const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Sample filters for teams - we can keep these hardcoded for now
-  const filters = [
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [activeFilter, setActiveFilter] = useState<string>("All");
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [availableSpecialties, setAvailableSpecialties] = useState<string[]>([
     "All",
-    "Analog Electronics",
-    "Medical Electronics",
-    "Robotics & Automation",
-    "Renewable Energy",
-    "Signal Processing",
-    "Embedded Systems",
-  ];
+  ]);
 
   // Fetch teams from the API
   useEffect(() => {
@@ -34,41 +45,23 @@ const TeamsPage = () => {
         }
 
         const data = await response.json();
+        setTeams(data);
 
-        // Transform the data to match our UI component expectations
-        const enhancedTeams = data.map((team) => {
-          // Safely parse achievements or handle as a string array
-          let achievements = [];
-          if (team.achievements) {
-            if (Array.isArray(team.achievements)) {
-              achievements = team.achievements;
-            } else {
-              try {
-                // Try to parse as JSON
-                achievements = JSON.parse(team.achievements);
-              } catch (e) {
-                // If parsing fails, treat it as a single string
-                console.warn(
-                  `Failed to parse achievements for team ${team.id}: ${e.message}`
-                );
-                achievements = [String(team.achievements)];
-              }
-            }
+        // Extract all unique specialties from teams (handling comma-separated values)
+        const allSpecialties = new Set<string>();
+        allSpecialties.add("All"); // Always include "All" option
+
+        data.forEach((team: Team) => {
+          if (team.specialty) {
+            // Handle comma-separated specialties
+            const specialties = team.specialty.split(",").map((s) => s.trim());
+            specialties.forEach((specialty) => {
+              if (specialty) allSpecialties.add(specialty);
+            });
           }
-
-          return {
-            id: team.id,
-            name: team.name || "Unnamed Team",
-            specialty: team.specialty || "General Electronics",
-            description: team.description || "No description available",
-            achievements: achievements,
-            members: [], // We'll need to fetch members separately if needed
-            projects: [], // We'll need to fetch projects separately if needed
-            image: "/images/default-team-image.png", // Using default image
-          };
         });
 
-        setTeams(enhancedTeams);
+        setAvailableSpecialties(Array.from(allSpecialties));
       } catch (err) {
         console.error("Failed to fetch teams:", err);
         setError("Failed to load teams data. Please try again later.");
@@ -83,12 +76,18 @@ const TeamsPage = () => {
   // Filter teams based on search term and active filter
   const filteredTeams = teams.filter((team) => {
     const matchesSearch =
-      team.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      team.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      team.description.toLowerCase().includes(searchTerm.toLowerCase());
+      team.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      team.specialty?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      team.description?.toLowerCase().includes(searchTerm.toLowerCase());
 
+    // Handle filtering by specialty, including comma-separated values
     const matchesFilter =
-      activeFilter === "All" || team.specialty === activeFilter;
+      activeFilter === "All" ||
+      (team.specialty &&
+        team.specialty
+          .split(",")
+          .map((s) => s.trim().toLowerCase())
+          .includes(activeFilter.toLowerCase()));
 
     return matchesSearch && matchesFilter;
   });
@@ -110,10 +109,9 @@ const TeamsPage = () => {
           setSearchTerm={setSearchTerm}
           activeFilter={activeFilter}
           setActiveFilter={setActiveFilter}
-          filters={filters}
+          filters={availableSpecialties}
         />
       )}
-      <TeamStatsSection />
     </>
   );
 };
@@ -161,8 +159,18 @@ const TeamHeroSection = () => {
   );
 };
 
+// Define props interface for TeamsSection
+interface TeamsSectionProps {
+  teams: Team[];
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  activeFilter: string;
+  setActiveFilter: React.Dispatch<React.SetStateAction<string>>;
+  filters: string[];
+}
+
 // Teams Section Component
-const TeamsSection = ({
+const TeamsSection: React.FC<TeamsSectionProps> = ({
   teams,
   searchTerm,
   setSearchTerm,
@@ -170,9 +178,9 @@ const TeamsSection = ({
   setActiveFilter,
   filters,
 }) => {
-  const [expandedTeam, setExpandedTeam] = useState(null);
+  const [expandedTeam, setExpandedTeam] = useState<number | null>(null);
 
-  const toggleTeamDetails = (teamId) => {
+  const toggleTeamDetails = (teamId: number) => {
     if (expandedTeam === teamId) {
       setExpandedTeam(null);
     } else {
@@ -196,7 +204,7 @@ const TeamsSection = ({
           </div>
 
           <div className="flex flex-wrap gap-2 flex-1 justify-center md:justify-end">
-            {filters.map((filter) => (
+            {filters.map((filter: string) => (
               <button
                 key={filter}
                 className={`py-2 px-4 bg-transparent border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10 ${
@@ -215,22 +223,37 @@ const TeamsSection = ({
         {/* Teams List */}
         <div className="space-y-12">
           {teams.length > 0 ? (
-            teams.map((team) => (
+            teams.map((team: Team) => (
               <div
                 key={team.id}
                 className="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:border-electric-blue"
               >
                 {/* Team Header */}
                 <div className="relative h-[200px] overflow-hidden">
-                  <img
+                  <Image
                     src={team.image}
                     alt={`${team.name} project image`}
                     className="w-full h-full object-cover"
+                    width={1200}
+                    height={200}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                  {/* Display specialties as separate tags */}
                   <div className="absolute bottom-0 left-0 p-5">
-                    <div className="inline-block py-1 px-2 mb-2 bg-electric-blue/80 text-white text-sm rounded">
-                      {team.specialty}
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {team.specialty &&
+                        team.specialty.split(",").map((specialty, index) => (
+                          <div
+                            key={index}
+                            className="inline-block py-1 px-2 bg-electric-blue/80 text-white text-sm rounded"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveFilter(specialty.trim());
+                            }}
+                          >
+                            {specialty.trim()}
+                          </div>
+                        ))}
                     </div>
                     <h3 className="text-2xl md:text-3xl mt-0 mb-0 text-white">
                       {team.name}
@@ -245,18 +268,22 @@ const TeamsSection = ({
                   <div className="flex flex-wrap gap-x-8 gap-y-4 mb-6">
                     {/* Team Members Preview */}
                     <div className="flex items-center gap-2">
-                      {team.members.slice(0, 3).map((member, index) => (
-                        <div
-                          key={index}
-                          className="w-10 h-10 rounded-full bg-[#172a45] border-2 border-mint-green overflow-hidden"
-                        >
-                          <img
-                            src={member.image}
-                            alt={member.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ))}
+                      {team.members
+                        .slice(0, 3)
+                        .map((member: TeamMember, index: number) => (
+                          <div
+                            key={index}
+                            className="w-10 h-10 rounded-full bg-[#172a45] border-2 border-mint-green overflow-hidden"
+                          >
+                            <Image
+                              src={member.image}
+                              alt={member.name}
+                              className="w-full h-full object-cover"
+                              width={40}
+                              height={40}
+                            />
+                          </div>
+                        ))}
                       {team.members.length > 3 && (
                         <div className="w-10 h-10 rounded-full bg-electric-blue/30 flex items-center justify-center text-sm text-white border-2 border-electric-blue">
                           +{team.members.length - 3}
@@ -281,14 +308,39 @@ const TeamsSection = ({
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => toggleTeamDetails(team.id)}
-                    className="py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10"
-                  >
-                    {expandedTeam === team.id
-                      ? "Hide Details"
-                      : "View Team Details"}
-                  </button>
+                  <div className="flex flex-wrap gap-3 mb-6">
+                    {/* View details button (existing) */}
+                    <button
+                      onClick={() => toggleTeamDetails(team.id)}
+                      className="py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10"
+                    >
+                      {expandedTeam === team.id
+                        ? "Hide Details"
+                        : "View Team Details"}
+                    </button>
+
+                    {/* View Team Profile Button (new) */}
+                    <Link
+                      href={`/teams/${team.id}`}
+                      className="py-2 px-4 bg-electric-blue/20 hover:bg-electric-blue/30 text-electric-blue rounded border border-electric-blue/50 text-sm cursor-pointer transition-all flex items-center gap-1"
+                    >
+                      Visit Team Profile
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 7l5 5m0 0l-5 5m5-5H6"
+                        />
+                      </svg>
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Expanded Team Details */}
@@ -300,31 +352,35 @@ const TeamsSection = ({
                         Team Members
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        {team.members.map((member, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center gap-3 p-3 bg-white/5 rounded"
-                          >
-                            <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                              <img
-                                src={member.image}
-                                alt={member.name}
-                                className="w-full h-full object-cover"
-                              />
+                        {team.members.map(
+                          (member: TeamMember, index: number) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-3 p-3 bg-white/5 rounded"
+                            >
+                              <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                                <Image
+                                  src={member.image}
+                                  alt={member.name}
+                                  className="w-full h-full object-cover"
+                                  width={48}
+                                  height={48}
+                                />
+                              </div>
+                              <div>
+                                <div className="text-white font-medium">
+                                  {member.name}
+                                </div>
+                                <div className="text-electric-blue text-sm">
+                                  {member.role}
+                                </div>
+                                <div className="text-white/60 text-xs">
+                                  {member.bio}
+                                </div>
+                              </div>
                             </div>
-                            <div>
-                              <div className="text-white font-medium">
-                                {member.name}
-                              </div>
-                              <div className="text-electric-blue text-sm">
-                                {member.role}
-                              </div>
-                              <div className="text-white/60 text-xs">
-                                {member.bio}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
+                          )
+                        )}
                       </div>
                     </div>
 
@@ -332,7 +388,7 @@ const TeamsSection = ({
                     <div className="mb-6">
                       <h4 className="text-lg text-mint-green mb-4">Projects</h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {team.projects.map((project, index) => (
+                        {team.projects.map((project: string, index: number) => (
                           <Link
                             href="#"
                             key={index}
@@ -350,15 +406,17 @@ const TeamsSection = ({
                         Achievements
                       </h4>
                       <ul className="space-y-2">
-                        {team.achievements.map((achievement, index) => (
-                          <li
-                            key={index}
-                            className="flex items-start gap-2 text-white/80"
-                          >
-                            <span className="text-electric-blue mt-1">•</span>
-                            <span>{achievement}</span>
-                          </li>
-                        ))}
+                        {team.achievements.map(
+                          (achievement: string, index: number) => (
+                            <li
+                              key={index}
+                              className="flex items-start gap-2 text-white/80"
+                            >
+                              <span className="text-electric-blue mt-1">•</span>
+                              <span>{achievement}</span>
+                            </li>
+                          )
+                        )}
                       </ul>
                     </div>
                   </div>
@@ -371,31 +429,6 @@ const TeamsSection = ({
             </div>
           )}
         </div>
-      </div>
-    </section>
-  );
-};
-
-// Team Stats Section
-const TeamStatsSection = () => {
-  const stats = [
-    { value: 6, label: "Research Teams" },
-    { value: 23, label: "Active Members" },
-    { value: 27, label: "Current Projects" },
-    { value: 12, label: "Industry Partners" },
-  ];
-
-  return (
-    <section className="py-16 px-5 bg-white/[0.03]">
-      <div className="flex justify-around flex-wrap max-w-6xl mx-auto gap-5">
-        {stats.map((stat, index) => (
-          <div key={index} className="text-center flex-1 min-w-[200px]">
-            <div className="text-4xl font-bold text-electric-blue mb-2.5">
-              {stat.value}
-            </div>
-            <div className="text-lg text-white/80">{stat.label}</div>
-          </div>
-        ))}
       </div>
     </section>
   );

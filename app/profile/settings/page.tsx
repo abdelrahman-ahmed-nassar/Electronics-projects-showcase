@@ -96,8 +96,7 @@ const ProfileSettingsPage = () => {
         throw new Error(error.error || "Failed to update profile");
       }
 
-      const result = await response.json();
-      console.log("Profile updated:", result);
+      // const result = await response.json();
       toast.success("Profile updated successfully");
 
       // Refresh user data in auth context

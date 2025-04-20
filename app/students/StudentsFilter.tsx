@@ -221,28 +221,53 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
             filteredStudents.map((student) => (
               <div
                 key={student.id}
-                className="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:border-electric-blue"
+                className="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:border-electric-blue hover:shadow-lg"
               >
-                <div className="p-5 flex flex-col sm:flex-row gap-5">
-                  {/* Student Image */}
-                  <div className="flex-shrink-0">
+                <div className="p-5 flex flex-col sm:flex-row gap-5 relative">
+                  {/* Student Image - Make clickable */}
+                  <Link
+                    href={`/students/${student.id}`}
+                    className="flex-shrink-0 relative group"
+                  >
                     <Image
                       src={student.image}
                       alt={`${student.name}`}
-                      className="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px] rounded-full border-2 border-mint-green object-cover"
+                      className="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px] rounded-full border-2 border-mint-green object-cover transition-all group-hover:border-[3px]"
                       width={150}
                       height={150}
                     />
-                  </div>
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-white text-sm font-medium">
+                        View Profile
+                      </span>
+                    </div>
+                  </Link>
 
                   {/* Student Basic Info */}
                   <div className="flex-1">
                     <div className="inline-block py-1 px-2 mb-2 bg-mint-green/10 text-mint-green text-sm rounded">
                       {student.level}
                     </div>
-                    <h3 className="text-2xl mt-0 mb-1 text-white">
-                      {student.name}
-                    </h3>
+
+                    {/* Make name clickable with icon indicator */}
+                    <Link href={`/students/${student.id}`} className="group">
+                      <h3 className="text-2xl mt-0 mb-1 text-white group-hover:text-electric-blue transition-colors flex items-center">
+                        {student.name}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5 ml-2 text-electric-blue opacity-0 group-hover:opacity-100 transition-opacity"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </h3>
+                    </Link>
+
                     <p className="text-electric-blue mb-2">
                       {student.specialization}
                     </p>
@@ -282,9 +307,23 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
 
                       <Link
                         href={`/students/${student.id}`}
-                        className="py-2 px-4 bg-mint-green text-black border border-mint-green rounded text-sm cursor-pointer transition-all hover:bg-mint-green/90"
+                        className="py-2 px-4 bg-mint-green text-black border border-mint-green rounded text-sm cursor-pointer transition-all hover:bg-mint-green/90 flex items-center"
                       >
                         View Full Profile
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 ml-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          />
+                        </svg>
                       </Link>
                     </div>
                   </div>
@@ -297,13 +336,32 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
                     <div className="space-y-4">
                       {student.projects.length > 0 ? (
                         student.projects.map((project, index) => (
-                          <div
+                          <Link
+                            href={`/projects/${encodeURIComponent(
+                              project.title
+                            )}`}
                             key={index}
-                            className="p-4 bg-white/5 rounded border border-electric-blue/10"
+                            className="block p-4 bg-white/5 rounded border border-electric-blue/10 transition-all hover:bg-electric-blue/10 hover:border-electric-blue hover:shadow-md"
                           >
                             <div className="flex justify-between items-start">
-                              <h5 className="text-white text-lg m-0">
+                              <h5 className="text-white text-lg m-0 flex items-center">
                                 {project.title}
+                                <span className="ml-2 text-electric-blue text-sm">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 inline"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                    />
+                                  </svg>
+                                </span>
                               </h5>
                               <span className="text-xs bg-mint-green/10 text-mint-green px-2 py-1 rounded">
                                 {project.role}
@@ -312,7 +370,7 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
                             <p className="text-sm text-white/80 mt-2">
                               {project.description}
                             </p>
-                          </div>
+                          </Link>
                         ))
                       ) : (
                         <div className="text-center py-4 text-white/60">

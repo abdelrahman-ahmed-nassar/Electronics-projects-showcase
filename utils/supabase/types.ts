@@ -89,7 +89,7 @@ export type Database = {
           createdAt: string; // timestamp
           name: string | null;
           description: string | null;
-          achievements: string[] | null; // array (corrected spelling from "achivements")
+          achievements: string | null; // array (corrected spelling from "achivements")
           specialty: string | null;
           image: string | null;
           isFeatured: boolean | null; // bool
@@ -99,7 +99,7 @@ export type Database = {
           createdAt?: string;
           name?: string | null;
           description?: string | null;
-          achievements?: string[] | null;
+          achievements?: string | null;
           specialty?: string | null;
           image?: string | null;
           isFeatured?: boolean | null;
@@ -109,7 +109,7 @@ export type Database = {
           createdAt?: string;
           name?: string | null;
           description?: string | null;
-          achievements?: string[] | null;
+          achievements?: string | null;
           specialty?: string | null;
           image?: string | null;
           isFeatured?: boolean | null;

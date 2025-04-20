@@ -1,10 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { getProfileById } from "@/utils/supabase/data-services";
+import { getProfileById, getTeamById } from "@/utils/supabase/data-services";
 import { TeamInterface } from "@/app/Types";
-
-
 
 // Define a team type with members for the UI
 interface TeamWithMembers extends TeamInterface {
@@ -28,25 +26,29 @@ export default async function ProjectPage({
 
     // Parse skills from string to array if it exists
     const studentSkills = student.skills
-      ? (JSON.parse(student.skills as string) as string[])
+      ? typeof student.skills === "string"
+        ? student.skills.split(",").map((skill) => skill.trim())
+        : []
       : [];
 
-    // For demo purposes, creating a mock teams array (since UserInterface only has a single team reference)
-    // In a real implementation, you would fetch the student's teams from the database
-    const studentTeams: TeamWithMembers[] = student.team
-      ? [
-          {
-            id: student.team,
-            name: "Student Team",
-            createdAt: new Date().toISOString(),
-            description: null,
-            achievements: null,
-            specialty: null,
-            image: null,
+    // Get team data if the student is a member of a team
+    let studentTeam: TeamWithMembers | null = null;
+    if (student.team) {
+      try {
+        const team = await getTeamById(student.team);
+        if (team) {
+          studentTeam = {
+            ...team,
             members: [{ name: student.name || "Unknown", id: student.id }],
-          },
-        ]
-      : [];
+          };
+        }
+      } catch (error) {
+        console.error("Error fetching team data:", error);
+      }
+    }
+
+    // Create teams array for display
+    const studentTeams: TeamWithMembers[] = studentTeam ? [studentTeam] : [];
 
     return (
       <div className="bg-navy text-white min-h-screen font-sans">

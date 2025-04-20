@@ -22,11 +22,11 @@ const Header = ({ children }) => {
         <nav className="hidden lg:flex items-center">
           <ul className="flex gap-5 list-none p-0 m-0">
             <NavItem href="/" label="Home" />
-            <NavItem href="projects" label="Projects" />
-            <NavItem href="students" label="Students" />
-            <NavItem href="teams" label="Teams" />
-            <NavItem href="about" label="About" />
-            <NavItem href="contact" label="Contact" />
+            <NavItem href="/projects" label="Projects" />
+            <NavItem href="/students" label="Students" />
+            <NavItem href="/teams" label="Teams" />
+            <NavItem href="/about" label="About" />
+            <NavItem href="/contact" label="Contact" />
           </ul>
           <DesktopLoginMenu />
         </nav>

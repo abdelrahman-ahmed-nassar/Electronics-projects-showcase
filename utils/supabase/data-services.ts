@@ -140,13 +140,25 @@ export async function getAllTeams(): Promise<TeamInterface[]> {
   }
 
   // Transform data to match TeamInterface
-  return (data || []).map((team: TeamRow) => ({
-    ...team,
-    // In the types.ts, achievements is string[] but in Types.ts it's string | null
-    achievements: Array.isArray(team.achievements)
-      ? team.achievements.join(", ")
-      : null,
-  }));
+  return (data || []).map((team: TeamRow) => {
+    // Process achievements based on the TeamInterface type (string | null)
+    let achievements: string | null = null;
+
+    if (team.achievements) {
+      // If achievements is an array, join it to create a string
+      if (Array.isArray(team.achievements)) {
+        achievements = team.achievements.join(", ");
+      } else {
+        // If it's already a string, use it as is
+        achievements = team.achievements as string;
+      }
+    }
+
+    return {
+      ...team,
+      achievements,
+    };
+  });
 }
 
 /**

@@ -14,7 +14,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-
   try {
     const rawData = await request.json();
 
@@ -35,10 +34,10 @@ export async function POST(request: Request) {
       period: rawData.period || null,
       link: rawData.link || null,
       teamId: rawData.teamId ? parseInt(rawData.teamId, 10) : null,
+      isFeatured: rawData.isFeatured || false, // Add the missing isFeatured property
       // Optional: Add user_id if linking projects to users
       // user_id: user.id, // You can now reliably add the user ID
     };
-
 
     if (!projectData.title || !projectData.description) {
       return NextResponse.json(
