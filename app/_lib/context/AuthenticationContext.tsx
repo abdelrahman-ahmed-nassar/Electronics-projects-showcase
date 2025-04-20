@@ -50,7 +50,7 @@ export const AuthenticationProvider: React.FC<{
           const cookieOptions = {
             expires: 7,
             sameSite: "strict" as const,
-            secure: window.location.protocol === "https:",
+            secure: window?.location.protocol === "https:",
           };
           Cookies.set("isAuthenticated", "true", cookieOptions);
           // Ensure all user profile fields are included in the cookie
@@ -123,7 +123,7 @@ export const AuthenticationProvider: React.FC<{
         const cookieOptions = {
           expires: 7,
           sameSite: "strict" as const,
-          secure: window.location.protocol === "https:",
+          secure: window?.location.protocol === "https:",
         };
 
         Cookies.set("isAuthenticated", "true", cookieOptions);
@@ -167,7 +167,7 @@ export const AuthenticationProvider: React.FC<{
           const cookieOptions = {
             expires: 7,
             sameSite: "strict" as const,
-            secure: window.location.protocol === "https:",
+            secure: window?.location.protocol === "https:",
           };
 
           Cookies.set("user", JSON.stringify(updatedUser), cookieOptions);
@@ -195,7 +195,7 @@ export const AuthenticationProvider: React.FC<{
         const cookieOptions = {
           expires: 7,
           sameSite: "strict" as const,
-          secure: window.location.protocol === "https:",
+          secure: window?.location.protocol === "https:",
         };
 
         // Ensure all user profile fields are included in the cookie when refreshing

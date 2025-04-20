@@ -10,6 +10,9 @@ const HeroSection = () => {
   const particlesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined') return;
+
     // Trigger animations after component mounts
     setTimeout(() => setAnimateCircuit(true), 300);
     setTimeout(() => setIsVisible(true), 500);
@@ -33,9 +36,10 @@ const HeroSection = () => {
 
   // Create electronic particles animation
   const createParticles = () => {
-    const container = particlesRef.current;
-    if (!container) return;
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || !particlesRef.current) return;
 
+    const container = particlesRef.current;
     // Clear existing particles
     container.innerHTML = "";
 
@@ -74,6 +78,11 @@ const HeroSection = () => {
 
   // Calculate parallax effect based on mouse position
   const getParallaxStyle = (intensity: number) => {
+    // Check if we're in a browser environment
+    if (typeof window === "undefined") {
+      return {}; // Return empty object if not in browser
+    }
+
     const maxMove = 20 * intensity;
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
