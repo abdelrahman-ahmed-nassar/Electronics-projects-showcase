@@ -169,16 +169,32 @@ const UpdateProjectsPage = () => {
     try {
       setIsLoading((prev) => ({ ...prev, updateProject: true }));
 
-      const response = await fetch(`/api/projects/${selectedProject.id}`, {
+      // First, format the data properly for the API
+      const projectUpdateData = {
+        ...formData,
+        teamId: formData.teamId || null,
+        // Ensure tags is an array
+        tags: Array.isArray(formData.tags) ? formData.tags : [],
+      };
+
+      // Convert the project ID to a string to ensure proper URL formatting
+      const projectId = selectedProject.id.toString();
+
+      const response = await fetch(`/api/projects/${projectId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(projectUpdateData),
       });
 
+   
       if (!response.ok) {
-        throw new Error(`Failed to update project: ${response.status}`);
+        const errorData = await response.json().catch(() => null);
+        console.error("Update error response:", errorData);
+        const errorMessage =
+          errorData?.message || `Failed to update project: ${response.status}`;
+        throw new Error(errorMessage);
       }
 
       const updatedProject = await response.json();
@@ -211,12 +227,21 @@ const UpdateProjectsPage = () => {
     try {
       setIsLoading((prev) => ({ ...prev, deleteProject: true }));
 
-      const response = await fetch(`/api/projects/${selectedProject.id}`, {
+      // Convert the project ID to a string to ensure proper URL formatting
+      const projectId = selectedProject.id.toString();
+
+
+      const response = await fetch(`/api/projects/${projectId}`, {
         method: "DELETE",
       });
 
+
       if (!response.ok) {
-        throw new Error(`Failed to delete project: ${response.status}`);
+        const errorData = await response.json().catch(() => null);
+        console.error("Delete error response:", errorData);
+        throw new Error(
+          errorData?.message || `Failed to delete project: ${response.status}`
+        );
       }
 
       // Remove the project from the list
