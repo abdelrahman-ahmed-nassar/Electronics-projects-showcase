@@ -49,10 +49,13 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
       Boolean
     );
 
-    // Extract unique skills (already as array)
-    const allSkills = initialStudents.flatMap(
-      (student) => student.skills || []
-    );
+    // Extract unique skills (as comma-separated string)
+    const allSkills = initialStudents.flatMap((student) => {
+      // Split skills by commas and trim each value
+      return student.skills
+        ? student.skills.split(",").map((s) => s.trim())
+        : [];
+    });
     const skills = Array.from(new Set(allSkills)).filter(Boolean);
 
     setAvailableFilters({
@@ -89,9 +92,9 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
       student.name.toLowerCase().includes(searchTermLower) ||
       studentSpecializations.some((spec) => spec.includes(searchTermLower)) ||
       student.team.toLowerCase().includes(searchTermLower) ||
-      student.skills.split(",").some((skill) =>
-        skill.toLowerCase().includes(searchTermLower)
-      );
+      student.skills
+        .split(",")
+        .some((skill) => skill.toLowerCase().includes(searchTermLower));
 
     // Filter matching
     let matchesFilter = activeFilter === "All";
@@ -107,9 +110,11 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
           );
           break;
         case "Skill":
-          matchesFilter = student.skills.split(",").some(
-            (skill) => skill.toLowerCase() === activeFilter.toLowerCase()
-          );
+          matchesFilter = student.skills
+            .split(",")
+            .some(
+              (skill) => skill.toLowerCase() === activeFilter.toLowerCase()
+            );
           break;
         default:
           matchesFilter = true;
