@@ -1,23 +1,28 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/app/_lib/context/AuthenticationContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { TeamInterface } from "@/app/Types";
+import Image from "next/image";
 
 const ProfileSettingsPage = () => {
   const { user, refreshUser } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [teams, setTeams] = useState<TeamInterface[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     nationalId: "",
     about: "",
-    skills: "", // Will store as comma-separated string in the form
+    skills: "",
     specialization: "",
     role: "",
     team: "",
+    avatarImage: "",
   });
 
   useEffect(() => {
@@ -38,16 +43,21 @@ const ProfileSettingsPage = () => {
 
     // Set form data from user if available
     if (user) {
+      // Convert skills array to comma-separated string if it's an array
+      const skillsString = Array.isArray(user.skills)
+        ? user.skills.join(", ")
+        : user.skills || "";
+
       setFormData({
         name: user.name || "",
         phone: user.phone || "",
         nationalId: user.nationalId || "",
         about: user.about || "",
-        // Convert skills array to comma-separated string for the input field
-        skills: Array.isArray(user.skills) ? user.skills.join(", ") : "",
+        skills: skillsString,
         specialization: user.specialization || "",
         role: user.role || "",
         team: user.team ? String(user.team) : "",
+        avatarImage: user.avatarImage || "",
       });
     }
   }, [user]);
@@ -64,21 +74,69 @@ const ProfileSettingsPage = () => {
     }));
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Create a preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (file: File): Promise<string | null> => {
+    setUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch("/api/upload-profile-image", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const data = await response.json();
+      return data.imageUrl;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Failed to upload profile image");
+      return null;
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      // Handle image upload if there's a new image
+      let imageUrl = formData.avatarImage;
+      if (fileInputRef.current?.files?.[0]) {
+        const uploadedImageUrl = await uploadImage(
+          fileInputRef.current.files[0]
+        );
+        if (uploadedImageUrl) {
+          imageUrl = uploadedImageUrl;
+        }
+      }
+
       // Prepare data with correct types
       const profileData = {
         ...formData,
+        avatarImage: imageUrl,
         // Convert the comma-separated skills string to an array
         skills: formData.skills
-          ? formData.skills
-              .split(",")
-              .map((skill) => skill.trim())
-              .filter(Boolean)
-          : [],
+          .split(",")
+          .map((skill) => skill.trim())
+          .filter(Boolean),
         team: formData.team ? parseInt(formData.team, 10) : null,
         yearId: user?.yearId || null,
       };
@@ -96,7 +154,6 @@ const ProfileSettingsPage = () => {
         throw new Error(error.error || "Failed to update profile");
       }
 
-      // const result = await response.json();
       toast.success("Profile updated successfully");
 
       // Refresh user data in auth context
@@ -124,6 +181,61 @@ const ProfileSettingsPage = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Profile Image Upload */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Profile Image
+            </label>
+            <div className="flex items-center space-x-4">
+              <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600">
+                {previewImage || formData.avatarImage ? (
+                  <Image
+                    src={previewImage || formData.avatarImage}
+                    alt="Profile preview"
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-12 w-12"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              <div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  id="profile-image-upload"
+                />
+                <label
+                  htmlFor="profile-image-upload"
+                  className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 inline-block"
+                >
+                  {uploadingImage ? "Uploading..." : "Choose Image"}
+                </label>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  JPG, PNG or GIF. Max 5MB.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Name
@@ -203,6 +315,7 @@ const ProfileSettingsPage = () => {
               value={formData.specialization}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-dark-700 text-gray-900 dark:text-white"
+              placeholder="e.g. Web Development, Data Science"
             />
           </div>
 
@@ -242,7 +355,7 @@ const ProfileSettingsPage = () => {
           <div className="pt-4">
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || uploadingImage}
               className="px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50"
             >
               {loading ? "Updating..." : "Update Profile"}

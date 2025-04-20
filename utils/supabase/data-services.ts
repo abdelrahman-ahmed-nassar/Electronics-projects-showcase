@@ -4,6 +4,7 @@ import {
   TeamInterface,
   ProjectInterface,
   ProjectDisplayInterface,
+  StudentDisplayInterface,
 } from "@/app/Types";
 import { Database } from "@/utils/supabase/types";
 
@@ -11,25 +12,7 @@ import { Database } from "@/utils/supabase/types";
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 type TeamRow = Database["public"]["Tables"]["teams"]["Row"];
 
-/**
- * Interface for student profiles displayed on the students page
- */
-interface StudentDisplayInterface {
-  id: string;
-  name: string;
-  level: string;
-  specialization: string;
-  team: string;
-  role: string;
-  bio: string;
-  skills: string[];
-  projects: {
-    title: string;
-    role: string;
-    description: string;
-  }[];
-  image: string;
-}
+
 
 /**
  * Gets the Supabase client for server-side operations
@@ -95,7 +78,6 @@ export async function getProfileById(
   // Transform data to match UserInterface
   return {
     ...data,
-    skills: Array.isArray(data.skills) ? data.skills.join(", ") : null,
     projects: projects, // Include the projects from the student's team
   };
 }
@@ -655,6 +637,7 @@ export async function getStudentsForDisplay(): Promise<
           bio: profile.about || "No bio available",
           skills: userSkills,
           projects: studentProjects.map((project) => ({
+            id: project.id,
             title: project.title || "Untitled Project",
             role: profile.role || "Contributor",
             description: project.description || "No description available",

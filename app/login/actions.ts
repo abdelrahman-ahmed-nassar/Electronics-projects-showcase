@@ -58,9 +58,6 @@ export async function login(formData: FormData) {
       } else {
         console.log("No profile found for user ID:", data.user.id);
       }
-
-      // Log the final userData being returned
-      console.log("Final userData being returned:", userData);
     }
   } catch (err) {
     console.error("Error fetching user profile:", err);

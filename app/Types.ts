@@ -18,6 +18,25 @@ export interface UserInterface {
   projects: ProjectInterface[] | null;
 }
 
+export interface StudentDisplayInterface {
+  id: string;
+  name: string;
+  level: string;
+  specialization: string;
+  team: string;
+  role: string;
+  bio: string;
+  skills: string[];
+  projects: {
+    id: number;
+    title: string;
+    role: string;
+    description: string;
+  }[];
+  image: string;
+}
+
+
 /**
  * Interface for teams
  */

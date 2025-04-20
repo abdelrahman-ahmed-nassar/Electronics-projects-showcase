@@ -4,25 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 
 // Define an interface for student data structure
-export interface StudentDisplay {
-  id: string;
-  name: string;
-  level: string;
-  specialization: string;
-  team: string;
-  role: string;
-  bio: string;
-  skills: string[];
-  projects: {
-    title: string;
-    role: string;
-    description: string;
-  }[];
-  image: string;
-}
+import { StudentDisplayInterface } from "../Types";
 
 interface StudentsFilterProps {
-  initialStudents: StudentDisplay[];
+  initialStudents: StudentDisplayInterface[];
 }
 
 // Filter categories
@@ -337,9 +322,7 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
                       {student.projects.length > 0 ? (
                         student.projects.map((project, index) => (
                           <Link
-                            href={`/projects/${encodeURIComponent(
-                              project.title
-                            )}`}
+                            href={`/projects/${project.id}`}
                             key={index}
                             className="block p-4 bg-white/5 rounded border border-electric-blue/10 transition-all hover:bg-electric-blue/10 hover:border-electric-blue hover:shadow-md"
                           >
