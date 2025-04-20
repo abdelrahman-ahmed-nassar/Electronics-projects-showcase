@@ -22,9 +22,19 @@ const NavLinks = [
     label: "Create a Project",
   },
   {
+    id: "update Projects",
+    href: "/profile/updateProjects",
+    label: "Update Projects",
+  },
+  {
     id: "teams",
     href: "/profile/teams",
     label: "Create Team",
+  },
+  {
+    id: "update team",
+    href: "/profile/updateTeam",
+    label: "Update Team",
   },
   {
     id: "update-profile",
