@@ -12,7 +12,6 @@ export async function GET() {
     // Get all teams from the database
     const teams = await getAllTeams();
 
-
     // For each team, get members and projects
     const teamsWithData = await Promise.all(
       teams.map(async (team) => {
@@ -25,8 +24,6 @@ export async function GET() {
 
           // Handle achievements - stored as comma-separated values
           let achievementsList: string[] = [];
-
-  
 
           if (team.achievements) {
             // Check if it's already an array
@@ -84,7 +81,6 @@ export async function GET() {
       })
     );
 
-
     return NextResponse.json(teamsWithData);
   } catch (error) {
     console.error("Error fetching teams:", error);
@@ -130,6 +126,7 @@ export async function POST(request: Request) {
           description: teamData.description,
           achievements: teamData.achievements || null,
           specialty: teamData.specialty || null,
+          image: teamData.image || null,
         },
       ])
       .select()

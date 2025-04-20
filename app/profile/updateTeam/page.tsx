@@ -6,7 +6,7 @@ import { useAuth } from "@/app/_lib/context/AuthenticationContext";
 import { TeamInterface, ProjectInterface } from "@/app/Types";
 import Link from "next/link";
 import Image from "next/image";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 type TeamFormData = {
@@ -356,8 +356,6 @@ const UpdateTeamPage = () => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <ToastContainer position="top-right" />
-
       <h1 className="text-3xl font-bold mb-8 text-dark-800 dark:text-white">
         Manage Your Team
       </h1>

@@ -66,7 +66,7 @@ export default function UploadTeamForm() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await fetch("/api/upload-image", {
+      const response = await fetch("/api/upload-team-image", {
         method: "POST",
         body: formData,
       });
