@@ -430,6 +430,157 @@ export async function uploadProject(
 }
 
 /**
+ * Fetches all featured projects from the database
+ */
+export async function getFeaturedProjects(): Promise<
+  ProjectDisplayInterface[]
+> {
+  try {
+    const supabase = await getSupabaseClient();
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("isFeatured", true);
+
+    if (error) {
+      throw new Error(`Error fetching featured projects: ${error.message}`);
+    }
+
+    // Use existing function to transform to display format
+    const transformedProjects = await Promise.all(
+      (data || []).map(async (project) => {
+        // Get team information if teamId exists
+        let teamInfo: {
+          name: string;
+          id: number;
+          members: {
+            name: string;
+            role: string;
+            image: string | null;
+            id: string;
+          }[];
+        } = {
+          name: "No team assigned",
+          id: project.teamId || 0,
+          members: [],
+        };
+
+        if (project.teamId) {
+          try {
+            const team = await getTeamById(project.teamId);
+            const members = await getProfilesByTeam(project.teamId);
+
+            if (team) {
+              teamInfo = {
+                name: team.name || "Team name not available",
+                id: team.id,
+                members: members.map((member) => ({
+                  name: member.name || "Unknown",
+                  role: member.role || member.specialization || "Team Member",
+                  image:
+                    member.avatarImage ||
+                    "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
+                  id: member.id || "Unknown ID",
+                })),
+              };
+            }
+          } catch (error) {
+            console.error(
+              `Error fetching team data for project ${project.id}:`,
+              error
+            );
+          }
+        }
+
+        return {
+          id: project.id,
+          title: project.title || "Untitled Project",
+          description: project.description || "No description available",
+          image:
+            project.image ||
+            "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/projects-images//default-project-image.png",
+          tags: project.tags || [],
+          dateCreated: project.created_at,
+          link: project.link || null,
+          team: teamInfo,
+        };
+      })
+    );
+
+    return transformedProjects;
+  } catch (error) {
+    console.error("Error fetching featured projects:", error);
+    return [];
+  }
+}
+
+/**
+ * Fetches all featured teams with member information
+ */
+export async function getFeaturedTeams(): Promise<{
+  teams: TeamInterface[];
+  members: Record<number, UserInterface[]>;
+  projectCounts: Record<number, number>;
+}> {
+  try {
+    const supabase = await getSupabaseClient();
+    const { data, error } = await supabase
+      .from("teams")
+      .select("*")
+      .eq("isFeatured", true);
+
+    if (error) {
+      throw new Error(`Error fetching featured teams: ${error.message}`);
+    }
+
+    // Transform data to match TeamInterface
+    const teams = (data || []).map((team: TeamRow) => {
+      let achievements: string | null = null;
+
+      if (team.achievements) {
+        if (Array.isArray(team.achievements)) {
+          achievements = team.achievements.join(", ");
+        } else {
+          achievements = team.achievements as string;
+        }
+      }
+
+      return {
+        ...team,
+        achievements,
+      };
+    });
+
+    // Get members and project counts for each team
+    const members: Record<number, UserInterface[]> = {};
+    const projectCounts: Record<number, number> = {};
+
+    await Promise.all(
+      teams.map(async (team) => {
+        try {
+          // Get team members
+          const teamMembers = await getProfilesByTeam(team.id);
+          members[team.id] = teamMembers;
+
+          // Get project count
+          const projects = await getProjectsByTeam(team.id);
+          projectCounts[team.id] = projects.length;
+        } catch (error) {
+          console.error(`Error fetching data for team ${team.id}:`, error);
+          members[team.id] = [];
+          projectCounts[team.id] = 0;
+        }
+      })
+    );
+
+    return { teams, members, projectCounts };
+  } catch (error) {
+    console.error("Error fetching featured teams:", error);
+    return { teams: [], members: {}, projectCounts: {} };
+  }
+}
+
+/**
  * STUDENT OPERATIONS
  */
 

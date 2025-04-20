@@ -1,73 +1,28 @@
-"use client"
+"use client";
 import { useState } from "react";
 import ProjectCard from "../UI/ProjectCard";
+import { ProjectDisplayInterface } from "@/app/Types";
+
 // Featured Projects Component
-const FeaturedProjects = () => {
+interface FeaturedProjectsProps {
+  projects: ProjectDisplayInterface[];
+}
+
+const FeaturedProjects = ({ projects }: FeaturedProjectsProps) => {
   const [activeFilter, setActiveFilter] = useState("All");
 
-  const filters = [
+  // Extract unique tags from all projects for filter options
+  const uniqueTags = [
     "All",
-    "Embedded Systems",
-    "Robotics",
-    "IoT",
-    "Signal Processing",
-    "Renewable Energy",
-    "Medical Devices",
-  ];
-
-  const allProjects = [
-    {
-      title: "Smart Home Energy Monitor",
-      description:
-        "A real-time power consumption analyzer with machine learning for device recognition and efficiency recommendations.",
-      tags: ["IoT", "Machine Learning", "PCB Design"],
-      category: "IoT",
-    },
-    {
-      title: "Biomedical Signal Processor",
-      description:
-        "A wearable ECG monitor with advanced filtering algorithms and wireless data transmission to medical professionals.",
-      tags: ["Medical Devices", "Signal Processing", "Embedded Systems"],
-      category: "Medical Devices",
-    },
-    {
-      title: "Autonomous Drone Navigation",
-      description:
-        "A vision-based navigation system for drones with obstacle avoidance and path planning algorithms.",
-      tags: ["Computer Vision", "Robotics", "Control Systems"],
-      category: "Robotics",
-    },
-    {
-      title: "Solar Power Optimizer",
-      description:
-        "A smart solar panel controller that maximizes energy output based on environmental conditions.",
-      tags: ["Renewable Energy", "Power Electronics", "IoT"],
-      category: "Renewable Energy",
-    },
-    {
-      title: "Audio Spectrum Analyzer",
-      description:
-        "A high-precision audio processing system with real-time visualization and frequency analysis.",
-      tags: ["Signal Processing", "Digital Filters", "Audio Systems"],
-      category: "Signal Processing",
-    },
-    {
-      title: "Smart Irrigation Controller",
-      description:
-        "An automated irrigation system that uses soil sensors and weather data to optimize water usage.",
-      tags: ["Embedded Systems", "IoT", "Sensor Networks"],
-      category: "Embedded Systems",
-    },
+    ...new Set(projects.flatMap((project) => project.tags || [])),
   ];
 
   // Filter projects based on the active filter
   const filteredProjects =
     activeFilter === "All"
-      ? allProjects
-      : allProjects.filter(
-          (project) =>
-            project.category === activeFilter ||
-            project.tags.includes(activeFilter)
+      ? projects
+      : projects.filter(
+          (project) => project.tags && project.tags.includes(activeFilter)
         );
 
   return (
@@ -78,7 +33,7 @@ const FeaturedProjects = () => {
 
       {/* Project Filters */}
       <div className="flex flex-wrap justify-center gap-2.5 mb-8 max-w-6xl mx-auto">
-        {filters.map((filter) => (
+        {uniqueTags.map((filter) => (
           <button
             key={filter}
             className={`py-2 px-4 bg-transparent border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10 ${
@@ -94,8 +49,8 @@ const FeaturedProjects = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {filteredProjects.map((project, index) => (
-          <ProjectCard key={index} project={project} />
+        {filteredProjects.map((project) => (
+          <ProjectCard key={project.id} project={project} />
         ))}
       </div>
     </section>
