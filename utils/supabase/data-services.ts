@@ -12,6 +12,26 @@ type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 type TeamRow = Database["public"]["Tables"]["teams"]["Row"];
 
 /**
+ * Interface for student profiles displayed on the students page
+ */
+interface StudentDisplayInterface {
+  id: string;
+  name: string;
+  level: string;
+  specialization: string;
+  team: string;
+  role: string;
+  bio: string;
+  skills: string[];
+  projects: {
+    title: string;
+    role: string;
+    description: string;
+  }[];
+  image: string;
+}
+
+/**
  * Gets the Supabase client for server-side operations
  */
 async function getSupabaseClient() {
@@ -61,11 +81,22 @@ export async function getProfileById(
 
   if (!data) return null;
 
+  // Get projects related to the student's team
+  let projects: ProjectInterface[] = [];
+  if (data.team) {
+    try {
+      projects = await getProjectsByTeam(data.team);
+    } catch (error) {
+      console.error(`Error fetching team projects: ${error}`);
+      // Continue with empty projects if there's an error
+    }
+  }
+
   // Transform data to match UserInterface
   return {
     ...data,
     skills: Array.isArray(data.skills) ? data.skills.join(", ") : null,
-    projects: null, // Initialize projects as null
+    projects: projects, // Include the projects from the student's team
   };
 }
 
@@ -384,6 +415,98 @@ export async function uploadProject(
   }
 
   return data;
+}
+
+/**
+ * STUDENT OPERATIONS
+ */
+
+/**
+ * Fetches all student profiles with a specialized format for the students page
+ */
+export async function getStudentsForDisplay(): Promise<
+  StudentDisplayInterface[]
+> {
+  try {
+    // Get all profiles directly from the database to preserve skills array format
+    const supabase = await getSupabaseClient();
+    const { data: profilesData, error } = await supabase
+      .from("profiles")
+      .select("*");
+
+    if (error) {
+      throw new Error(`Error fetching profiles: ${error.message}`);
+    }
+
+    // Get all projects to associate with students
+    const allProjects = await getAllProjects();
+
+    // Get all teams to get team names
+    const allTeams = await getAllTeams();
+
+    // Transform profiles into the student display format
+    const students = await Promise.all(
+      (profilesData || []).map(async (profile: ProfileRow) => {
+        // Find team info
+        const teamInfo = profile.team
+          ? allTeams.find((team) => team.id === profile.team)
+          : null;
+
+        // Find projects associated with the student's team
+        const studentProjects = profile.team
+          ? allProjects.filter((project) => project.teamId === profile.team)
+          : [];
+
+        // Handle skills array correctly
+        let userSkills: string[] = [];
+
+        if (profile.skills) {
+          // If skills is already an array in the database
+          if (Array.isArray(profile.skills)) {
+            userSkills = profile.skills;
+          }
+          // Handle string case (though this shouldn't happen with proper types)
+          else if (typeof profile.skills === "string") {
+            // Type assertion to help TypeScript understand this is a string
+            const skillsString = profile.skills as string;
+            userSkills = skillsString
+              .split(",")
+              .map((skill: string) => skill.trim())
+              .filter(Boolean);
+          }
+        }
+
+        // Set a default skill if no skills are found
+        if (userSkills.length === 0) {
+          userSkills = ["General Electronics"];
+        }
+
+        // Transform to format expected by the student page
+        return {
+          id: profile.id,
+          name: profile.name || "Unknown Student",
+          level: profile.isGraduated ? "Graduate" : "Undergraduate",
+          specialization: profile.specialization || "General Electronics",
+          team: teamInfo?.name || "Independent",
+          role: profile.role || "Team Member",
+          bio: profile.about || "No bio available",
+          skills: userSkills,
+          projects: studentProjects.map((project) => ({
+            title: project.title || "Untitled Project",
+            role: profile.role || "Contributor",
+            description: project.description || "No description available",
+          })),
+          image:
+            profile.avatarImage || "/images/default-user-profile-image.svg",
+        };
+      })
+    );
+
+    return students;
+  } catch (error) {
+    console.error("Error fetching students for display:", error);
+    return [];
+  }
 }
 
 /**

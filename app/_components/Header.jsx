@@ -3,14 +3,19 @@ import React from "react";
 import Image from "next/image";
 import MobileNav from "@/app/_components/layout/MobileNav";
 import DesktopLoginMenu from "./layout/DesktopLoginMenu";
-import logoImage from "@/public/images/logo.png"
+import logoImage from "@/public/images/logo.png";
 // Header Component with Navigation
 const Header = ({ children }) => {
   return (
     <div className="font-sans m-0 p-0 bg-navy text-white">
       <header className="flex justify-between items-center p-5 border-b border-electric-blue relative z-50">
         <div className="flex items-center gap-4 md:gap-8">
-          <Image src={logoImage} className="w-16  md:w-20" alt="logo"/>
+          <Link
+            href="/"
+            className="text-white no-underline text-base relative hover:text-mint-green after:content-[''] after:absolute after:w-0 after:h-0.5 after:-bottom-1.5 after:left-0 after:bg-mint-green after:transition-all hover:after:w-full"
+          >
+            <Image src={logoImage} className="w-16  md:w-20" alt="logo" />
+          </Link>
         </div>
 
         {/* Desktop Navigation */}

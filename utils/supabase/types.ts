@@ -56,6 +56,7 @@ export type Database = {
           period: string | null;
           link: string | null;
           teamId: number | null; // int8
+          isFeatured: boolean | null; // bool
         };
         Insert: {
           id?: number;
@@ -67,6 +68,7 @@ export type Database = {
           period?: string | null;
           link?: string | null;
           teamId?: number | null;
+          isFeatured?: boolean | null;
         };
         Update: {
           id?: number;
@@ -78,6 +80,7 @@ export type Database = {
           period?: string | null;
           link?: string | null;
           teamId?: number | null;
+          isFeatured?: boolean | null;
         };
       };
       teams: {
@@ -89,6 +92,7 @@ export type Database = {
           achievements: string[] | null; // array (corrected spelling from "achivements")
           specialty: string | null;
           image: string | null;
+          isFeatured: boolean | null; // bool
         };
         Insert: {
           id?: number;
@@ -98,6 +102,7 @@ export type Database = {
           achievements?: string[] | null;
           specialty?: string | null;
           image?: string | null;
+          isFeatured?: boolean | null;
         };
         Update: {
           id?: number;
@@ -107,6 +112,7 @@ export type Database = {
           achievements?: string[] | null;
           specialty?: string | null;
           image?: string | null;
+          isFeatured?: boolean | null;
         };
       };
     };
