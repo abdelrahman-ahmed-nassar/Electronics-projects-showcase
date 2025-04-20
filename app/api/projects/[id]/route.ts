@@ -5,10 +5,10 @@ import { ProjectInterface } from "@/app/Types";
 // This handler will handle PUT and DELETE requests for a specific project
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   // Get the project ID from the URL params
-  const projectId = params.id;
+  const projectId = (await params).id;
 
   if (!projectId) {
     return NextResponse.json(
@@ -100,10 +100,10 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   // Get the project ID from the URL params
-  const projectId = params.id;
+  const projectId = (await params).id;
 
   if (!projectId) {
     return NextResponse.json(
