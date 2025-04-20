@@ -31,6 +31,11 @@ const NavLinks = [
     href: "/profile/settings",
     label: "Update Profile",
   },
+  {
+    id: "change-password",
+    href: "/profile/changePassword",
+    label: "Change Password",
+  },
 ];
 
 const SecondaryNav = ({ children }: { children: React.ReactNode }) => {
