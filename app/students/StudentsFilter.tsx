@@ -213,11 +213,11 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
                 key={student.id}
                 className="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:border-electric-blue hover:shadow-lg"
               >
-                <div className="p-5 flex flex-col sm:flex-row gap-5 relative">
+                <div className="p-5 flex flex-col sm:flex-row gap-5 relative ">
                   {/* Student Image - Make clickable */}
                   <Link
                     href={`/students/${student.id}`}
-                    className="flex-shrink-0 relative group"
+                    className="flex-shrink-0 relative group h-fit"
                   >
                     <Image
                       src={student.image}

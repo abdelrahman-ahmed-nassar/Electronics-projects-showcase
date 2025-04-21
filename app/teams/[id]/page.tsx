@@ -5,7 +5,6 @@ import { getCompleteTeamData } from "@/utils/supabase/data-services";
 import { UserInterface, ProjectInterface } from "@/app/Types";
 import CircuitBackground from "@/app/_components/UI/CircuitBackground";
 
-
 // Team Profile Page
 export default async function TeamPage({
   params,
@@ -25,13 +24,6 @@ export default async function TeamPage({
     if (!team) {
       notFound();
     }
-
-    // Parse achievements from string to array if needed
-    const achievements = team.achievements
-      ? typeof team.achievements === "string"
-        ? team.achievements.split(",").map((a) => a.trim())
-        : []
-      : [];
 
     return (
       <div className="bg-navy text-white min-h-screen font-sans relative">
@@ -147,29 +139,31 @@ export default async function TeamPage({
                   Achievements
                 </h2>
                 <div className="bg-white/5 border border-electric-blue/20 rounded-lg p-6">
-                  {achievements.length > 0 ? (
+                  {team?.achievements ? (
                     <ul className="space-y-3">
-                      {achievements.map((achievement, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                          <span className="text-mint-green mt-1">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                          </span>
-                          <span className="text-white/90">{achievement}</span>
-                        </li>
-                      ))}
+                      {team.achievements
+                        ?.split(",")
+                        .map((achievement, index) => (
+                          <li key={index} className="flex items-start gap-3">
+                            <span className="text-mint-green mt-1">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                            </span>
+                            <span className="text-white/90">{achievement}</span>
+                          </li>
+                        ))}
                     </ul>
                   ) : (
                     <p className="text-white/70 text-center py-4">
@@ -367,7 +361,9 @@ export default async function TeamPage({
                     </div>
                     <div className="py-3 flex justify-between">
                       <span className="text-white/70">Achievements</span>
-                      <span className="text-white">{achievements.length}</span>
+                      <span className="text-white">
+                        {team?.achievements?.split(",").length || 0} 
+                      </span>
                     </div>
                   </div>
                 </div>

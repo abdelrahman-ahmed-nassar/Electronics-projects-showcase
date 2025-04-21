@@ -10,9 +10,6 @@ import { Database } from "@/utils/supabase/types";
 
 // Define types for database row shapes
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
-type TeamRow = Database["public"]["Tables"]["teams"]["Row"];
-
-
 
 /**
  * Gets the Supabase client for server-side operations
@@ -39,8 +36,6 @@ export async function getAllProfiles(): Promise<UserInterface[]> {
   // Transform data to match UserInterface
   return (data || []).map((profile: ProfileRow) => ({
     ...profile,
-    // In the types.ts, skills is string[] but in Types.ts it's string | null
-    skills: Array.isArray(profile.skills) ? profile.skills.join(", ") : null,
     projects: null, // Initialize projects as null
   }));
 }
@@ -101,7 +96,6 @@ export async function getProfilesByTeam(
   // Transform data to match UserInterface
   return (data || []).map((profile: ProfileRow) => ({
     ...profile,
-    skills: Array.isArray(profile.skills) ? profile.skills.join(", ") : null,
     projects: null, // Initialize projects as null
   }));
 }
@@ -121,26 +115,7 @@ export async function getAllTeams(): Promise<TeamInterface[]> {
     throw new Error(`Error fetching teams: ${error.message}`);
   }
 
-  // Transform data to match TeamInterface
-  return (data || []).map((team: TeamRow) => {
-    // Process achievements based on the TeamInterface type (string | null)
-    let achievements: string | null = null;
-
-    if (team.achievements) {
-      // If achievements is an array, join it to create a string
-      if (Array.isArray(team.achievements)) {
-        achievements = team.achievements.join(", ");
-      } else {
-        // If it's already a string, use it as is
-        achievements = team.achievements as string;
-      }
-    }
-
-    return {
-      ...team,
-      achievements,
-    };
-  });
+  return data || [];
 }
 
 /**
@@ -163,9 +138,6 @@ export async function getTeamById(id: number): Promise<TeamInterface | null> {
   // Transform data to match TeamInterface
   return {
     ...data,
-    achievements: Array.isArray(data.achievements)
-      ? data.achievements.join(", ")
-      : null,
   };
 }
 
@@ -519,22 +491,7 @@ export async function getFeaturedTeams(): Promise<{
     }
 
     // Transform data to match TeamInterface
-    const teams = (data || []).map((team: TeamRow) => {
-      let achievements: string | null = null;
-
-      if (team.achievements) {
-        if (Array.isArray(team.achievements)) {
-          achievements = team.achievements.join(", ");
-        } else {
-          achievements = team.achievements as string;
-        }
-      }
-
-      return {
-        ...team,
-        achievements,
-      };
-    });
+    const teams = data || [];
 
     // Get members and project counts for each team
     const members: Record<number, UserInterface[]> = {};
@@ -605,9 +562,6 @@ export async function getStudentsForDisplay(): Promise<
           ? allProjects.filter((project) => project.teamId === profile.team)
           : [];
 
-    
-
-    
         // Transform to format expected by the student page
         return {
           id: profile.id,
@@ -617,7 +571,7 @@ export async function getStudentsForDisplay(): Promise<
           team: teamInfo?.name || "Independent",
           role: profile.role || "Team Member",
           bio: profile.about || "No bio available",
-          skills: profile.skills || "", // Join the skills array into a comma-separated string
+          skills: profile.skills || "",
           projects: studentProjects.map((project) => ({
             id: project.id,
             title: project.title || "Untitled Project",

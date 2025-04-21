@@ -225,10 +225,10 @@ const TeamsSection: React.FC<TeamsSectionProps> = ({
           {teams.length > 0 ? (
             teams.map((team: Team) => (
               <div
-          key={team.id}
-          className="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:border-electric-blue"
+                key={team.id}
+                className="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:border-electric-blue"
               >
-          {/* Team Header */}
+                {/* Team Header */}
                 <div className="relative h-[200px] overflow-hidden">
                   <Image
                     src={team.image}
@@ -351,12 +351,12 @@ const TeamsSection: React.FC<TeamsSectionProps> = ({
                       <h4 className="text-lg text-mint-green mb-4">
                         Team Members
                       </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      <div className="flex flex-col gap-3">
                         {team.members.map(
                           (member: TeamMember, index: number) => (
                             <div
                               key={index}
-                              className="flex items-center gap-3 p-3 bg-white/5 rounded"
+                              className="flex items-center gap-3 p-3 bg-white/5 rounded w-fit"
                             >
                               <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                                 <Image
@@ -373,9 +373,6 @@ const TeamsSection: React.FC<TeamsSectionProps> = ({
                                 </div>
                                 <div className="text-electric-blue text-sm">
                                   {member.role}
-                                </div>
-                                <div className="text-white/60 text-xs">
-                                  {member.bio}
                                 </div>
                               </div>
                             </div>

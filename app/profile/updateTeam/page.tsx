@@ -287,17 +287,8 @@ const UpdateTeamPage = () => {
     try {
       setIsLoading((prev) => ({ ...prev, updateTeam: true }));
 
-      // Convert achievements string to array if needed for API
-      const achievementsArray = formData.achievements
-        ? formData.achievements
-            .split(",")
-            .map((item) => item.trim())
-            .filter((item) => item)
-        : [];
-
       const teamUpdateData = {
         ...formData,
-        achievements: achievementsArray,
       };
 
       const response = await fetch(`/api/teams/${teamData.id}`, {

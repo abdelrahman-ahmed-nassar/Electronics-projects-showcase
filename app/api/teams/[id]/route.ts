@@ -27,37 +27,14 @@ export async function GET(
     // Get team members
     const members = await getProfilesByTeam(parseInt(teamId));
 
-    // Process team data for frontend
-    let achievementsList: string[] = [];
-    if (team.achievements) {
-      // Check if it's already an array
-      if (Array.isArray(team.achievements)) {
-        achievementsList = team.achievements;
-      }
-      // Handle string format
-      else if (typeof team.achievements === "string") {
-        // Split by commas and trim each value
-        achievementsList = team.achievements
-          .split(",")
-          .map((a) => a.trim())
-          .filter((a) => a.length > 0);
-      }
-    }
-
-    // Ensure there's at least one achievement for display purposes
-    if (achievementsList.length === 0) {
-      achievementsList = [
-        "Established research team in electronics engineering",
-      ];
-    }
-
     // Format the response
     const response = {
       team: {
         ...team,
-        achievements: achievementsList,
-        image: team.image || "/images/default-team-image.png",
-        specialty: team.specialty || "Electronics Research",
+        image:
+          team.image ||
+          "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/teams-images//default-team-image.png",
+        specialty: team.specialty || "Unspecified",
       },
       members: members || [],
     };
