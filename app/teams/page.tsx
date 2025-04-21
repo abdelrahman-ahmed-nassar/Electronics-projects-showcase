@@ -221,14 +221,14 @@ const TeamsSection: React.FC<TeamsSectionProps> = ({
         </div>
 
         {/* Teams List */}
-        <div className="space-y-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {teams.length > 0 ? (
             teams.map((team: Team) => (
               <div
-                key={team.id}
-                className="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:border-electric-blue"
+          key={team.id}
+          className="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:border-electric-blue"
               >
-                {/* Team Header */}
+          {/* Team Header */}
                 <div className="relative h-[200px] overflow-hidden">
                   <Image
                     src={team.image}
