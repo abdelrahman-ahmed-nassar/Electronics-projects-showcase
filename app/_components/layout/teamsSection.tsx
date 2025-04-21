@@ -14,7 +14,7 @@ const TeamsSection = ({ teams, members, projectCounts }: TeamsSectionProps) => {
       <h2 className="text-3xl text-center mb-10 text-mint-green">
         Meet Our Teams
       </h2>
-      <div className="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {teams.map((team) => {
           const teamMembers = members[team.id] || [];
           const formattedMembers = teamMembers.map((member) => ({
