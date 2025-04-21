@@ -203,11 +203,11 @@ export default async function ProjectPage({
                   Project Resources
                 </h2>
                 <div className="bg-white/5 border border-electric-blue/20 rounded-lg p-6">
-                  <a
+                  <Link
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-electric-blue hover:text-mint-green transition-colors"
+                    className="flex items-center text-xl gap-2 text-electric-blue hover:text-mint-green transition-colors"
                   >
                     <svg
                       className="w-5 h-5"
@@ -223,8 +223,9 @@ export default async function ProjectPage({
                         d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                       ></path>
                     </svg>
+                    
                     View Project Resources
-                  </a>
+                  </Link>
                 </div>
               </div>
             )}
@@ -304,9 +305,9 @@ export default async function ProjectPage({
                     </span>
                   </div>
                   <div className="py-3 flex justify-between">
-                    <span className="text-white/70">Date</span>
+                    <span className="text-white/70">Project Period</span>
                     <span className="text-white">
-                      {formatDate(project.dateCreated)}
+                      {project.period || "Not specified"}
                     </span>
                   </div>
                 </div>

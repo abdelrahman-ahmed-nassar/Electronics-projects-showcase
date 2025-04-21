@@ -257,6 +257,7 @@ export async function getProjectsForDisplay(): Promise<
           id: project.id,
           title: project.title || "Untitled Project",
           description: project.description || "No description available",
+          period: project.period || null,
           image:
             project.image ||
             "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/projects-images//default-team-image.png",
@@ -340,6 +341,7 @@ export async function getProjectDisplayById(
       dateCreated: project.created_at,
       link: project.link || null,
       team: teamInfo,
+      period: project.period || null,
     };
   } catch (error) {
     console.error(`Error getting project display for id ${id}:`, error);
@@ -478,6 +480,7 @@ export async function getFeaturedProjects(): Promise<
           id: project.id,
           title: project.title || "Untitled Project",
           description: project.description || "No description available",
+          period: project.period || null,
           image:
             project.image ||
             "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/projects-images//default-project-image.png",

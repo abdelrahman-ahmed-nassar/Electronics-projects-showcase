@@ -76,6 +76,7 @@ export interface ProjectDisplayInterface {
   tags: string[];
   dateCreated: string;
   link: string | null;
+  period: string | null;
   team: {
     name: string;
     id: number | null;
