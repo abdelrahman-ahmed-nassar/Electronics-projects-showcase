@@ -86,15 +86,17 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
       ? student.specialization.split(",").map((s) => s.trim().toLowerCase())
       : [];
 
+    const studentSkills = student.skills
+      ? student.skills.split(",").map((s) => s.trim().toLowerCase())
+      : [];
+
     const searchTermLower = searchTerm.toLowerCase();
 
     const matchesSearch =
       student.name.toLowerCase().includes(searchTermLower) ||
       studentSpecializations.some((spec) => spec.includes(searchTermLower)) ||
       student.team.toLowerCase().includes(searchTermLower) ||
-      student.skills
-        .split(",")
-        .some((skill) => skill.toLowerCase().includes(searchTermLower));
+      studentSkills.some((skill) => skill.includes(searchTermLower));
 
     // Filter matching
     let matchesFilter = activeFilter === "All";
@@ -110,11 +112,9 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
           );
           break;
         case "Skill":
-          matchesFilter = student.skills
-            .split(",")
-            .some(
-              (skill) => skill.toLowerCase() === activeFilter.toLowerCase()
-            );
+          matchesFilter = studentSkills.some(
+            (skill) => skill === activeFilter.toLowerCase()
+          );
           break;
         default:
           matchesFilter = true;
@@ -271,18 +271,21 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
 
                     {/* Skills */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {student.skills.split(",").map((skill, index) => (
-                        <span
-                          key={index}
-                          className="py-1 px-2 bg-electric-blue/10 rounded text-xs text-electric-blue cursor-pointer hover:bg-electric-blue/20"
-                          onClick={() => {
-                            setActiveCategory("Skill");
-                            setActiveFilter(skill);
-                          }}
-                        >
-                          {skill}
-                        </span>
-                      ))}
+                      {student.skills.split(",").map((skill, index) => {
+                        const trimmedSkill = skill.trim();
+                        return (
+                          <span
+                            key={index}
+                            className="py-1 px-2 bg-electric-blue/10 rounded text-xs text-electric-blue cursor-pointer hover:bg-electric-blue/20"
+                            onClick={() => {
+                              setActiveCategory("Skill");
+                              setActiveFilter(trimmedSkill);
+                            }}
+                          >
+                            {trimmedSkill}
+                          </span>
+                        );
+                      })}
                     </div>
 
                     <div className="flex flex-wrap gap-2">
