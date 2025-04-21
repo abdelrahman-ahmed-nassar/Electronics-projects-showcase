@@ -17,7 +17,7 @@ interface Team {
 
 const TeamCard = ({ team }: { team: Team }) => {
   return (
-    <div className="w-[280px] bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:-translate-y-1 hover:shadow-xl hover:border-electric-blue">
+    <div className=" bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:-translate-y-1 hover:shadow-xl hover:border-electric-blue">
       {/* Team Image */}
       {team.image && (
       <div className="w-full h-40 relative">

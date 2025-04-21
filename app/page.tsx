@@ -3,7 +3,7 @@ import React from "react";
 import CircuitBackground from "./_components/UI/CircuitBackground";
 import HeroSection from "./_components/layout/HeroSection";
 import FeaturedProjects from "./_components/layout/FeaturedProjects";
-import TeamsSection from "./_components/layout/teamsSection";
+import TeamsSection from "./_components/layout/FeaturedTeamsSection";
 import {
   getFeaturedProjects,
   getFeaturedTeams,
