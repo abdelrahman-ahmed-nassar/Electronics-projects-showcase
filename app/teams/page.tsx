@@ -32,6 +32,8 @@ const TeamsPage = () => {
   const [availableSpecialties, setAvailableSpecialties] = useState<string[]>([
     "All",
   ]);
+  const [sortOption, setSortOption] = useState("newest");
+  const [expandedTeam, setExpandedTeam] = useState<number | null>(null);
 
   // Fetch teams from the API
   useEffect(() => {
@@ -73,112 +75,63 @@ const TeamsPage = () => {
     fetchTeams();
   }, []);
 
-  // Filter teams based on search term and active filter
-  const filteredTeams = teams.filter((team) => {
-    const matchesSearch =
-      team.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      team.specialty?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      team.description?.toLowerCase().includes(searchTerm.toLowerCase());
+  // Filter teams based on search term, active filter, and sort option
+  const filteredTeams = React.useMemo(() => {
+    let result = [...teams];
 
-    // Handle filtering by specialty, including comma-separated values
-    const matchesFilter =
-      activeFilter === "All" ||
-      (team.specialty &&
-        team.specialty
-          .split(",")
-          .map((s) => s.trim().toLowerCase())
-          .includes(activeFilter.toLowerCase()));
+    // Apply search filter
+    if (searchTerm) {
+      const query = searchTerm.toLowerCase();
+      result = result.filter(
+        (team) =>
+          team.name?.toLowerCase().includes(query) ||
+          team.specialty?.toLowerCase().includes(query) ||
+          team.description?.toLowerCase().includes(query)
+      );
+    }
 
-    return matchesSearch && matchesFilter;
-  });
+    // Apply specialty filter
+    if (activeFilter !== "All") {
+      result = result.filter(
+        (team) =>
+          team.specialty &&
+          team.specialty
+            .split(",")
+            .map((s) => s.trim().toLowerCase())
+            .includes(activeFilter.toLowerCase())
+      );
+    }
 
-  return (
-    <>
-      <CircuitBackground />
-      <TeamHeroSection />
-      {loading ? (
-        <div className="flex justify-center items-center py-16">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-electric-blue"></div>
-        </div>
-      ) : error ? (
-        <div className="text-center py-16 text-red-500">{error}</div>
-      ) : (
-        <TeamsSection
-          teams={filteredTeams}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          activeFilter={activeFilter}
-          setActiveFilter={setActiveFilter}
-          filters={availableSpecialties}
-        />
-      )}
-    </>
-  );
-};
+    // Apply sorting
+    switch (sortOption) {
+      case "newest":
+        // Assuming teams have a creation date field, adjust as needed
+        result.sort((a, b) => b.id - a.id);
+        break;
+      case "oldest":
+        result.sort((a, b) => a.id - b.id);
+        break;
+      case "a-z":
+        result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "z-a":
+        result.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        break;
+    }
 
-// Circuit Board Background Pattern Component (reused from main App)
-const CircuitBackground = () => {
-  return (
-    <div
-      className="absolute inset-0 opacity-10 z-10"
-      style={{
-        backgroundImage:
-          "radial-gradient(#4d94ff 1px, transparent 1px), linear-gradient(to right, #4d94ff 1px, transparent 1px), linear-gradient(to bottom, #4d94ff 1px, transparent 1px)",
-        backgroundSize: "20px 20px, 40px 40px, 40px 40px",
-        backgroundPosition: "0 0, 0 0, 0 0",
-        backgroundBlendMode: "soft-light",
-        pointerEvents: "none", // Ensures the background doesn't interfere with clicks
-      }}
-    ></div>
-  );
-};
+    return result;
+  }, [teams, searchTerm, activeFilter, sortOption]);
 
-// Team Hero Section Component
-const TeamHeroSection = () => {
-  return (
-    <section className="flex flex-col justify-center items-center text-center relative overflow-hidden p-5 h-[40vh]">
-      <div
-        className="absolute inset-0 opacity-10 -z-10"
-        style={{
-          backgroundImage:
-            "radial-gradient(#4d94ff 1px, transparent 1px), linear-gradient(to right, #4d94ff 1px, transparent 1px), linear-gradient(to bottom, #4d94ff 1px, transparent 1px)",
-          backgroundSize: "20px 20px, 40px 40px, 40px 40px",
-          backgroundPosition: "0 0, 0 0, 0 0",
-          backgroundBlendMode: "soft-light",
-          pointerEvents: "none",
-        }}
-      ></div>
-      <h1 className="text-4xl md:text-5xl mb-5 text-white z-10">
-        Research Teams
-      </h1>
-      <p className="text-lg md:text-xl max-w-3xl mb-8 z-10">
-        Meet our innovative research teams working at the cutting edge of
-        electronics engineering.
-      </p>
-    </section>
-  );
-};
+  const toggleTag = (tag: string) => {
+    setActiveFilter(tag);
+  };
 
-// Define props interface for TeamsSection
-interface TeamsSectionProps {
-  teams: Team[];
-  searchTerm: string;
-  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
-  activeFilter: string;
-  setActiveFilter: React.Dispatch<React.SetStateAction<string>>;
-  filters: string[];
-}
-
-// Teams Section Component
-const TeamsSection: React.FC<TeamsSectionProps> = ({
-  teams,
-  searchTerm,
-  setSearchTerm,
-  activeFilter,
-  setActiveFilter,
-  filters,
-}) => {
-  const [expandedTeam, setExpandedTeam] = useState<number | null>(null);
+  const clearFilters = () => {
+    setActiveFilter("All");
+    setSearchTerm("");
+  };
 
   const toggleTeamDetails = (teamId: number) => {
     if (expandedTeam === teamId) {
@@ -189,245 +142,325 @@ const TeamsSection: React.FC<TeamsSectionProps> = ({
   };
 
   return (
-    <section className="py-16 px-5" id="teams">
-      <div className="max-w-6xl mx-auto">
-        {/* Search and Filter Bar */}
-        <div className="mb-10 flex flex-col md:flex-row gap-5 items-center">
-          <div className="w-full md:w-1/3">
-            <input
-              type="text"
-              placeholder="Search teams..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full p-3 bg-transparent border border-electric-blue rounded text-white focus:outline-none focus:border-mint-green"
-            />
-          </div>
-
-          <div className="flex flex-wrap gap-2 flex-1 justify-center md:justify-end">
-            {filters.map((filter: string) => (
-              <button
-                key={filter}
-                className={`py-2 px-4 bg-transparent border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10 ${
-                  activeFilter === filter
-                    ? "bg-electric-blue text-white"
-                    : "text-electric-blue"
-                }`}
-                onClick={() => setActiveFilter(filter)}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
+    <div className="font-sans bg-navy text-white min-h-screen">
+      {/* Page Banner */}
+      <section className="relative py-16 px-5 bg-white/[0.03] border-b border-electric-blue/20">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-4xl md:text-5xl mb-3 text-mint-green">
+            Research Teams
+          </h1>
+          <p className="text-lg md:text-xl max-w-3xl mb-0 text-white/80">
+            Meet our innovative research teams working at the cutting edge of
+            electronics engineering.
+          </p>
         </div>
+      </section>
 
-        {/* Teams List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {teams.length > 0 ? (
-            teams.map((team: Team) => (
-              <div
-                key={team.id}
-                className="bg-white/5 rounded-lg overflow-hidden transition-all border border-electric-blue/20 hover:border-electric-blue"
-              >
-                {/* Team Header */}
-                <div className="relative h-[200px] overflow-hidden">
-                  <Image
-                    src={team.image}
-                    alt={`${team.name} project image`}
-                    className="w-full h-full object-cover"
-                    width={1200}
-                    height={200}
+      {loading ? (
+        <div className="flex justify-center items-center py-16">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-electric-blue"></div>
+        </div>
+      ) : error ? (
+        <div className="text-center py-16 text-red-500">{error}</div>
+      ) : (
+        /* Search and Filter Section */
+        <div>
+          <section className="py-8 px-5 bg-white/[0.01] sticky top-0 z-30 backdrop-blur-sm border-b border-electric-blue/20">
+            <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 items-center justify-between">
+              {/* Search Bar */}
+              <div className="relative w-full md:w-auto flex-grow max-w-lg">
+                <input
+                  type="text"
+                  placeholder="Search teams..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full py-2 px-4 pl-10 bg-white/5 border border-electric-blue/30 rounded outline-none focus:border-electric-blue transition-all text-white"
+                />
+                <svg
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/50"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clipRule="evenodd"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                  {/* Display specialties as separate tags */}
-                  <div className="absolute bottom-0 left-0 p-5">
-                    <div className="flex flex-wrap gap-2 mb-2">
-                      {team.specialty &&
-                        team.specialty.split(",").map((specialty, index) => (
-                          <div
-                            key={index}
-                            className="inline-block py-1 px-2 bg-electric-blue/80 text-white text-sm rounded"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setActiveFilter(specialty.trim());
-                            }}
-                          >
-                            {specialty.trim()}
-                          </div>
-                        ))}
-                    </div>
-                    <h3 className="text-2xl md:text-3xl mt-0 mb-0 text-white">
-                      {team.name}
-                    </h3>
-                  </div>
-                </div>
+                </svg>
+              </div>
 
-                {/* Team Info */}
-                <div className="p-5">
-                  <p className="text-white/80 mb-4 line-clamp-4">{team.description}</p>
+              {/* Sort Dropdown */}
+              <div className="w-full md:w-auto">
+                <select
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                  className="py-2 px-4 bg-gray-900/70 border border-electric-blue/30 rounded outline-none focus:border-electric-blue focus:ring-1 focus:ring-electric-blue/50 transition-all text-white appearance-none cursor-pointer w-full md:w-auto hover:bg-gray-800/60 shadow-sm shadow-black/30"
+                >
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                  <option value="a-z">A-Z</option>
+                  <option value="z-a">Z-A</option>
+                </select>
+              </div>
+            </div>
+          </section>
 
-                  <div className="flex flex-wrap gap-x-8 gap-y-4 mb-6">
-                    {/* Team Members Preview */}
-                    <div className="flex items-center gap-2">
-                      {team.members
-                        .slice(0, 3)
-                        .map((member: TeamMember, index: number) => (
-                          <div
-                            key={index}
-                            className="w-10 h-10 rounded-full bg-[#172a45] border-2 border-mint-green overflow-hidden"
-                          >
-                            <Image
-                              src={member.image}
-                              alt={member.name}
-                              className="w-full h-full object-cover"
-                              width={40}
-                              height={40}
-                            />
-                          </div>
-                        ))}
-                      {team.members.length > 3 && (
-                        <div className="w-10 h-10 rounded-full bg-electric-blue/30 flex items-center justify-center text-sm text-white border-2 border-electric-blue">
-                          +{team.members.length - 3}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Project Count */}
-                    <div className="flex items-center text-white/70">
-                      <span className="text-mint-green font-semibold mr-2">
-                        {team.projects.length}
-                      </span>
-                      <span>Active Projects</span>
-                    </div>
-
-                    {/* Achievement Count */}
-                    <div className="flex items-center text-white/70">
-                      <span className="text-mint-green font-semibold mr-2">
-                        {team.achievements.length}
-                      </span>
-                      <span>Achievements</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-3 mb-6">
-                    {/* View details button (existing) */}
-                    <button
-                      onClick={() => toggleTeamDetails(team.id)}
-                      className="py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10"
-                    >
-                      {expandedTeam === team.id
-                        ? "Hide Details"
-                        : "View Team Details"}
-                    </button>
-
-                    {/* View Team Profile Button (new) */}
-                    <Link
-                      href={`/teams/${team.id}`}
-                      className="py-2 px-4 bg-electric-blue/20 hover:bg-electric-blue/30 text-electric-blue rounded border border-electric-blue/50 text-sm cursor-pointer transition-all flex items-center gap-1"
-                    >
-                      Visit Team Profile
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+          {/* Main Content Area */}
+          <section className="py-10 px-5">
+            <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8">
+              {/* Filters Sidebar */}
+              <div className="lg:w-1/4">
+                <div className="bg-white/5 rounded-lg p-5 sticky top-28">
+                  <div className="flex justify-between items-center mb-5">
+                    <h3 className="text-xl m-0 text-mint-green">Filters</h3>
+                    {activeFilter !== "All" && (
+                      <button
+                        onClick={clearFilters}
+                        className="text-sm text-electric-blue hover:text-mint-green"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 7l5 5m0 0l-5 5m5-5H6"
-                        />
-                      </svg>
-                    </Link>
+                        Clear All
+                      </button>
+                    )}
+                  </div>
+
+                  <div>
+                    <h4 className="text-md mb-3 text-white/80">Specialties</h4>
+                    <div className="flex flex-col gap-2">
+                      {availableSpecialties.map((specialty) => (
+                        <label
+                          key={specialty}
+                          className="flex items-center gap-2 cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={activeFilter === specialty}
+                            onChange={() => toggleTag(specialty)}
+                            className="rounded border-electric-blue/50 text-mint-green focus:ring-mint-green"
+                          />
+                          <span className="text-white/90">{specialty}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Expanded Team Details */}
-                {expandedTeam === team.id && (
-                  <div className="px-5 pb-5 pt-0 border-t border-electric-blue/20 mt-4">
-                    {/* Team Members Section */}
-                    <div className="mb-6">
-                      <h4 className="text-lg text-mint-green mb-4">
-                        Team Members
-                      </h4>
-                      <div className="flex flex-col gap-3">
-                        {team.members.map(
-                          (member: TeamMember, index: number) => (
-                            <div
-                              key={index}
-                              className="flex items-center gap-3 p-3 bg-white/5 rounded w-fit"
-                            >
-                              <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                                <Image
-                                  src={member.image}
-                                  alt={member.name}
-                                  className="w-full h-full object-cover"
-                                  width={48}
-                                  height={48}
-                                />
+              {/* Teams Grid */}
+              <div className="lg:w-3/4">
+                {filteredTeams.length > 0 ? (
+                  <>
+                    <div className="mb-5 text-white/70">
+                      Showing {filteredTeams.length} of {teams.length} teams
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {filteredTeams.map((team: Team) => (
+                        <div
+                          key={team.id}
+                          className="bg-white/5 rounded-lg overflow-hidden border border-electric-blue/20 hover:border-electric-blue transition-all"
+                        >
+                          {/* Team Header */}
+                          <div className="relative h-[200px] overflow-hidden">
+                            <Image
+                              src={team.image}
+                              alt={`${team.name} team image`}
+                              className="w-full h-full object-cover"
+                              width={1200}
+                              height={200}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                            {/* Display specialties as separate tags */}
+                            <div className="absolute bottom-0 left-0 p-5">
+                              <div className="flex flex-wrap gap-2 mb-2">
+                                {team.specialty &&
+                                  team.specialty
+                                    .split(",")
+                                    .map((specialty, index) => (
+                                      <div
+                                        key={index}
+                                        className="py-1 px-2 bg-mint-green/10 rounded text-xs text-mint-green"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          toggleTag(specialty.trim());
+                                        }}
+                                      >
+                                        {specialty.trim()}
+                                      </div>
+                                    ))}
                               </div>
-                              <div>
-                                <div className="text-white font-medium">
-                                  {member.name}
-                                </div>
-                                <div className="text-electric-blue text-sm">
-                                  {member.role}
-                                </div>
+                              <h3 className="text-xl mt-0 mb-0 text-white">
+                                {team.name}
+                              </h3>
+                            </div>
+                          </div>
+
+                          {/* Team Info */}
+                          <div className="p-5">
+                            <p className="text-white/80 mb-4 line-clamp-3">
+                              {team.description}
+                            </p>
+
+                            <div className="flex flex-wrap gap-x-8 gap-y-4 mb-6">
+                              {/* Team Members Preview */}
+                              <div className="flex -space-x-2">
+                                {team.members
+                                  .slice(0, 3)
+                                  .map((member: TeamMember, index: number) => (
+                                    <div
+                                      key={index}
+                                      className="w-8 h-8 rounded-full bg-[#172a45] border-2 border-navy overflow-hidden"
+                                    >
+                                      <Image
+                                        src={member.image}
+                                        alt={member.name}
+                                        className="w-full h-full object-cover"
+                                        width={32}
+                                        height={32}
+                                      />
+                                    </div>
+                                  ))}
+                                {team.members.length > 3 && (
+                                  <div className="w-8 h-8 rounded-full bg-electric-blue/30 flex items-center justify-center text-sm text-white border-2 border-navy">
+                                    +{team.members.length - 3}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Project Count */}
+                              <div className="flex items-center text-white/70">
+                                <span className="text-mint-green font-semibold mr-2">
+                                  {team.projects.length}
+                                </span>
+                                <span>Active Projects</span>
                               </div>
                             </div>
-                          )
-                        )}
-                      </div>
-                    </div>
 
-                    {/* Projects Section */}
-                    <div className="mb-6">
-                      <h4 className="text-lg text-mint-green mb-4">Projects</h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {team.projects.map((project: string, index: number) => (
-                          <Link
-                            href="#"
-                            key={index}
-                            className="p-3 bg-white/5 rounded border border-electric-blue/10 text-white hover:bg-electric-blue/10 transition-all"
-                          >
-                            {project}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
+                            <div className="flex flex-wrap gap-3 mb-4">
+                              {/* View details button */}
+                              <button
+                                onClick={() => toggleTeamDetails(team.id)}
+                                className="py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10"
+                              >
+                                {expandedTeam === team.id
+                                  ? "Hide Details"
+                                  : "View Team Details"}
+                              </button>
 
-                    {/* Achievements Section */}
-                    <div>
-                      <h4 className="text-lg text-mint-green mb-4">
-                        Achievements
-                      </h4>
-                      <ul className="space-y-2">
-                        {team.achievements.map(
-                          (achievement: string, index: number) => (
-                            <li
-                              key={index}
-                              className="flex items-start gap-2 text-white/80"
-                            >
-                              <span className="text-electric-blue mt-1">•</span>
-                              <span>{achievement}</span>
-                            </li>
-                          )
-                        )}
-                      </ul>
+                              {/* View Team Profile Button */}
+                              <Link
+                                href={`/teams/${team.id}`}
+                                className="py-2 px-4 bg-electric-blue text-white border-none rounded cursor-pointer transition-all hover:bg-mint-green hover:text-navy"
+                              >
+                                Visit Team Profile
+                              </Link>
+                            </div>
+                          </div>
+
+                          {/* Expanded Team Details */}
+                          {expandedTeam === team.id && (
+                            <div className="px-5 pb-5 pt-0 border-t border-electric-blue/20 mt-4">
+                              {/* Team Members Section */}
+                              <div className="mb-6">
+                                <h4 className="text-lg text-mint-green mb-4">
+                                  Team Members
+                                </h4>
+                                <div className="flex flex-col gap-3">
+                                  {team.members.map(
+                                    (member: TeamMember, index: number) => (
+                                      <div
+                                        key={index}
+                                        className="flex items-center gap-3 p-3 bg-white/5 rounded w-fit"
+                                      >
+                                        <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                                          <Image
+                                            src={member.image}
+                                            alt={member.name}
+                                            className="w-full h-full object-cover"
+                                            width={48}
+                                            height={48}
+                                          />
+                                        </div>
+                                        <div>
+                                          <div className="text-white font-medium">
+                                            {member.name}
+                                          </div>
+                                          <div className="text-electric-blue text-sm">
+                                            {member.role}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Projects Section */}
+                              <div className="mb-6">
+                                <h4 className="text-lg text-mint-green mb-4">
+                                  Projects
+                                </h4>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                  {team.projects.map(
+                                    (project: string, index: number) => (
+                                      <Link
+                                        href="#"
+                                        key={index}
+                                        className="p-3 bg-white/5 rounded border border-electric-blue/10 text-white hover:bg-electric-blue/10 transition-all"
+                                      >
+                                        {project}
+                                      </Link>
+                                    )
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Achievements Section */}
+                              <div>
+                                <h4 className="text-lg text-mint-green mb-4">
+                                  Achievements
+                                </h4>
+                                <ul className="space-y-2">
+                                  {team.achievements.map(
+                                    (achievement: string, index: number) => (
+                                      <li
+                                        key={index}
+                                        className="flex items-start gap-2 text-white/80"
+                                      >
+                                        <span className="text-electric-blue mt-1">
+                                          •
+                                        </span>
+                                        <span>{achievement}</span>
+                                      </li>
+                                    )
+                                  )}
+                                </ul>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
+                  </>
+                ) : (
+                  <div className="bg-white/5 rounded-lg p-8 text-center">
+                    <div className="text-4xl mb-4 text-white/30">🔍</div>
+                    <h3 className="text-xl mb-2 text-white">No teams found</h3>
+                    <p className="text-white/70 mb-4">
+                      Try adjusting your filters or search criteria
+                    </p>
+                    <button
+                      onClick={clearFilters}
+                      className="py-2 px-4 bg-electric-blue text-white border-none rounded cursor-pointer transition-all hover:bg-mint-green hover:text-navy"
+                    >
+                      Clear All Filters
+                    </button>
                   </div>
                 )}
               </div>
-            ))
-          ) : (
-            <div className="text-center py-10 text-white/70">
-              No teams found matching your search criteria.
             </div>
-          )}
+          </section>
         </div>
-      </div>
-    </section>
+      )}
+    </div>
   );
 };
 
