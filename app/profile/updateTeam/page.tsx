@@ -644,14 +644,14 @@ const UpdateTeamPage = () => {
                     <h4 className="font-medium text-dark-800 dark:text-white mb-2">
                       Project Link
                     </h4>
-                    <a
+                    <Link
                       href={selectedProject.link}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-electric-blue hover:underline"
                     >
                       {selectedProject.link}
-                    </a>
+                    </Link>
                   </div>
                 )}
 

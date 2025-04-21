@@ -154,7 +154,9 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
           {/* Sort Dropdown */}
           <div className="w-full md:w-auto">
             <div className="relative w-full md:w-auto">
-              <label htmlFor="sort-projects" className="sr-only">Sort projects</label>
+              <label htmlFor="sort-projects" className="sr-only">
+                Sort projects
+              </label>
               <select
                 id="sort-projects"
                 value={sortOption}
@@ -167,7 +169,11 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
                 <option value="z-a">Z-A</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-electric-blue">
-                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                 </svg>
               </div>
@@ -441,9 +447,9 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
                     </div>
                   </div>
 
-                  {activeProject.link && (
-                    <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                      <a
+                  <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                    {activeProject.link && (
+                      <Link
                         href={activeProject.link}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -465,29 +471,29 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
                           <line x1="10" y1="14" x2="21" y2="3"></line>
                         </svg>
                         Visit Project
-                      </a>
-                      <Link
-                        href={`/projects/${activeProject.id}`}
-                        className="py-2 px-4 bg-mint-green hover:bg-mint-green/80 text-navy rounded-md flex items-center justify-center gap-2 transition-all"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <circle cx="11" cy="11" r="8"></circle>
-                          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        Project Details
                       </Link>
-                    </div>
-                  )}
+                    )}
+                    <Link
+                      href={`/projects/${activeProject.id}`}
+                      className="py-2 px-4 bg-mint-green hover:bg-mint-green/80 text-navy rounded-md flex items-center justify-center gap-2 transition-all"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      </svg>
+                      Project Details
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
