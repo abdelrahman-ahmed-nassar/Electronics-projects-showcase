@@ -263,7 +263,7 @@ const TeamsSection: React.FC<TeamsSectionProps> = ({
 
                 {/* Team Info */}
                 <div className="p-5">
-                  <p className="text-white/80 mb-4">{team.description}</p>
+                  <p className="text-white/80 mb-4 line-clamp-4">{team.description}</p>
 
                   <div className="flex flex-wrap gap-x-8 gap-y-4 mb-6">
                     {/* Team Members Preview */}
