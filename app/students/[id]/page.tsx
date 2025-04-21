@@ -24,12 +24,6 @@ export default async function ProjectPage({
       notFound();
     }
 
-    // Parse skills from string to array if it exists
-    const studentSkills = student.skills
-      ? typeof student.skills === "string"
-        ? student.skills.split(",").map((skill) => skill.trim())
-        : []
-      : [];
 
     // Get team data if the student is a member of a team
     let studentTeam: TeamWithMembers | null = null;
@@ -216,12 +210,12 @@ export default async function ProjectPage({
               </div>
 
               {/* Skills Section */}
-              {studentSkills.length > 0 && (
+              {student?.skills?.split(",") && (
                 <div className="mb-10">
                   <h2 className="text-2xl text-mint-green mb-4">Skills</h2>
                   <div className="bg-white/5 border border-electric-blue/20 rounded-lg p-6">
                     <div className="flex flex-wrap gap-2">
-                      {studentSkills.map((skill: string, i: number) => (
+                      {student?.skills.split(",").map((skill: string, i: number) => (
                         <span
                           key={i}
                           className="py-2 px-4 bg-navy-light text-white rounded-md flex items-center gap-2"
@@ -241,7 +235,7 @@ export default async function ProjectPage({
                           </svg>
                           <span>{skill}</span>
                         </span>
-                      ))}
+                      )) || ""}
                     </div>
                   </div>
                 </div>
