@@ -835,21 +835,6 @@ const UpdateTeamPage = () => {
                       </div>
                     </div>
                   </div>
-
-                  <div className="md:col-span-2">
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="isFeatured"
-                        checked={formData.isFeatured}
-                        onChange={handleChange}
-                        className="h-5 w-5 text-electric-blue focus:ring-electric-blue rounded"
-                      />
-                      <span className="ml-2 text-gray-700 dark:text-gray-300">
-                        Feature this team (requires admin approval)
-                      </span>
-                    </label>
-                  </div>
                 </div>
 
                 <div className="border-t border-gray-200 dark:border-dark-700 pt-4 flex justify-end">
