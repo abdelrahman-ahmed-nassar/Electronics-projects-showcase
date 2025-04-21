@@ -6,7 +6,7 @@ import { useAuth } from "@/app/_lib/context/AuthenticationContext";
 import { TeamInterface, ProjectInterface } from "@/app/Types";
 import Link from "next/link";
 import Image from "next/image";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 type TeamFormData = {
@@ -32,10 +32,11 @@ const UpdateTeamPage = () => {
     role?: string;
     specialization?: string;
   };
-  
+
   const [teamMembers, setTeamMembers] = useState<TeamMemberInterface[]>([]);
   const [teamProjects, setTeamProjects] = useState<ProjectInterface[]>([]);
-  const [selectedProject, setSelectedProject] = useState<ProjectInterface | null>(null);
+  const [selectedProject, setSelectedProject] =
+    useState<ProjectInterface | null>(null);
   const [isLoading, setIsLoading] = useState({
     team: true,
     projects: true,
@@ -85,21 +86,23 @@ const UpdateTeamPage = () => {
 
       if (!response.ok) {
         if (response.status === 404) {
-          throw new Error("Your team information could not be found. The team may have been deleted.");
+          throw new Error(
+            "Your team information could not be found. The team may have been deleted."
+          );
         }
         throw new Error(`Failed to fetch team data: ${response.status}`);
       }
 
       const data = await response.json();
-      
+
       if (data.team && typeof data.team === "object") {
         setTeamData(data.team);
-        
+
         // Convert achievements array to comma-separated string for form
-        const achievementsString = Array.isArray(data.team.achievements) 
+        const achievementsString = Array.isArray(data.team.achievements)
           ? data.team.achievements.join(", ")
           : data.team.achievements || "";
-        
+
         // Set form data
         setFormData({
           name: data.team.name || "",
@@ -125,7 +128,9 @@ const UpdateTeamPage = () => {
         ...prev,
         team: err instanceof Error ? err.message : "Failed to load team data",
       }));
-      toast.error(err instanceof Error ? err.message : "Failed to load team data");
+      toast.error(
+        err instanceof Error ? err.message : "Failed to load team data"
+      );
     } finally {
       setIsLoading((prev) => ({ ...prev, team: false }));
     }
@@ -154,7 +159,11 @@ const UpdateTeamPage = () => {
 
       if (Array.isArray(data)) {
         setTeamProjects(data);
-      } else if (data && typeof data === "object" && Array.isArray(data.projects)) {
+      } else if (
+        data &&
+        typeof data === "object" &&
+        Array.isArray(data.projects)
+      ) {
         setTeamProjects(data.projects);
       } else {
         setTeamProjects([]);
@@ -163,7 +172,8 @@ const UpdateTeamPage = () => {
       console.error("Error fetching team projects:", err);
       setError((prev) => ({
         ...prev,
-        projects: err instanceof Error ? err.message : "Failed to load team projects",
+        projects:
+          err instanceof Error ? err.message : "Failed to load team projects",
       }));
     } finally {
       setIsLoading((prev) => ({ ...prev, projects: false }));
@@ -177,7 +187,9 @@ const UpdateTeamPage = () => {
 
   // Handle form input changes
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value, type } = e.target;
 
@@ -269,7 +281,7 @@ const UpdateTeamPage = () => {
   // Handle team update
   const handleUpdateTeam = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!teamData) return;
 
     try {
@@ -277,7 +289,10 @@ const UpdateTeamPage = () => {
 
       // Convert achievements string to array if needed for API
       const achievementsArray = formData.achievements
-        ? formData.achievements.split(",").map(item => item.trim()).filter(item => item)
+        ? formData.achievements
+            .split(",")
+            .map((item) => item.trim())
+            .filter((item) => item)
         : [];
 
       const teamUpdateData = {
@@ -299,11 +314,13 @@ const UpdateTeamPage = () => {
 
       const updatedTeam = await response.json();
       setTeamData(updatedTeam);
-      
+
       toast.success("Team information updated successfully!");
     } catch (err) {
       console.error("Error updating team:", err);
-      toast.error(err instanceof Error ? err.message : "Failed to update team information");
+      toast.error(
+        err instanceof Error ? err.message : "Failed to update team information"
+      );
     } finally {
       setIsLoading((prev) => ({ ...prev, updateTeam: false }));
     }
@@ -409,7 +426,7 @@ const UpdateTeamPage = () => {
                 <h3 className="text-xl font-semibold text-dark-800 dark:text-white mb-2">
                   {teamData.name}
                 </h3>
-                
+
                 <div className="mb-4">
                   <span className="text-sm bg-electric-blue/10 dark:bg-electric-blue/20 text-electric-blue px-2 py-1 rounded-full">
                     {teamData.specialty || "General Research"}
@@ -417,10 +434,15 @@ const UpdateTeamPage = () => {
                 </div>
 
                 <div className="mt-6">
-                  <h4 className="font-medium text-dark-800 dark:text-white mb-2">Team Members ({teamMembers.length})</h4>
+                  <h4 className="font-medium text-dark-800 dark:text-white mb-2">
+                    Team Members ({teamMembers.length})
+                  </h4>
                   <div className="max-h-60 overflow-y-auto">
                     {teamMembers.map((member) => (
-                      <div key={member.id} className="flex items-center space-x-3 py-2 border-b border-gray-100 dark:border-dark-700 last:border-0">
+                      <div
+                        key={member.id}
+                        className="flex items-center space-x-3 py-2 border-b border-gray-100 dark:border-dark-700 last:border-0"
+                      >
                         <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 dark:bg-dark-600">
                           {member.avatarImage ? (
                             <Image
@@ -441,13 +463,17 @@ const UpdateTeamPage = () => {
                             {member.name || "Unnamed Member"}
                           </div>
                           <div className="text-sm text-dark-500 dark:text-gray-400">
-                            {member.role || member.specialization || "Team Member"}
+                            {member.role ||
+                              member.specialization ||
+                              "Team Member"}
                           </div>
                         </div>
                       </div>
                     ))}
                     {teamMembers.length === 0 && (
-                      <p className="text-dark-500 dark:text-gray-400 text-center py-4">No team members found</p>
+                      <p className="text-dark-500 dark:text-gray-400 text-center py-4">
+                        No team members found
+                      </p>
                     )}
                   </div>
                 </div>
@@ -536,7 +562,8 @@ const UpdateTeamPage = () => {
                 Team Information Not Available
               </h2>
               <p className="text-dark-600 dark:text-gray-300 mb-6">
-                Please make sure you are a member of a team to manage team settings.
+                Please make sure you are a member of a team to manage team
+                settings.
               </p>
             </div>
           ) : selectedProject ? (
@@ -562,7 +589,7 @@ const UpdateTeamPage = () => {
                   </button>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 <div className="mb-6 relative w-full h-60 bg-gray-200 dark:bg-dark-600 rounded-lg overflow-hidden">
                   {selectedProject.image ? (
@@ -578,11 +605,11 @@ const UpdateTeamPage = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <h3 className="text-2xl font-bold mb-2 text-dark-800 dark:text-white">
                   {selectedProject.title}
                 </h3>
-                
+
                 <div className="mb-4">
                   <span className="text-sm text-dark-500 dark:text-gray-400">
                     Created: {formatDate(selectedProject.created_at)}
@@ -593,17 +620,21 @@ const UpdateTeamPage = () => {
                     </span>
                   )}
                 </div>
-                
+
                 <div className="mb-6">
-                  <h4 className="font-medium text-dark-800 dark:text-white mb-2">Description</h4>
+                  <h4 className="font-medium text-dark-800 dark:text-white mb-2">
+                    Description
+                  </h4>
                   <p className="text-dark-600 dark:text-gray-300">
                     {selectedProject.description || "No description available"}
                   </p>
                 </div>
-                
+
                 {selectedProject.tags && selectedProject.tags.length > 0 && (
                   <div className="mb-6">
-                    <h4 className="font-medium text-dark-800 dark:text-white mb-2">Tags</h4>
+                    <h4 className="font-medium text-dark-800 dark:text-white mb-2">
+                      Tags
+                    </h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedProject.tags.map((tag, index) => (
                         <span
@@ -616,10 +647,12 @@ const UpdateTeamPage = () => {
                     </div>
                   </div>
                 )}
-                
+
                 {selectedProject.link && (
                   <div className="mb-6">
-                    <h4 className="font-medium text-dark-800 dark:text-white mb-2">Project Link</h4>
+                    <h4 className="font-medium text-dark-800 dark:text-white mb-2">
+                      Project Link
+                    </h4>
                     <a
                       href={selectedProject.link}
                       target="_blank"
@@ -630,7 +663,7 @@ const UpdateTeamPage = () => {
                     </a>
                   </div>
                 )}
-                
+
                 <div className="mt-8 flex justify-end space-x-3">
                   <Link
                     href={`/projects/${selectedProject.id}`}
@@ -700,7 +733,7 @@ const UpdateTeamPage = () => {
                       className="block text-gray-700 dark:text-gray-300 font-bold mb-2"
                       htmlFor="specialty"
                     >
-                      Specialty
+                      Specialty (comma-separated)
                     </label>
                     <input
                       type="text"
@@ -711,6 +744,9 @@ const UpdateTeamPage = () => {
                       className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue"
                       placeholder="e.g., Embedded Systems, IoT, Machine Learning"
                     />
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                      Separate multiple skills with commas
+                    </p>
                   </div>
 
                   <div className="md:col-span-2">
@@ -801,7 +837,8 @@ const UpdateTeamPage = () => {
                             </button>
                           </div>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Maximum file size: 5MB. Supported formats: JPEG, PNG, GIF, WEBP
+                            Maximum file size: 5MB. Supported formats: JPEG,
+                            PNG, GIF, WEBP
                           </p>
                         </div>
                       </div>

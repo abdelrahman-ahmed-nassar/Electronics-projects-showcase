@@ -238,7 +238,7 @@ export default function UploadTeamForm() {
             className="block text-gray-300 font-bold mb-1"
             htmlFor="specialty"
           >
-            Specialty
+            Specialty (comma-separated)
           </label>
           <input
             type="text"
@@ -249,6 +249,9 @@ export default function UploadTeamForm() {
             className="bg-gray-700 text-white px-3 py-2 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="e.g. Embedded Systems, IoT, Robotics"
           />
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            Separate multiple skills with commas
+          </p>
         </div>
 
         <div>
