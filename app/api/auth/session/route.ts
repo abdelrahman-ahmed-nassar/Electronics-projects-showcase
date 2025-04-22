@@ -5,6 +5,10 @@ import { getProfileById } from "@/utils/supabase/data-services";
 export async function GET() {
   const supabase = await createClient();
   try {
+    // Add cache headers to prevent excessive requests
+    const response = NextResponse.next();
+    response.headers.set("Cache-Control", "private, max-age=60"); // Cache for 1 minute on client side
+
     // First get the session
     const {
       data: { session },
@@ -13,11 +17,27 @@ export async function GET() {
 
     if (sessionError) {
       console.error("Session error:", sessionError);
-      return NextResponse.json({ user: null }, { status: 200 });
+      return NextResponse.json(
+        { user: null },
+        {
+          status: 200,
+          headers: {
+            "Cache-Control": "private, max-age=60",
+          },
+        }
+      );
     }
 
     if (!session) {
-      return NextResponse.json({ user: null }, { status: 200 });
+      return NextResponse.json(
+        { user: null },
+        {
+          status: 200,
+          headers: {
+            "Cache-Control": "private, max-age=60",
+          },
+        }
+      );
     }
 
     // Then get the user
@@ -27,12 +47,19 @@ export async function GET() {
     } = await supabase.auth.getUser();
 
     if (userError || !user) {
-      return NextResponse.json({ user: null }, { status: 200 });
+      return NextResponse.json(
+        { user: null },
+        {
+          status: 200,
+          headers: {
+            "Cache-Control": "private, max-age=60",
+          },
+        }
+      );
     }
 
     // Use getProfileById from data-services instead of direct Supabase query
     const profile = await getProfileById(user.id);
-
 
     // Combine user data
     const userData = {
@@ -51,13 +78,24 @@ export async function GET() {
       skills: profile?.skills,
     };
 
-
-    return NextResponse.json({ user: userData });
+    return NextResponse.json(
+      { user: userData },
+      {
+        headers: {
+          "Cache-Control": "private, max-age=60",
+        },
+      }
+    );
   } catch (error) {
     console.error("Session API error:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      {
+        status: 500,
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      }
     );
   }
 }

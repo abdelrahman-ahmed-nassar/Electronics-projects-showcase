@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useRef,
 } from "react";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
@@ -33,6 +34,10 @@ export const AuthenticationProvider: React.FC<{
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+
+  // Function to keep track of when we last called the API
+  const lastRefreshTimeRef = useRef<number>(0);
+  const refreshInProgressRef = useRef<boolean>(false);
 
   // Load authentication state and user data from cookies on initial render
   useEffect(() => {
@@ -154,106 +159,112 @@ export const AuthenticationProvider: React.FC<{
     [user]
   );
 
-  // Enhanced refreshUser function to properly handle team data
-  const refreshUser = useCallback(async () => {
-    try {
-      setIsLoading(true);
+  // Debounced refresh user function to prevent excessive API calls
+  const debouncedRefreshUser = useCallback(
+    async (forceRefresh = false) => {
+      // Skip refresh if one is already in progress
+      if (refreshInProgressRef.current && !forceRefresh) return;
 
-      // Check if we already have a user ID in state
-      const currentUserId = user?.id;
-      // Preserve the current team value to compare after fetch
-      const currentTeam = user?.team;
+      const now = Date.now();
+      // Only allow refresh every 10 seconds unless forced
+      if (!forceRefresh && now - lastRefreshTimeRef.current < 10000) {
+        return;
+      }
 
-      const response = await fetch("/api/auth/session");
-      if (!response.ok) throw new Error("Failed to fetch user data");
+      try {
+        refreshInProgressRef.current = true;
 
-      const data = await response.json();
+        // Check if we already have a user ID in state
+        const currentUserId = user?.id;
+        // Preserve the current team value to compare after fetch
+        const currentTeam = user?.team;
 
-      // If we have user data from the API
-      if (data.user) {
-        // Security check: if we already have a user but the IDs don't match,
-        // this could be a session confusion issue - don't update
-        if (currentUserId && data.user.id !== currentUserId) {
-          console.error("Session user ID mismatch - possible security issue");
-          setIsLoading(false);
-          return;
-        }
+        const response = await fetch("/api/auth/session");
+        if (!response.ok) throw new Error("Failed to fetch user data");
 
-        // Log team values for debugging
-        if (currentTeam !== data.user.team) {
-          console.log(
-            `Team value updated: ${currentTeam} -> ${data.user.team}`
-          );
-        }
+        const data = await response.json();
+        lastRefreshTimeRef.current = Date.now();
 
-        // Make sure team value is preserved and correctly typed
-        const userData = {
-          ...data.user,
-          team: data.user.team !== undefined ? data.user.team : currentTeam,
-        };
+        // If we have user data from the API
+        if (data.user) {
+          // Security check: if we already have a user but the IDs don't match,
+          // this could be a session confusion issue - don't update
+          if (currentUserId && data.user.id !== currentUserId) {
+            console.error("Session user ID mismatch - possible security issue");
+            return;
+          }
 
-        setIsAuthenticated(true);
-        setUser(userData);
-
-        // We only update cookies if the user was not already authenticated
-        // This prevents recreating cookies after logout
-        if (!isAuthenticated) {
-          // Update cookies with fresh data
-            const cookieOptions = {
-            expires: 9999, // No expiration (very far future date)
-            sameSite: "strict" as const,
-            secure: window?.location.protocol === "https:",
-            };
-
-          // Ensure all user profile fields are included in the cookie
-          const userDataForCookie = {
-            id: userData.id,
-            email: userData.email,
-            name: userData.name,
-            phone: userData.phone,
-            nationalId: userData.nationalId,
-            yearId: userData.yearId,
-            avatarImage: userData.avatarImage,
-            isGraduated: userData.isGraduated,
-            about: userData.about,
-            specialization: userData.specialization,
-            role: userData.role,
-            team: userData.team, // Ensure team is included
-            skills: userData.skills,
+          // Make sure team value is preserved and correctly typed
+          const userData = {
+            ...data.user,
+            team: data.user.team !== undefined ? data.user.team : currentTeam,
           };
 
-          Cookies.set("isAuthenticated", "true", cookieOptions);
-          Cookies.set("user", JSON.stringify(userDataForCookie), cookieOptions);
+          setIsAuthenticated(true);
+          setUser(userData);
+
+          // We only update cookies if the user was not already authenticated
+          // This prevents recreating cookies after logout
+          if (!isAuthenticated) {
+            // Update cookies with fresh data
+            const cookieOptions = {
+              expires: 9999, // No expiration (very far future date)
+              sameSite: "strict" as const,
+              secure: window?.location.protocol === "https:",
+            };
+
+            // Ensure all user profile fields are included in the cookie
+            const userDataForCookie = {
+              id: userData.id,
+              email: userData.email,
+              name: userData.name,
+              phone: userData.phone,
+              nationalId: userData.nationalId,
+              yearId: userData.yearId,
+              avatarImage: userData.avatarImage,
+              isGraduated: userData.isGraduated,
+              about: userData.about,
+              specialization: userData.specialization,
+              role: userData.role,
+              team: userData.team, // Ensure team is included
+              skills: userData.skills,
+            };
+
+            Cookies.set("isAuthenticated", "true", cookieOptions);
+            Cookies.set(
+              "user",
+              JSON.stringify(userDataForCookie),
+              cookieOptions
+            );
+          }
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+          Cookies.remove("isAuthenticated");
+          Cookies.remove("user");
         }
-      } else {
-        setIsAuthenticated(false);
-        setUser(null);
-        Cookies.remove("isAuthenticated");
-        Cookies.remove("user");
+      } catch (error) {
+        console.error("Error refreshing user session:", error);
+      } finally {
+        refreshInProgressRef.current = false;
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Error refreshing user session:", error);
-      setIsAuthenticated(false);
-      setUser(null);
-      Cookies.remove("isAuthenticated");
-      Cookies.remove("user");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [user, isAuthenticated]);
+    },
+    [user, isAuthenticated]
+  );
 
   // Consolidate refreshUser logic to use a timer for hourly updates.
   useEffect(() => {
     // Call refreshUser once on initial load
-    refreshUser();
+    debouncedRefreshUser(true);
 
     // Set up hourly refresh interval
     const interval = setInterval(() => {
-      refreshUser();
+      debouncedRefreshUser();
     }, 3600000); // 1 hour in milliseconds
 
     return () => clearInterval(interval); // Cleanup the interval on unmount
-  }, [refreshUser]);
+  }, [debouncedRefreshUser]);
 
   return (
     <AuthContext.Provider
@@ -264,7 +275,7 @@ export const AuthenticationProvider: React.FC<{
         login,
         logout,
         updateUser,
-        refreshUser,
+        refreshUser: () => debouncedRefreshUser(true),
       }}
     >
       {children}
