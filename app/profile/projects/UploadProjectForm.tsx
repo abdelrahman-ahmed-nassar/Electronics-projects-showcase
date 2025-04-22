@@ -42,16 +42,11 @@ export default function UploadProjectForm() {
 
   // Improved check for team membership
   useEffect(() => {
-    // Skip the check if auth is still loading
-    if (authLoading) {
-      return;
-    }
-
-    // Only perform the check once after loading is complete
-    if (!teamChecked) {
+    // Only check team membership once after authentication loading is complete
+    if (!authLoading && !teamChecked) {
       setTeamChecked(true);
 
-      // After auth is loaded, check if user has a team
+      // If user exists but doesn't have a team, show a message and redirect
       if (user && !user.team) {
         toast.error("You must be a member of a team to upload projects.");
         setTimeout(() => {

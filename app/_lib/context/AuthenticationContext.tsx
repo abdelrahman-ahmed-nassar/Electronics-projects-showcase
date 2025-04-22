@@ -173,17 +173,23 @@ export const AuthenticationProvider: React.FC<{
 
       try {
         refreshInProgressRef.current = true;
+        lastRefreshTimeRef.current = now; // Set this immediately to prevent parallel calls
 
         // Check if we already have a user ID in state
         const currentUserId = user?.id;
         // Preserve the current team value to compare after fetch
         const currentTeam = user?.team;
 
-        const response = await fetch("/api/auth/session");
+        const response = await fetch("/api/auth/session", {
+          cache: "no-store",
+          headers: {
+            "x-refresh-timestamp": now.toString(), // Add timestamp to bypass browser cache
+          },
+        });
+        
         if (!response.ok) throw new Error("Failed to fetch user data");
 
         const data = await response.json();
-        lastRefreshTimeRef.current = Date.now();
 
         // If we have user data from the API
         if (data.user) {
@@ -255,16 +261,26 @@ export const AuthenticationProvider: React.FC<{
 
   // Consolidate refreshUser logic to use a timer for hourly updates.
   useEffect(() => {
-    // Call refreshUser once on initial load
-    debouncedRefreshUser(true);
+    let isMounted = true;
+    
+    // Only call refreshUser on initial load if we don't already have user data
+    // This prevents unnecessary refresh when user data is already loaded via login
+    if (!user && !isLoading) {
+      debouncedRefreshUser(true);
+    }
 
-    // Set up hourly refresh interval
+    // Set up hourly refresh interval - much less frequent than before
     const interval = setInterval(() => {
-      debouncedRefreshUser();
+      if (isMounted && isAuthenticated) {
+        debouncedRefreshUser(false);
+      }
     }, 3600000); // 1 hour in milliseconds
 
-    return () => clearInterval(interval); // Cleanup the interval on unmount
-  }, [debouncedRefreshUser]);
+    return () => {
+      isMounted = false;
+      clearInterval(interval); // Cleanup the interval on unmount
+    }
+  }, [debouncedRefreshUser, user, isLoading, isAuthenticated]);
 
   return (
     <AuthContext.Provider

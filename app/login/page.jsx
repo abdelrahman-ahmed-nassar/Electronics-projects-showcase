@@ -14,6 +14,9 @@ const LoginFormSkeleton = () => (
   </div>
 );
 
+// Mark this as a static page since it doesn't need to fetch data on each request
+export const dynamic = 'force-static';
+
 const LoginPage = () => {
   return (
     <div className="font-sans m-0 p-0 bg-navy text-white min-h-screen flex flex-col">

@@ -5,9 +5,11 @@ import { getProfileById } from "@/utils/supabase/data-services";
 export async function GET() {
   const supabase = await createClient();
   try {
-    // Add cache headers to prevent excessive requests
-    const response = NextResponse.next();
-    response.headers.set("Cache-Control", "private, max-age=60"); // Cache for 1 minute on client side
+    // Add strong cache-control headers to prevent excessive requests
+    const headers = {
+      // Cache for 1 minute on client side
+      "Cache-Control": "private, max-age=60, stale-while-revalidate=300",
+    };
 
     // First get the session
     const {
@@ -21,9 +23,7 @@ export async function GET() {
         { user: null },
         {
           status: 200,
-          headers: {
-            "Cache-Control": "private, max-age=60",
-          },
+          headers,
         }
       );
     }
@@ -33,9 +33,7 @@ export async function GET() {
         { user: null },
         {
           status: 200,
-          headers: {
-            "Cache-Control": "private, max-age=60",
-          },
+          headers,
         }
       );
     }
@@ -51,9 +49,7 @@ export async function GET() {
         { user: null },
         {
           status: 200,
-          headers: {
-            "Cache-Control": "private, max-age=60",
-          },
+          headers,
         }
       );
     }
@@ -81,9 +77,7 @@ export async function GET() {
     return NextResponse.json(
       { user: userData },
       {
-        headers: {
-          "Cache-Control": "private, max-age=60",
-        },
+        headers,
       }
     );
   } catch (error) {
@@ -93,7 +87,7 @@ export async function GET() {
       {
         status: 500,
         headers: {
-          "Cache-Control": "no-cache",
+          "Cache-Control": "no-store",
         },
       }
     );
