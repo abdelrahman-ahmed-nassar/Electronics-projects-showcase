@@ -52,7 +52,7 @@ export default function ClearCache() {
           const cacheNames = await caches.keys();
           await Promise.all(cacheNames.map((name) => caches.delete(name)));
         } catch (e) {
-          console.log("Cache API not fully supported or permission denied");
+          console.log("Cache API not fully supported or permission denied", e);
         }
       }
 

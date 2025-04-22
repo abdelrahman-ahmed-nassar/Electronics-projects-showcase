@@ -48,7 +48,7 @@ export async function updateSession(request: NextRequest) {
     "/projects",
     "/teams",
     "/students",
-    
+    "/clearCache",
   ];
 
   // Custom check for course detail pages without lectures
