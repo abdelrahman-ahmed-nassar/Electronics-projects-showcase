@@ -186,7 +186,7 @@ export const AuthenticationProvider: React.FC<{
             "x-refresh-timestamp": now.toString(), // Add timestamp to bypass browser cache
           },
         });
-        
+
         if (!response.ok) throw new Error("Failed to fetch user data");
 
         const data = await response.json();
@@ -262,7 +262,7 @@ export const AuthenticationProvider: React.FC<{
   // Consolidate refreshUser logic to use a timer for hourly updates.
   useEffect(() => {
     let isMounted = true;
-    
+
     // Only call refreshUser on initial load if we don't already have user data
     // This prevents unnecessary refresh when user data is already loaded via login
     if (!user && !isLoading) {
@@ -279,7 +279,7 @@ export const AuthenticationProvider: React.FC<{
     return () => {
       isMounted = false;
       clearInterval(interval); // Cleanup the interval on unmount
-    }
+    };
   }, [debouncedRefreshUser, user, isLoading, isAuthenticated]);
 
   return (
