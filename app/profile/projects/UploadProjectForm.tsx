@@ -13,11 +13,12 @@ type ProjectFormData = Omit<ProjectInterface, "id" | "created_at">;
 
 export default function UploadProjectForm() {
   const router = useRouter();
-  const { user } = useAuth(); // Get the authenticated user
+  const { user, isLoading: authLoading } = useAuth(); // Get the authenticated user and loading state
   const [loading, setLoading] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [teamChecked, setTeamChecked] = useState(false);
 
   const [formData, setFormData] = useState<ProjectFormData>({
     title: "",
@@ -39,15 +40,26 @@ export default function UploadProjectForm() {
     }
   }, [user?.team]);
 
-  // Redirect if user has no team
+  // Improved check for team membership
   useEffect(() => {
-    if (user && !user.team) {
-      toast.error("You must be a member of a team to upload projects.");
-      setTimeout(() => {
-        router.push("/profile");
-      }, 3000);
+    // Skip the check if auth is still loading
+    if (authLoading) {
+      return;
     }
-  }, [user, router]);
+
+    // Only perform the check once after loading is complete
+    if (!teamChecked) {
+      setTeamChecked(true);
+
+      // After auth is loaded, check if user has a team
+      if (user && !user.team) {
+        toast.error("You must be a member of a team to upload projects.");
+        setTimeout(() => {
+          router.push("/profile");
+        }, 3000);
+      }
+    }
+  }, [user, router, authLoading, teamChecked]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -127,7 +139,7 @@ export default function UploadProjectForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // Check if user has a team
+    // Double-check if user has a team
     if (!user?.team) {
       toast.error("You must be a member of a team to upload projects.");
       return;
@@ -175,6 +187,18 @@ export default function UploadProjectForm() {
       setLoading(false);
     }
   };
+
+  // Show loading state when auth is still loading
+  if (authLoading) {
+    return (
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-white">Loading user data...</p>
+        </div>
+      </div>
+    );
+  }
 
   // If user has no team, show message and don't render the form
   if (user && !user.team) {
@@ -262,10 +286,10 @@ export default function UploadProjectForm() {
           />
         </div>
 
-        {/* Replace Image URL input with File Upload */}
+        {/* Project Image Upload */}
         <div>
           <label className="block text-gray-300 font-bold mb-1" htmlFor="image">
-            Project Image
+            Project Image (Optional)
           </label>
           <div className="flex flex-col space-y-2">
             <input
@@ -285,7 +309,10 @@ export default function UploadProjectForm() {
               >
                 {imageUploading ? "Uploading..." : "Choose Image"}
               </button>
-              {formData.image && (
+              {imageUploading && (
+                <span className="text-yellow-500 text-sm">Uploading...</span>
+              )}
+              {imagePreview && !imageUploading && (
                 <span className="text-green-500 text-sm">✓ Image uploaded</span>
               )}
             </div>
@@ -301,28 +328,27 @@ export default function UploadProjectForm() {
                 />
               </div>
             )}
-
-            {/* Show URL (optional) */}
-            {formData.image && (
-              <p className="text-xs text-gray-400 truncate mt-1">
-                {formData.image}
-              </p>
-            )}
           </div>
         </div>
 
         <div>
           <label className="block text-gray-300 font-bold mb-1" htmlFor="tags">
-            Tags (comma separated)
+            Tags (comma-separated)
           </label>
           <input
             type="text"
             id="tags"
             name="tags"
-            value={formData.tags ?? ""}
-            onChange={handleChange}
+            value={Array.isArray(formData.tags) ? formData.tags.join(", ") : ""}
+            onChange={(e) => {
+              const tagsArray = e.target.value
+                .split(",")
+                .map((tag) => tag.trim())
+                .filter((tag) => tag.length > 0);
+              setFormData((prev) => ({ ...prev, tags: tagsArray }));
+            }}
             className="bg-gray-700 text-white px-3 py-2 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="e.g. React, Supabase, Next.js"
+            placeholder="e.g. Robotics, IoT, Embedded Systems"
           />
         </div>
 
@@ -331,7 +357,7 @@ export default function UploadProjectForm() {
             className="block text-gray-300 font-bold mb-1"
             htmlFor="period"
           >
-            Time Period
+            Project Period (Optional)
           </label>
           <input
             type="text"
@@ -340,13 +366,13 @@ export default function UploadProjectForm() {
             value={formData.period ?? ""}
             onChange={handleChange}
             className="bg-gray-700 text-white px-3 py-2 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="e.g. Jan 2023 - Mar 2023"
+            placeholder="e.g. Fall 2022 - Spring 2023"
           />
         </div>
 
         <div>
           <label className="block text-gray-300 font-bold mb-1" htmlFor="link">
-            Project Link
+            Project Link (Optional)
           </label>
           <input
             type="url"

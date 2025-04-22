@@ -180,39 +180,67 @@ export const AuthenticationProvider: React.FC<{
     [user]
   );
 
-  // Reintroduce the refreshUser function to restore session state on reload.
+  // Enhanced refreshUser function to properly handle team data
   const refreshUser = useCallback(async () => {
     try {
+      setIsLoading(true);
+      
+      // Check if we already have a user ID in state
+      const currentUserId = user?.id;
+      // Preserve the current team value to compare after fetch
+      const currentTeam = user?.team;
+
       const response = await fetch("/api/auth/session");
       if (!response.ok) throw new Error("Failed to fetch user data");
 
       const data = await response.json();
-      if (data.user) {
-        setIsAuthenticated(true);
-        setUser(data.user);
 
-        // Update the cookie with the refreshed user data
+      // If we have user data from the API
+      if (data.user) {
+        // Security check: if we already have a user but the IDs don't match,
+        // this could be a session confusion issue - don't update
+        if (currentUserId && data.user.id !== currentUserId) {
+          console.error("Session user ID mismatch - possible security issue");
+          setIsLoading(false);
+          return;
+        }
+
+        // Log team values for debugging
+        if (currentTeam !== data.user.team) {
+          console.log(`Team value updated: ${currentTeam} -> ${data.user.team}`);
+        }
+
+        // Make sure team value is preserved and correctly typed
+        const userData = {
+          ...data.user,
+          team: data.user.team !== undefined ? data.user.team : currentTeam,
+        };
+
+        setIsAuthenticated(true);
+        setUser(userData);
+
+        // Update cookies with fresh data
         const cookieOptions = {
           expires: 7,
           sameSite: "strict" as const,
           secure: window?.location.protocol === "https:",
         };
 
-        // Ensure all user profile fields are included in the cookie when refreshing
+        // Ensure all user profile fields are included in the cookie
         const userDataForCookie = {
-          id: data.user.id,
-          email: data.user.email,
-          name: data.user.name,
-          phone: data.user.phone,
-          nationalId: data.user.nationalId,
-          yearId: data.user.yearId,
-          avatarImage: data.user.avatarImage,
-          isGraduated: data.user.isGraduated,
-          about: data.user.about,
-          specialization: data.user.specialization,
-          role: data.user.role,
-          team: data.user.team,
-          skills: data.user.skills,
+          id: userData.id,
+          email: userData.email,
+          name: userData.name,
+          phone: userData.phone,
+          nationalId: userData.nationalId,
+          yearId: userData.yearId,
+          avatarImage: userData.avatarImage,
+          isGraduated: userData.isGraduated,
+          about: userData.about,
+          specialization: userData.specialization,
+          role: userData.role,
+          team: userData.team, // Ensure team is included
+          skills: userData.skills,
         };
 
         Cookies.set("isAuthenticated", "true", cookieOptions);
@@ -229,22 +257,20 @@ export const AuthenticationProvider: React.FC<{
       setUser(null);
       Cookies.remove("isAuthenticated");
       Cookies.remove("user");
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
+  }, [user]);
 
-  // Use refreshUser only once during the initial load.
+  // Consolidate refreshUser logic to use a timer for hourly updates.
   useEffect(() => {
+    // Call refreshUser once on initial load
     refreshUser();
-  }, [refreshUser]);
 
-  // Modify the refreshUser logic to use a timer for hourly updates.
-  useEffect(() => {
+    // Set up hourly refresh interval
     const interval = setInterval(() => {
       refreshUser();
     }, 3600000); // 1 hour in milliseconds
-
-    // Call refreshUser once on initial load
-    refreshUser();
 
     return () => clearInterval(interval); // Cleanup the interval on unmount
   }, [refreshUser]);
