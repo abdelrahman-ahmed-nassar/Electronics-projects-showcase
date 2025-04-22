@@ -11,7 +11,21 @@ const DesktopLoginMenu = () => {
   const { isAuthenticated, logout } = useAuth();
   const router = useRouter();
 
-  const clearAllStorageAndCookies = () => {
+  const clearAllStorageAndCookies = async () => {
+    // First call server-side endpoint to clear HTTP-only cookies
+    try {
+      const response = await fetch("/api/auth/clear-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const result = await response.json();
+      console.log("Server-side session clearing result:", result);
+    } catch (serverError) {
+      console.error("Error clearing session server-side:", serverError);
+    }
+
     // Clear localStorage
     if (typeof window !== "undefined" && window.localStorage) {
       window.localStorage.clear();
@@ -22,45 +36,72 @@ const DesktopLoginMenu = () => {
       window.sessionStorage.clear();
     }
 
-    // Clear cookies
+    // Clear cookies with more thorough approach
     if (typeof document !== "undefined") {
       const cookies = document.cookie.split("; ");
 
+      // Get all possible domain variations
+      const hostname = window.location.hostname;
+      const domains = [null, hostname, `.${hostname}`]; // null means no domain specification
+
+      // Add root domain variations
+      const parts = hostname.split(".");
+      if (parts.length > 1) {
+        const rootDomain = parts.slice(-2).join(".");
+        domains.push(rootDomain, `.${rootDomain}`);
+
+        if (parts.length > 2) {
+          for (let i = 1; i < parts.length - 1; i++) {
+            const subDomain = parts.slice(i).join(".");
+            domains.push(subDomain, `.${subDomain}`);
+          }
+        }
+      }
+
+      // Get all possible paths
+      const paths = ["/", "", window.location.pathname];
+
+      // Combinations of secure flag
+      const secureOptions = [true, false];
+
+      // Combinations of SameSite attribute
+      const sameSiteOptions = ["Lax", "Strict", "None", null];
+
+      // Clear cookies using all combinations
       for (const cookie of cookies) {
         const eqPos = cookie.indexOf("=");
         const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
 
-        // Delete cookie with path=/
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        // Try all domain combinations
+        domains.forEach((domain) => {
+          paths.forEach((path) => {
+            secureOptions.forEach((secure) => {
+              sameSiteOptions.forEach((sameSite) => {
+                let cookieString = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 
-        // Delete cookie without path specification
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+                if (path) cookieString += `;path=${path}`;
+                if (domain) cookieString += `;domain=${domain}`;
+                if (secure) cookieString += `;secure`;
+                if (sameSite) cookieString += `;samesite=${sameSite}`;
 
-        // Try with secure flag
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;secure`;
+                // If SameSite=None, it requires Secure flag
+                if (sameSite === "None" && !secure) {
+                  cookieString += `;secure`;
+                }
 
-        // Try with common subdomains
-        const domain = window.location.hostname;
-        const parts = domain.split(".");
-
-        // Try various domain possibilities
-        if (parts.length > 1) {
-          // Root domain
-          const rootDomain = parts.slice(-2).join(".");
-          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${rootDomain}`;
-          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${rootDomain}`;
-
-          // Full domain
-          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${domain}`;
-          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${domain}`;
-        }
+                // Set the cookie to expire
+                document.cookie = cookieString;
+              });
+            });
+          });
+        });
       }
     }
   };
 
   const handleLogoutAction = async () => {
     // Clear all storage and cookies before logout
-    clearAllStorageAndCookies();
+    await clearAllStorageAndCookies();
 
     await handleLogout(logout, () => {
       router.push("/login");

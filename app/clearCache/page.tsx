@@ -21,35 +21,75 @@ export default function ClearCache() {
   const deleteAllCookies = () => {
     const cookies = document.cookie.split("; ");
 
+    // Log how many cookies we're attempting to clear
+    console.log(`Attempting to clear ${cookies.length} cookies`);
+
+    // Get all possible domain variations
+    const hostname = window.location.hostname;
+    const domains = [null, hostname, `.${hostname}`]; // null means no domain specification
+
+    // Add root domain variations
+    const parts = hostname.split(".");
+    if (parts.length > 1) {
+      // For domains like "app.example.com", we want to try "example.com" and ".example.com"
+      const rootDomain = parts.slice(-2).join(".");
+      domains.push(rootDomain, `.${rootDomain}`);
+
+      // For longer subdomains, try more variations
+      if (parts.length > 2) {
+        for (let i = 1; i < parts.length - 1; i++) {
+          const subDomain = parts.slice(i).join(".");
+          domains.push(subDomain, `.${subDomain}`);
+        }
+      }
+    }
+
+    // Get all possible paths
+    const paths = ["/", "", window.location.pathname];
+
+    // Combinations of secure flag
+    const secureOptions = [true, false];
+
+    // Combinations of SameSite attribute
+    const sameSiteOptions = ["Lax", "Strict", "None", null];
+
+    // Clear cookies using all combinations
     for (const cookie of cookies) {
       const eqPos = cookie.indexOf("=");
       const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
 
-      // Delete cookie with path=/
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+      console.log(`Attempting to clear cookie: ${name}`);
 
-      // Delete cookie without path specification
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      // Try all domain combinations
+      domains.forEach((domain) => {
+        paths.forEach((path) => {
+          secureOptions.forEach((secure) => {
+            sameSiteOptions.forEach((sameSite) => {
+              let cookieString = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 
-      // Try with secure flag
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;secure`;
+              if (path) cookieString += `;path=${path}`;
+              if (domain) cookieString += `;domain=${domain}`;
+              if (secure) cookieString += `;secure`;
+              if (sameSite) cookieString += `;samesite=${sameSite}`;
 
-      // Try with common subdomains
-      const domain = window.location.hostname;
-      const parts = domain.split(".");
+              // If SameSite=None, it requires Secure flag
+              if (sameSite === "None" && !secure) {
+                cookieString += `;secure`;
+              }
 
-      // Try various domain possibilities
-      if (parts.length > 1) {
-        // Root domain
-        const rootDomain = parts.slice(-2).join(".");
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${rootDomain}`;
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${rootDomain}`;
-
-        // Full domain
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${domain}`;
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${domain}`;
-      }
+              // Set the cookie to expire
+              document.cookie = cookieString;
+            });
+          });
+        });
+      });
     }
+
+    // Log how many cookies remain after clearing
+    const remainingCookies = document.cookie
+      .split("; ")
+      .filter((c) => c.trim() !== "");
+    console.log(`Remaining cookies after clearing: ${remainingCookies.length}`);
 
     // For persistent cookies that might be HTTPOnly or have specific SameSite settings
     // We'll tell users that some cookies might require them to close the browser
@@ -61,6 +101,23 @@ export default function ClearCache() {
     setIsClearing(true);
 
     try {
+      // First call our server-side endpoint to clear HTTP-only cookies
+      // This is crucial for production environments
+      try {
+        const response = await fetch("/api/auth/clear-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const result = await response.json();
+        console.log("Server-side session clearing result:", result);
+      } catch (serverError) {
+        console.error("Error clearing session server-side:", serverError);
+        // Continue with client-side clearing even if server-side fails
+      }
+
       // Clear localStorage
       if (typeof window !== "undefined" && window.localStorage) {
         window.localStorage.clear();
@@ -71,7 +128,7 @@ export default function ClearCache() {
         window.sessionStorage.clear();
       }
 
-      // Clear cookies with improved method
+      // Clear cookies with our improved method
       if (typeof document !== "undefined") {
         deleteAllCookies();
       }
@@ -102,7 +159,11 @@ export default function ClearCache() {
       if (typeof caches !== "undefined") {
         try {
           const cacheNames = await caches.keys();
-          await Promise.all(cacheNames.map((name) => caches.delete(name)));
+          await Promise.all(
+            cacheNames.map((name: string) => {
+              return caches.delete(name);
+            })
+          );
         } catch (e) {
           console.log("Cache API not fully supported or permission denied:", e);
         }

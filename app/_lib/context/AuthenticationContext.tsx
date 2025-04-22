@@ -46,42 +46,16 @@ export const AuthenticationProvider: React.FC<{
         if (data.user) {
           setIsAuthenticated(true);
           setUser(data.user);
-          // Update cookies with fresh data
-          const cookieOptions = {
-            expires: 7,
-            sameSite: "strict" as const,
-            secure: window?.location.protocol === "https:",
-          };
-          Cookies.set("isAuthenticated", "true", cookieOptions);
-          // Ensure all user profile fields are included in the cookie
-          const userDataForCookie = {
-            id: data.user.id,
-            email: data.user.email,
-            name: data.user.name,
-            phone: data.user.phone,
-            nationalId: data.user.nationalId,
-            yearId: data.user.yearId,
-            avatarImage: data.user.avatarImage,
-            isGraduated: data.user.isGraduated,
-            about: data.user.about,
-            specialization: data.user.specialization,
-            role: data.user.role,
-            team: data.user.team,
-            skills: data.user.skills,
-          };
-          Cookies.set("user", JSON.stringify(userDataForCookie), cookieOptions);
+          // We don't set cookies here anymore - they should only be set during login
         } else {
-          // Clear cookies if session is invalid
-          Cookies.remove("isAuthenticated");
-          Cookies.remove("user");
+          // Clear authentication state if session is invalid
           setIsAuthenticated(false);
           setUser(null);
+          // Let the logout process handle cookie removal
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
         // Clear authentication state on error
-        Cookies.remove("isAuthenticated");
-        Cookies.remove("user");
         setIsAuthenticated(false);
         setUser(null);
       } finally {
@@ -184,7 +158,7 @@ export const AuthenticationProvider: React.FC<{
   const refreshUser = useCallback(async () => {
     try {
       setIsLoading(true);
-      
+
       // Check if we already have a user ID in state
       const currentUserId = user?.id;
       // Preserve the current team value to compare after fetch
@@ -207,7 +181,9 @@ export const AuthenticationProvider: React.FC<{
 
         // Log team values for debugging
         if (currentTeam !== data.user.team) {
-          console.log(`Team value updated: ${currentTeam} -> ${data.user.team}`);
+          console.log(
+            `Team value updated: ${currentTeam} -> ${data.user.team}`
+          );
         }
 
         // Make sure team value is preserved and correctly typed
@@ -219,32 +195,36 @@ export const AuthenticationProvider: React.FC<{
         setIsAuthenticated(true);
         setUser(userData);
 
-        // Update cookies with fresh data
-        const cookieOptions = {
-          expires: 7,
-          sameSite: "strict" as const,
-          secure: window?.location.protocol === "https:",
-        };
+        // We only update cookies if the user was not already authenticated
+        // This prevents recreating cookies after logout
+        if (!isAuthenticated) {
+          // Update cookies with fresh data
+          const cookieOptions = {
+            expires: 7,
+            sameSite: "strict" as const,
+            secure: window?.location.protocol === "https:",
+          };
 
-        // Ensure all user profile fields are included in the cookie
-        const userDataForCookie = {
-          id: userData.id,
-          email: userData.email,
-          name: userData.name,
-          phone: userData.phone,
-          nationalId: userData.nationalId,
-          yearId: userData.yearId,
-          avatarImage: userData.avatarImage,
-          isGraduated: userData.isGraduated,
-          about: userData.about,
-          specialization: userData.specialization,
-          role: userData.role,
-          team: userData.team, // Ensure team is included
-          skills: userData.skills,
-        };
+          // Ensure all user profile fields are included in the cookie
+          const userDataForCookie = {
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+            phone: userData.phone,
+            nationalId: userData.nationalId,
+            yearId: userData.yearId,
+            avatarImage: userData.avatarImage,
+            isGraduated: userData.isGraduated,
+            about: userData.about,
+            specialization: userData.specialization,
+            role: userData.role,
+            team: userData.team, // Ensure team is included
+            skills: userData.skills,
+          };
 
-        Cookies.set("isAuthenticated", "true", cookieOptions);
-        Cookies.set("user", JSON.stringify(userDataForCookie), cookieOptions);
+          Cookies.set("isAuthenticated", "true", cookieOptions);
+          Cookies.set("user", JSON.stringify(userDataForCookie), cookieOptions);
+        }
       } else {
         setIsAuthenticated(false);
         setUser(null);
@@ -260,7 +240,7 @@ export const AuthenticationProvider: React.FC<{
     } finally {
       setIsLoading(false);
     }
-  }, [user]);
+  }, [user, isAuthenticated]);
 
   // Consolidate refreshUser logic to use a timer for hourly updates.
   useEffect(() => {
