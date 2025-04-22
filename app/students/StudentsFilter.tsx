@@ -11,13 +11,13 @@ interface StudentsFilterProps {
 }
 
 // Filter categories
-type FilterCategory = "All" | "Level" | "Specialization" | "Skill";
+type FilterCategory =  "Level" | "Specialization" | "Skill";
 
 // Client-side Filter/Search Component
 const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
-  const [activeCategory, setActiveCategory] = useState<FilterCategory>("All");
+  const [activeCategory, setActiveCategory] = useState<FilterCategory>("Skill");
   const [expandedStudent, setExpandedStudent] = useState<string | null>(null);
   const [availableFilters, setAvailableFilters] = useState<{
     levels: string[];
