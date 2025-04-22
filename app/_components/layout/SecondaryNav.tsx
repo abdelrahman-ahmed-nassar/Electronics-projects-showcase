@@ -51,7 +51,7 @@ const NavLinks = [
 const SecondaryNav = ({ children }: { children: React.ReactNode }) => {
   const pathName = usePathname();
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto md:px-4 py-8">
       {/* Circuit board background pattern */}
       <div
         className="absolute inset-0 opacity-10 -z-10"
@@ -97,7 +97,7 @@ const SecondaryNav = ({ children }: { children: React.ReactNode }) => {
 
         {/* Main Content */}
         <div className="w-full lg:w-3/4">
-          <div className="rounded-lg bg-dark-800/90 backdrop-blur-sm border border-secondary-500/20 p-6 shadow-lg relative overflow-hidden">
+          <div className="rounded-lg bg-dark-800/90 backdrop-blur-sm border border-secondary-500/20 px-0 py-6 md:p-6 shadow-lg relative overflow-hidden">
             {/* Tech decoration elements */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-secondary-500/5 rounded-full -mr-16 -mt-16 border border-secondary-500/10"></div>
             <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary-400/5 rounded-full -ml-20 -mb-20 border border-primary-400/10"></div>

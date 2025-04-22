@@ -138,7 +138,7 @@ export default function UploadTeamForm() {
   };
 
   return (
-    <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
+    <div className="bg-gray-800 p-4 sm:p-5 md:p-6 rounded-lg shadow-lg w-full max-w-3xl mx-auto">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -152,11 +152,16 @@ export default function UploadTeamForm() {
         theme="colored"
       />
 
-      <h1 className="text-2xl font-bold text-white mb-6">Create New Team</h1>
+      <h1 className="text-xl sm:text-2xl font-bold text-white mb-5">
+        Create New Team
+      </h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-gray-300 font-bold mb-1" htmlFor="name">
+        <div className="w-full">
+          <label
+            className="block text-gray-300 font-medium mb-1.5 text-sm"
+            htmlFor="name"
+          >
             Team Name *
           </label>
           <input
@@ -165,14 +170,15 @@ export default function UploadTeamForm() {
             name="name"
             value={formData.name ?? ""}
             onChange={handleChange}
-            className="bg-gray-700 text-white px-3 py-2 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-gray-700 text-white px-4 py-2.5 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
             required
+            placeholder="Enter team name"
           />
         </div>
 
-        <div>
+        <div className="w-full">
           <label
-            className="block text-gray-300 font-bold mb-1"
+            className="block text-gray-300 font-medium mb-1.5 text-sm"
             htmlFor="description"
           >
             Description *
@@ -182,18 +188,21 @@ export default function UploadTeamForm() {
             name="description"
             value={formData.description ?? ""}
             onChange={handleChange}
-            className="bg-gray-700 text-white px-3 py-2 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={4}
+            className="bg-gray-700 text-white px-4 py-2.5 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-[120px] transition-all duration-200"
             required
+            placeholder="Describe your team and its purpose"
           />
         </div>
 
         {/* Team Logo Upload */}
-        <div>
-          <label className="block text-gray-300 font-bold mb-1" htmlFor="image">
+        <div className="w-full">
+          <label
+            className="block text-gray-300 font-medium mb-1.5 text-sm"
+            htmlFor="image"
+          >
             Team Logo (Optional)
           </label>
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-col space-y-3">
             <input
               type="file"
               id="image"
@@ -202,40 +211,45 @@ export default function UploadTeamForm() {
               onChange={handleImageChange}
               className="hidden"
             />
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-colors duration-200"
                 disabled={imageUploading}
               >
                 {imageUploading ? "Uploading..." : "Choose Logo"}
               </button>
               {imageUploading && (
-                <span className="text-yellow-500 text-sm">Uploading...</span>
+                <span className="text-yellow-500">Uploading...</span>
               )}
               {imagePreview && !imageUploading && (
-                <span className="text-green-500 text-sm">✓ Logo uploaded</span>
+                <span className="text-green-500">✓ Logo uploaded</span>
               )}
             </div>
 
             {/* Image Preview */}
             {imagePreview && (
-              <div className="mt-2 relative h-40 w-full max-w-sm overflow-hidden rounded-lg border border-gray-600">
+              <div className="mt-3 relative h-48 w-full max-w-[280px] overflow-hidden rounded-lg border border-gray-600 bg-gray-900">
                 <Image
                   src={imagePreview}
                   alt="Preview"
                   fill
+                  sizes="(max-width: 768px) 100vw, 280px"
                   style={{ objectFit: "contain" }}
+                  className="p-2"
                 />
               </div>
             )}
           </div>
+          <p className="mt-1.5 text-xs text-gray-400">
+            Maximum file size: 5MB. Supported formats: JPEG, PNG, GIF, WEBP
+          </p>
         </div>
 
-        <div>
+        <div className="w-full">
           <label
-            className="block text-gray-300 font-bold mb-1"
+            className="block text-gray-300 font-medium mb-1.5 text-sm"
             htmlFor="specialty"
           >
             Specialty (comma-separated)
@@ -246,17 +260,17 @@ export default function UploadTeamForm() {
             name="specialty"
             value={formData.specialty ?? ""}
             onChange={handleChange}
-            className="bg-gray-700 text-white px-3 py-2 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-gray-700 text-white px-4 py-2.5 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
             placeholder="e.g. Embedded Systems, IoT, Robotics"
           />
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-1 text-xs text-gray-400">
             Separate multiple skills with commas
           </p>
         </div>
 
-        <div>
+        <div className="w-full">
           <label
-            className="block text-gray-300 font-bold mb-1"
+            className="block text-gray-300 font-medium mb-1.5 text-sm"
             htmlFor="achievements"
           >
             Achievements
@@ -266,16 +280,22 @@ export default function UploadTeamForm() {
             name="achievements"
             value={formData.achievements ?? ""}
             onChange={handleChange}
-            className="bg-gray-700 text-white px-3 py-2 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={3}
+            className="bg-gray-700 text-white px-4 py-2.5 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-[100px] transition-all duration-200"
             placeholder="e.g. Competitions won, projects completed, recognitions"
           />
         </div>
 
-        <div className="flex items-center justify-end pt-2">
+        <div className="flex items-center justify-end pt-2 mt-2">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="mr-4 bg-gray-600 hover:bg-gray-500 text-white font-medium py-2.5 px-5 rounded-lg focus:outline-none transition duration-150 ease-in-out"
+          >
+            Cancel
+          </button>
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={loading || imageUploading}
           >
             {loading ? "Creating..." : "Create Team"}

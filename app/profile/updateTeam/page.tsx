@@ -363,15 +363,15 @@ const UpdateTeamPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-8 text-dark-800 dark:text-white">
+    <div className="container mx-auto py-6 sm:py-8 px-3 sm:px-4">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-dark-800 dark:text-white">
         Manage Your Team
       </h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
         {/* Team Information (Left Column) */}
         <div className="lg:col-span-1">
-          <div className="bg-white dark:bg-dark-800 rounded-lg shadow p-6">
+          <div className="bg-white dark:bg-dark-800 rounded-lg shadow p-4 sm:p-6">
             <h2 className="text-xl font-bold mb-4 text-dark-800 dark:text-white">
               Team Information
             </h2>
@@ -405,6 +405,7 @@ const UpdateTeamPage = () => {
                       src={teamData.image}
                       alt={teamData.name || "Team image"}
                       fill
+                      sizes="(max-width: 768px) 100vw, 250px"
                       className="object-cover"
                     />
                   ) : (
@@ -428,7 +429,7 @@ const UpdateTeamPage = () => {
                   <h4 className="font-medium text-dark-800 dark:text-white mb-2">
                     Team Members ({teamMembers.length})
                   </h4>
-                  <div className="max-h-60 overflow-y-auto">
+                  <div className="max-h-60 overflow-y-auto pr-1">
                     {teamMembers.map((member) => (
                       <div
                         key={member.id}
@@ -473,7 +474,7 @@ const UpdateTeamPage = () => {
           </div>
 
           {/* Team Projects Section */}
-          <div className="bg-white dark:bg-dark-800 rounded-lg shadow p-6 mt-6">
+          <div className="bg-white dark:bg-dark-800 rounded-lg shadow p-4 sm:p-6 mt-4 sm:mt-6">
             <h2 className="text-xl font-bold mb-4 text-dark-800 dark:text-white">
               Team Projects
             </h2>
@@ -504,7 +505,7 @@ const UpdateTeamPage = () => {
                 {teamProjects.map((project) => (
                   <div
                     key={project.id}
-                    className={`p-4 rounded-lg cursor-pointer transition-all hover:shadow-md border
+                    className={`p-3 sm:p-4 rounded-lg cursor-pointer transition-all hover:shadow-md border
                       ${
                         selectedProject?.id === project.id
                           ? "border-electric-blue bg-electric-blue/10 dark:bg-electric-blue/20"
@@ -559,35 +560,36 @@ const UpdateTeamPage = () => {
             </div>
           ) : selectedProject ? (
             <div className="bg-white dark:bg-dark-800 rounded-lg shadow">
-              <div className="flex items-center justify-between border-b border-gray-200 dark:border-dark-700 p-6">
-                <h2 className="text-xl font-bold text-dark-800 dark:text-white">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-200 dark:border-dark-700 p-4 sm:p-6">
+                <h2 className="text-xl font-bold text-dark-800 dark:text-white mb-3 sm:mb-0">
                   Project Details
                 </h2>
-                <div className="flex space-x-2">
+                <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
                     onClick={() => setIsDeleteModalOpen(true)}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors text-sm sm:text-base"
                   >
                     Delete Project
                   </button>
                   <button
                     type="button"
                     onClick={() => setSelectedProject(null)}
-                    className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-dark-700 dark:hover:bg-dark-600 text-dark-800 dark:text-white rounded-md transition-colors"
+                    className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-dark-700 dark:hover:bg-dark-600 text-dark-800 dark:text-white rounded-md transition-colors text-sm sm:text-base"
                   >
                     Back to Team
                   </button>
                 </div>
               </div>
 
-              <div className="p-6">
-                <div className="mb-6 relative w-full h-60 bg-gray-200 dark:bg-dark-600 rounded-lg overflow-hidden">
+              <div className="p-4 sm:p-6">
+                <div className="mb-6 relative w-full h-48 sm:h-60 bg-gray-200 dark:bg-dark-600 rounded-lg overflow-hidden">
                   {selectedProject.image ? (
                     <Image
                       src={selectedProject.image}
                       alt={selectedProject.title || "Project image"}
                       fill
+                      sizes="(max-width: 768px) 100vw, 768px"
                       className="object-cover"
                     />
                   ) : (
@@ -597,7 +599,7 @@ const UpdateTeamPage = () => {
                   )}
                 </div>
 
-                <h3 className="text-2xl font-bold mb-2 text-dark-800 dark:text-white">
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 text-dark-800 dark:text-white">
                   {selectedProject.title}
                 </h3>
 
@@ -648,23 +650,23 @@ const UpdateTeamPage = () => {
                       href={selectedProject.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-electric-blue hover:underline"
+                      className="text-electric-blue hover:underline break-words"
                     >
                       {selectedProject.link}
                     </Link>
                   </div>
                 )}
 
-                <div className="mt-8 flex justify-end space-x-3">
+                <div className="mt-6 sm:mt-8 flex flex-wrap justify-end gap-3">
                   <Link
                     href={`/projects/${selectedProject.id}`}
-                    className="px-4 py-2 bg-electric-blue hover:bg-electric-blue/90 text-white rounded-md transition-colors"
+                    className="px-4 py-2.5 bg-electric-blue hover:bg-electric-blue/90 text-white rounded-md transition-colors text-sm sm:text-base"
                   >
                     View Project Page
                   </Link>
                   <Link
                     href={`/profile/updateProjects`}
-                    className="px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-md transition-colors"
+                    className="px-4 py-2.5 bg-gray-700 hover:bg-gray-800 text-white rounded-md transition-colors text-sm sm:text-base"
                   >
                     Edit Project
                   </Link>
@@ -673,17 +675,17 @@ const UpdateTeamPage = () => {
             </div>
           ) : (
             <div className="bg-white dark:bg-dark-800 rounded-lg shadow">
-              <div className="border-b border-gray-200 dark:border-dark-700 p-6">
+              <div className="border-b border-gray-200 dark:border-dark-700 p-4 sm:p-6">
                 <h2 className="text-xl font-bold text-dark-800 dark:text-white">
                   Update Team Information
                 </h2>
               </div>
 
-              <form onSubmit={handleUpdateTeam} className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div className="col-span-2">
+              <form onSubmit={handleUpdateTeam} className="p-4 sm:p-6">
+                <div className="grid grid-cols-1 gap-6">
+                  <div className="w-full">
                     <label
-                      className="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                      className="block text-gray-300 font-medium mb-2 text-sm"
                       htmlFor="name"
                     >
                       Team Name *
@@ -694,15 +696,15 @@ const UpdateTeamPage = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue transition-all"
                       placeholder="Enter team name"
                       required
                     />
                   </div>
 
-                  <div className="md:col-span-2">
+                  <div className="w-full">
                     <label
-                      className="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                      className="block text-gray-300 font-medium mb-2 text-sm"
                       htmlFor="description"
                     >
                       Description *
@@ -713,15 +715,15 @@ const UpdateTeamPage = () => {
                       value={formData.description}
                       onChange={handleChange}
                       rows={4}
-                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue resize-y min-h-[150px]"
                       placeholder="Describe your team"
                       required
                     />
                   </div>
 
-                  <div className="col-span-2">
+                  <div className="w-full">
                     <label
-                      className="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                      className="block text-gray-300 font-medium mb-2 text-sm"
                       htmlFor="specialty"
                     >
                       Specialty (comma-separated)
@@ -732,17 +734,17 @@ const UpdateTeamPage = () => {
                       name="specialty"
                       value={formData.specialty}
                       onChange={handleChange}
-                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue transition-all"
                       placeholder="e.g., Embedded Systems, IoT, Machine Learning"
                     />
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                       Separate multiple skills with commas
                     </p>
                   </div>
 
-                  <div className="md:col-span-2">
+                  <div className="w-full">
                     <label
-                      className="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                      className="block text-gray-300 font-medium mb-2 text-sm"
                       htmlFor="achievements"
                     >
                       Achievements
@@ -753,94 +755,93 @@ const UpdateTeamPage = () => {
                       value={formData.achievements}
                       onChange={handleChange}
                       rows={3}
-                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue resize-y min-h-[120px]"
                       placeholder="List team achievements (separate with commas)"
                     />
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                       Separate multiple achievements with commas
                     </p>
                   </div>
 
-                  <div className="md:col-span-2">
-                    <label className="block text-gray-700 dark:text-gray-300 font-bold mb-2">
+                  <div className="w-full">
+                    <label className="block text-gray-300 font-medium mb-2 text-sm">
                       Team Image
                     </label>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-                      <div className="md:col-span-1">
-                        <div className="relative w-full h-32 bg-gray-100 dark:bg-dark-600 rounded-lg overflow-hidden border border-gray-300 dark:border-dark-600">
-                          {imagePreview ? (
-                            <Image
-                              src={imagePreview}
-                              alt="Team image preview"
-                              fill
-                              className="object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-dark-700 text-gray-500 dark:text-gray-400">
-                              <span className="text-sm">No image</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="md:col-span-2">
-                        <div className="flex flex-col space-y-2">
-                          <div className="relative">
-                            <input
-                              type="file"
-                              id="image-upload"
-                              ref={fileInputRef}
-                              onChange={handleImageChange}
-                              accept="image/jpeg,image/png,image/gif,image/webp"
-                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            />
-                            <button
-                              type="button"
-                              className="px-4 py-2 bg-electric-blue hover:bg-electric-blue/90 text-white rounded-md transition-colors w-full flex items-center justify-center"
-                              disabled={imageUploading}
-                            >
-                              {imageUploading ? (
-                                <>
-                                  <svg
-                                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <circle
-                                      className="opacity-25"
-                                      cx="12"
-                                      cy="12"
-                                      r="10"
-                                      stroke="currentColor"
-                                      strokeWidth="4"
-                                    ></circle>
-                                    <path
-                                      className="opacity-75"
-                                      fill="currentColor"
-                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
-                                  </svg>
-                                  Uploading...
-                                </>
-                              ) : (
-                                "Choose Image"
-                              )}
-                            </button>
+                    {/* Preview current image */}
+                    <div className="mb-4">
+                      <div className="relative w-full h-48 max-w-md bg-gray-100 dark:bg-dark-600 rounded-lg overflow-hidden border border-gray-300 dark:border-dark-600">
+                        {imagePreview ? (
+                          <Image
+                            src={imagePreview}
+                            alt="Team image preview"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 400px"
+                            className="object-contain p-2"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-dark-700 text-gray-500 dark:text-gray-400">
+                            <span className="text-sm">No image</span>
                           </div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Maximum file size: 5MB. Supported formats: JPEG,
-                            PNG, GIF, WEBP
-                          </p>
-                        </div>
+                        )}
                       </div>
+                    </div>
+                    {/* Upload new image */}
+                    <div className="flex flex-col space-y-2">
+                      <div className="relative">
+                        <input
+                          type="file"
+                          id="image-upload"
+                          ref={fileInputRef}
+                          onChange={handleImageChange}
+                          accept="image/jpeg,image/png,image/gif,image/webp"
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <button
+                          type="button"
+                          className="px-4 py-3 bg-electric-blue hover:bg-electric-blue/90 text-white rounded-md transition-colors w-full max-w-xs flex items-center justify-center"
+                          disabled={imageUploading}
+                        >
+                          {imageUploading ? (
+                            <>
+                              <svg
+                                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                              </svg>
+                              Uploading...
+                            </>
+                          ) : (
+                            "Choose Image"
+                          )}
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Maximum file size: 5MB. Supported formats: JPEG, PNG,
+                        GIF, WEBP
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="border-t border-gray-200 dark:border-dark-700 pt-4 flex justify-end">
+                <div className="mt-8 pt-4 border-t border-gray-200 dark:border-dark-700 flex justify-end">
                   <button
                     type="submit"
-                    className="px-6 py-2 bg-electric-blue hover:bg-electric-blue/90 text-white rounded-md transition-colors"
+                    className="px-5 py-3 bg-electric-blue hover:bg-electric-blue/90 text-white rounded-md transition-colors"
                     disabled={isLoading.updateTeam}
                   >
                     {isLoading.updateTeam
@@ -856,8 +857,8 @@ const UpdateTeamPage = () => {
 
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-dark-800 rounded-lg shadow-lg max-w-md w-full p-6 mx-4">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-dark-800 rounded-lg shadow-lg max-w-md w-full p-5 mx-4">
             <h3 className="text-xl font-bold mb-4 text-dark-800 dark:text-white">
               Confirm Deletion
             </h3>
@@ -869,13 +870,13 @@ const UpdateTeamPage = () => {
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setIsDeleteModalOpen(false)}
-                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-dark-700 dark:hover:bg-dark-600 text-dark-800 dark:text-white rounded-md transition-colors"
+                className="px-4 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-dark-700 dark:hover:bg-dark-600 text-dark-800 dark:text-white rounded-md transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteProject}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
+                className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
                 disabled={isLoading.deleteProject}
               >
                 {isLoading.deleteProject ? "Deleting..." : "Delete Project"}

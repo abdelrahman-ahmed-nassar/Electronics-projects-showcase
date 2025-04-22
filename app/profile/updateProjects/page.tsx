@@ -188,7 +188,6 @@ const UpdateProjectsPage = () => {
         body: JSON.stringify(projectUpdateData),
       });
 
-   
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
         console.error("Update error response:", errorData);
@@ -230,11 +229,9 @@ const UpdateProjectsPage = () => {
       // Convert the project ID to a string to ensure proper URL formatting
       const projectId = selectedProject.id.toString();
 
-
       const response = await fetch(`/api/projects/${projectId}`, {
         method: "DELETE",
       });
-
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
@@ -384,10 +381,10 @@ const UpdateProjectsPage = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div className="col-span-2">
+                <div className="grid grid-cols-1 gap-6 mb-6">
+                  <div className="w-full">
                     <label
-                      className="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                      className="block text-gray-700 dark:text-gray-300 font-medium mb-2 text-sm"
                       htmlFor="title"
                     >
                       Project Title *
@@ -398,15 +395,15 @@ const UpdateProjectsPage = () => {
                       name="title"
                       value={formData.title || ""}
                       onChange={handleChange}
-                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue transition-all"
                       placeholder="Enter project title"
                       required
                     />
                   </div>
 
-                  <div className="md:col-span-2">
+                  <div className="w-full">
                     <label
-                      className="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                      className="block text-gray-700 dark:text-gray-300 font-medium mb-2 text-sm"
                       htmlFor="description"
                     >
                       Description *
@@ -417,15 +414,15 @@ const UpdateProjectsPage = () => {
                       value={formData.description || ""}
                       onChange={handleChange}
                       rows={4}
-                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue resize-y min-h-[150px] transition-all"
                       placeholder="Describe your project"
                       required
                     />
                   </div>
 
-                  <div>
+                  <div className="w-full">
                     <label
-                      className="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                      className="block text-gray-700 dark:text-gray-300 font-medium mb-2 text-sm"
                       htmlFor="period"
                     >
                       Time Period
@@ -436,14 +433,14 @@ const UpdateProjectsPage = () => {
                       name="period"
                       value={formData.period || ""}
                       onChange={handleChange}
-                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue transition-all"
                       placeholder="e.g. Jan 2023 - Mar 2023"
                     />
                   </div>
 
-                  <div>
+                  <div className="w-full">
                     <label
-                      className="block text-gray-700 dark:text-gray-300 font-bold mb-2"
+                      className="block text-gray-700 dark:text-gray-300 font-medium mb-2 text-sm"
                       htmlFor="link"
                     >
                       Project Link
@@ -454,13 +451,13 @@ const UpdateProjectsPage = () => {
                       name="link"
                       value={formData.link || ""}
                       onChange={handleChange}
-                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                      className="bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-electric-blue transition-all"
                       placeholder="https://github.com/your-repo"
                     />
                   </div>
 
-                  <div className="md:col-span-2">
-                    <label className="block text-gray-700 dark:text-gray-300 font-bold mb-2">
+                  <div className="w-full">
+                    <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2 text-sm">
                       Tags
                     </label>
                     <div className="flex items-center mb-2">
@@ -472,29 +469,29 @@ const UpdateProjectsPage = () => {
                           e.key === "Enter" &&
                           (e.preventDefault(), handleAddTag())
                         }
-                        className="flex-grow bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                        className="flex-grow bg-gray-50 dark:bg-dark-700 text-dark-800 dark:text-white px-4 py-3 border border-gray-300 dark:border-dark-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-electric-blue transition-all"
                         placeholder="Add a tag"
                       />
                       <button
                         type="button"
                         onClick={handleAddTag}
-                        className="px-4 py-2 bg-electric-blue hover:bg-electric-blue/90 text-white rounded-r-lg transition-colors"
+                        className="px-4 py-3 bg-electric-blue hover:bg-electric-blue/90 text-white rounded-r-lg transition-colors font-medium"
                       >
                         Add
                       </button>
                     </div>
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="flex flex-wrap gap-2 mt-3">
                       {formData.tags &&
                         formData.tags.map((tag, index) => (
                           <div
                             key={index}
-                            className="inline-flex items-center bg-electric-blue/10 dark:bg-electric-blue/20 text-electric-blue px-2 py-1 rounded-full text-sm"
+                            className="inline-flex items-center bg-electric-blue/10 dark:bg-electric-blue/20 text-electric-blue px-3 py-1.5 rounded-full text-sm"
                           >
                             {tag}
                             <button
                               type="button"
                               onClick={() => handleRemoveTag(tag)}
-                              className="ml-1 text-electric-blue hover:text-red-500 focus:outline-none"
+                              className="ml-1.5 text-electric-blue hover:text-red-500 focus:outline-none"
                             >
                               ×
                             </button>
@@ -502,13 +499,12 @@ const UpdateProjectsPage = () => {
                         ))}
                     </div>
                   </div>
-                  
                 </div>
 
-                <div className="border-t border-gray-200 dark:border-dark-700 pt-4 flex justify-end">
+                <div className="border-t border-gray-200 dark:border-dark-700 pt-4 mt-2 flex justify-end">
                   <button
                     type="submit"
-                    className="px-6 py-2 bg-electric-blue hover:bg-electric-blue/90 text-white rounded-md transition-colors"
+                    className="px-6 py-3 bg-electric-blue hover:bg-electric-blue/90 text-white rounded-md transition-colors font-medium"
                     disabled={isLoading.updateProject}
                   >
                     {isLoading.updateProject
