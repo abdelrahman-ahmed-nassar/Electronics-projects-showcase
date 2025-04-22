@@ -95,7 +95,7 @@ export const AuthenticationProvider: React.FC<{
         setUser(userWithDefaults);
 
         const cookieOptions = {
-          expires: 7,
+          expires: 9999,
           sameSite: "strict" as const,
           secure: window?.location.protocol === "https:",
         };
@@ -139,7 +139,7 @@ export const AuthenticationProvider: React.FC<{
 
           // Update the cookie with the new user data
           const cookieOptions = {
-            expires: 7,
+            expires: 9999,
             sameSite: "strict" as const,
             secure: window?.location.protocol === "https:",
           };
@@ -199,11 +199,11 @@ export const AuthenticationProvider: React.FC<{
         // This prevents recreating cookies after logout
         if (!isAuthenticated) {
           // Update cookies with fresh data
-          const cookieOptions = {
-            expires: 7,
+            const cookieOptions = {
+            expires: 9999, // No expiration (very far future date)
             sameSite: "strict" as const,
             secure: window?.location.protocol === "https:",
-          };
+            };
 
           // Ensure all user profile fields are included in the cookie
           const userDataForCookie = {
