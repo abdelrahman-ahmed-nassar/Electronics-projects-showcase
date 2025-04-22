@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function ClearCache() {
@@ -8,7 +8,56 @@ export default function ClearCache() {
   const [isCleared, setIsCleared] = useState(false);
   const router = useRouter();
 
+  // Flag to track component mounting state
+  const [isMounted, setIsMounted] = useState(true);
+
+  // Set up effect to track component mount status
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+
+  // Function to delete all cookies more thoroughly
+  const deleteAllCookies = () => {
+    const cookies = document.cookie.split("; ");
+
+    for (const cookie of cookies) {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+
+      // Delete cookie with path=/
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+
+      // Delete cookie without path specification
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+
+      // Try with secure flag
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;secure`;
+
+      // Try with common subdomains
+      const domain = window.location.hostname;
+      const parts = domain.split(".");
+
+      // Try various domain possibilities
+      if (parts.length > 1) {
+        // Root domain
+        const rootDomain = parts.slice(-2).join(".");
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${rootDomain}`;
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${rootDomain}`;
+
+        // Full domain
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${domain}`;
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${domain}`;
+      }
+    }
+
+    // For persistent cookies that might be HTTPOnly or have specific SameSite settings
+    // We'll tell users that some cookies might require them to close the browser
+    return cookies.length;
+  };
+
   const clearCache = async () => {
+    if (!isMounted) return;
     setIsClearing(true);
 
     try {
@@ -22,27 +71,30 @@ export default function ClearCache() {
         window.sessionStorage.clear();
       }
 
-      // Clear cookies
+      // Clear cookies with improved method
       if (typeof document !== "undefined") {
-        const cookies = document.cookie.split(";");
-
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i];
-          const eqPos = cookie.indexOf("=");
-          const name =
-            eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
-          document.cookie =
-            name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-        }
+        deleteAllCookies();
       }
 
-      // Clear IndexedDB databases
+      // Clear IndexedDB databases (with safer implementation)
       if (typeof window !== "undefined" && window.indexedDB) {
-        const databases = await window.indexedDB.databases();
-        for (const db of databases) {
-          if (db.name) {
-            window.indexedDB.deleteDatabase(db.name);
+        try {
+          // Check if databases() method is supported
+          if (typeof window.indexedDB.databases === "function") {
+            const databases = await window.indexedDB.databases();
+            for (const db of databases) {
+              if (db.name) {
+                window.indexedDB.deleteDatabase(db.name);
+              }
+            }
+          } else {
+            // Fallback for browsers not supporting databases() method
+            console.log(
+              "IndexedDB databases() method not supported in this browser"
+            );
           }
+        } catch (e) {
+          console.log("Error clearing IndexedDB:", e);
         }
       }
 
@@ -52,20 +104,41 @@ export default function ClearCache() {
           const cacheNames = await caches.keys();
           await Promise.all(cacheNames.map((name) => caches.delete(name)));
         } catch (e) {
-          console.log("Cache API not fully supported or permission denied", e);
+          console.log("Cache API not fully supported or permission denied:", e);
         }
       }
 
-      setIsCleared(true);
-      setIsClearing(false);
+      // Force clear service workers
+      if (navigator.serviceWorker) {
+        try {
+          const registrations =
+            await navigator.serviceWorker.getRegistrations();
+          for (const registration of registrations) {
+            await registration.unregister();
+          }
+        } catch (e) {
+          console.log("Error clearing service workers:", e);
+        }
+      }
+
+      // Only update state if component is still mounted
+      if (isMounted) {
+        setIsCleared(true);
+        setIsClearing(false);
+      }
 
       // Redirect to login page after a short delay
       setTimeout(() => {
-        router.push("/login");
-      }, 1500);
+        if (isMounted) {
+          router.push("/login");
+        }
+      }, 1000);
     } catch (error) {
       console.error("Error clearing cache:", error);
-      setIsClearing(false);
+      // Only update state if component is still mounted
+      if (isMounted) {
+        setIsClearing(false);
+      }
     }
   };
 
@@ -98,6 +171,11 @@ export default function ClearCache() {
 
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">
           After clearing, you will be redirected to the login page.
+        </p>
+
+        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-center">
+          Note: Some secure cookies may require closing the browser completely
+          to be removed.
         </p>
       </div>
     </div>
