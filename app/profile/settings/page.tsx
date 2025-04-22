@@ -23,6 +23,7 @@ const ProfileSettingsPage = () => {
     role: "",
     team: "",
     avatarImage: "",
+    userId: "",
   });
 
   useEffect(() => {
@@ -43,20 +44,31 @@ const ProfileSettingsPage = () => {
 
     // Set form data from user if available
     if (user) {
-      // Convert skills array to comma-separated string if it's an array
+      // Only update form data if it's empty or if user has changed
+      const userHasChanged = user.id !== formData.userId;
+      const formIsEmpty = !formData.name && !formData.phone && !formData.about;
 
-      setFormData({
-        name: user.name || "",
-        phone: user.phone || "",
-        nationalId: user.nationalId || "",
-        about: user.about || "",
-        skills: user.skills || "",
-        specialization: user.specialization || "",
-        role: user.role || "",
-        team: user.team ? String(user.team) : "",
-        avatarImage: user.avatarImage || "",
-      });
+      if (formIsEmpty || userHasChanged) {
+        // Convert skills array to comma-separated string if needed
+        const skills = Array.isArray(user.skills)
+          ? user.skills.join(", ")
+          : user.skills || "";
+
+        setFormData({
+          name: user.name || "",
+          phone: user.phone || "",
+          nationalId: user.nationalId || "",
+          about: user.about || "",
+          skills: skills,
+          specialization: user.specialization || "",
+          role: user.role || "",
+          team: user.team ? String(user.team) : "",
+          avatarImage: user.avatarImage || "",
+          userId: user.id, // Track which user this form data belongs to
+        });
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleChange = (
