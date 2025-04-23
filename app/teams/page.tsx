@@ -401,13 +401,12 @@ const TeamsPage = () => {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                   {team.projects.map(
                                     (project: string, index: number) => (
-                                      <Link
-                                        href="#"
+                                      <div
                                         key={index}
                                         className="p-3 bg-white/5 rounded border border-electric-blue/10 text-white hover:bg-electric-blue/10 transition-all"
                                       >
                                         {project}
-                                      </Link>
+                                      </div>
                                     )
                                   )}
                                 </div>
