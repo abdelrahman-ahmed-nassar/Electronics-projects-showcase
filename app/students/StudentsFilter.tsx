@@ -217,7 +217,7 @@ const StudentsFilter = ({ initialStudents }: StudentsFilterProps) => {
                   {/* Student Image - Make clickable */}
                   <Link
                     href={`/students/${student.id}`}
-                    className="flex-shrink-0 relative group h-fit"
+                    className="flex-shrink-0 relative group h-fit mx-auto md:mx-0"
                   >
                     <Image
                       src={student.image}
