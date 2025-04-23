@@ -8,29 +8,44 @@ const HeroSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const particlesRef = useRef<HTMLDivElement>(null);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   useEffect(() => {
     // Check if we're in a browser environment
     if (typeof window === "undefined") return;
 
-    // Trigger animations after component mounts
+    // Check if screen is large enough for animations
+    const checkScreenSize = () => {
+      setIsLargeScreen(window.innerWidth >= 800);
+    };
+
+    // Initial check
+    checkScreenSize();
+
+    // Listen for resize events
+    window.addEventListener("resize", checkScreenSize);
+
+    // Trigger animations after component mounts (only on large screens)
     setTimeout(() => setAnimateCircuit(true), 300);
     setTimeout(() => setIsVisible(true), 500);
 
-    // Mouse movement effect for parallax
+    // Mouse movement effect for parallax - only on large screens
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      if (window.innerWidth >= 800) {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove);
 
-    // Create and animate particles
-    if (particlesRef.current) {
+    // Create and animate particles - only on large screens
+    if (particlesRef.current && window.innerWidth >= 800) {
       createParticles();
     }
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", checkScreenSize);
     };
   }, []);
 
@@ -78,9 +93,9 @@ const HeroSection = () => {
 
   // Calculate parallax effect based on mouse position
   const getParallaxStyle = (intensity: number) => {
-    // Check if we're in a browser environment
-    if (typeof window === "undefined") {
-      return {}; // Return empty object if not in browser
+    // Check if we're in a browser environment or if screen is too small for animations
+    if (typeof window === "undefined" || !isLargeScreen) {
+      return {}; // Return empty object if not in browser or on small screen
     }
 
     const maxMove = 20 * intensity;
@@ -98,100 +113,114 @@ const HeroSection = () => {
 
   return (
     <section className="flex flex-col justify-center items-center text-center relative overflow-hidden p-5 min-h-[100vh]">
-      {/* Dynamic animated background with electronic circuit pattern */}
-      <div
-        className={`absolute inset-0 opacity-0 transition-opacity duration-1500 ${
-          animateCircuit ? "opacity-20" : ""
-        }`}
-        style={{
-          backgroundImage:
-            "radial-gradient(#4d94ff 1px, transparent 1px), linear-gradient(to right, #4d94ff 1px, transparent 1px), linear-gradient(to bottom, #4d94ff 1px, transparent 1px)",
-          backgroundSize: "20px 20px, 40px 40px, 40px 40px",
-          backgroundPosition: "0 0, 0 0, 0 0",
-          backgroundBlendMode: "soft-light",
-          pointerEvents: "none",
-        }}
-      ></div>
+      {/* Dynamic animated background with electronic circuit pattern - only on large screens */}
+      {isLargeScreen && (
+        <div
+          className={`absolute inset-0 opacity-0 transition-opacity duration-1500 ${
+            animateCircuit ? "opacity-20" : ""
+          }`}
+          style={{
+            backgroundImage:
+              "radial-gradient(#4d94ff 1px, transparent 1px), linear-gradient(to right, #4d94ff 1px, transparent 1px), linear-gradient(to bottom, #4d94ff 1px, transparent 1px)",
+            backgroundSize: "20px 20px, 40px 40px, 40px 40px",
+            backgroundPosition: "0 0, 0 0, 0 0",
+            backgroundBlendMode: "soft-light",
+            pointerEvents: "none",
+          }}
+        ></div>
+      )}
 
-      {/* Glowing circuit nodes and connections */}
-      <div className="absolute inset-0 -z-5 overflow-hidden">
-        {/* Circuit nodes */}
-        <div className="absolute top-[15%] left-[10%] w-4 h-4 bg-electric-blue rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(77,148,255,0.4)] animate-pulse"></div>
-        <div
-          className="absolute top-[30%] left-[25%] w-3 h-3 bg-mint-green rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(100,255,218,0.4)] animate-pulse"
-          style={{ animationDelay: "0.7s" }}
-        ></div>
-        <div
-          className="absolute top-[70%] left-[15%] w-5 h-5 bg-amber rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(255,179,0,0.4)] animate-pulse"
-          style={{ animationDelay: "1.2s" }}
-        ></div>
-        <div
-          className="absolute top-[20%] right-[20%] w-6 h-6 bg-electric-blue rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(77,148,255,0.4)] animate-pulse"
-          style={{ animationDelay: "0.5s" }}
-        ></div>
-        <div
-          className="absolute top-[50%] right-[10%] w-4 h-4 bg-mint-green rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(100,255,218,0.4)] animate-pulse"
-          style={{ animationDelay: "0.9s" }}
-        ></div>
-        <div
-          className="absolute bottom-[20%] right-[30%] w-5 h-5 bg-amber rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(255,179,0,0.4)] animate-pulse"
-          style={{ animationDelay: "1.5s" }}
-        ></div>
+      {/* Glowing circuit nodes and connections - only on large screens */}
+      {isLargeScreen && (
+        <div className="absolute inset-0 -z-5 overflow-hidden">
+          {/* Circuit nodes */}
+          <div className="absolute top-[15%] left-[10%] w-4 h-4 bg-electric-blue rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(77,148,255,0.4)] animate-pulse"></div>
+          <div
+            className="absolute top-[30%] left-[25%] w-3 h-3 bg-mint-green rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(100,255,218,0.4)] animate-pulse"
+            style={{ animationDelay: "0.7s" }}
+          ></div>
+          <div
+            className="absolute top-[70%] left-[15%] w-5 h-5 bg-amber rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(255,179,0,0.4)] animate-pulse"
+            style={{ animationDelay: "1.2s" }}
+          ></div>
+          <div
+            className="absolute top-[20%] right-[20%] w-6 h-6 bg-electric-blue rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(77,148,255,0.4)] animate-pulse"
+            style={{ animationDelay: "0.5s" }}
+          ></div>
+          <div
+            className="absolute top-[50%] right-[10%] w-4 h-4 bg-mint-green rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(100,255,218,0.4)] animate-pulse"
+            style={{ animationDelay: "0.9s" }}
+          ></div>
+          <div
+            className="absolute bottom-[20%] right-[30%] w-5 h-5 bg-amber rounded-full opacity-60 shadow-[0_0_15px_5px_rgba(255,179,0,0.4)] animate-pulse"
+            style={{ animationDelay: "1.5s" }}
+          ></div>
 
-        {/* Circuit connections - glowing lines */}
-        <div className="absolute top-[15%] left-[10%] w-[30vw] h-[1px] bg-gradient-to-r from-electric-blue to-transparent opacity-40 transform origin-left"></div>
-        <div className="absolute top-[15%] left-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-electric-blue to-transparent opacity-40"></div>
-        <div className="absolute top-[30%] left-[25%] w-[40vw] h-[1px] bg-gradient-to-r from-mint-green to-transparent opacity-40 transform rotate-12 origin-left"></div>
-        <div className="absolute top-[50%] right-[10%] w-[20vw] h-[1px] bg-gradient-to-l from-mint-green to-transparent opacity-40 transform -rotate-15 origin-right"></div>
-        <div className="absolute top-[20%] right-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-electric-blue to-transparent opacity-40"></div>
+          {/* Circuit connections - glowing lines */}
+          <div className="absolute top-[15%] left-[10%] w-[30vw] h-[1px] bg-gradient-to-r from-electric-blue to-transparent opacity-40 transform origin-left"></div>
+          <div className="absolute top-[15%] left-[10%] w-[1px] h-[30vh] bg-gradient-to-b from-electric-blue to-transparent opacity-40"></div>
+          <div className="absolute top-[30%] left-[25%] w-[40vw] h-[1px] bg-gradient-to-r from-mint-green to-transparent opacity-40 transform rotate-12 origin-left"></div>
+          <div className="absolute top-[50%] right-[10%] w-[20vw] h-[1px] bg-gradient-to-l from-mint-green to-transparent opacity-40 transform -rotate-15 origin-right"></div>
+          <div className="absolute top-[20%] right-[20%] w-[1px] h-[40vh] bg-gradient-to-b from-electric-blue to-transparent opacity-40"></div>
 
-        {/* Animated circuit pulses - data flowing along the lines */}
-        <div className="absolute top-[15%] left-[10%] w-[5px] h-[5px] bg-electric-blue rounded-full shadow-[0_0_10px_5px_rgba(77,148,255,0.6)] animate-circuit-pulse-horizontal"></div>
-        <div
-          className="absolute top-[30%] left-[25%] w-[5px] h-[5px] bg-mint-green rounded-full shadow-[0_0_10px_5px_rgba(100,255,218,0.6)] animate-circuit-pulse-diagonal"
-          style={{ animationDelay: "1s" }}
-        ></div>
-        <div
-          className="absolute top-[15%] left-[10%] w-[5px] h-[5px] bg-electric-blue rounded-full shadow-[0_0_10px_5px_rgba(77,148,255,0.6)] animate-circuit-pulse-vertical"
-          style={{ animationDelay: "0.5s" }}
-        ></div>
-        <div
-          className="absolute top-[50%] right-[10%] w-[5px] h-[5px] bg-mint-green rounded-full shadow-[0_0_10px_5px_rgba(100,255,218,0.6)] animate-circuit-pulse-horizontal-reverse"
-          style={{ animationDelay: "1.5s" }}
-        ></div>
-      </div>
-
-      {/* Floating electronic particles */}
-      <div
-        ref={particlesRef}
-        className="absolute inset-0 -z-5 overflow-hidden pointer-events-none"
-      ></div>
-
-      {/* Animated binary code backdrop - subtle tech effect */}
-      <div className="absolute inset-0 -z-6 overflow-hidden opacity-5">
-        <div className="animate-binary-fall text-[10px] leading-none text-electric-blue font-mono whitespace-nowrap">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div
-              key={i}
-              style={{ animationDelay: `${i * 0.3}s` }}
-              className="whitespace-pre"
-            >
-              {Array.from({ length: 200 })
-                .map(() => Math.round(Math.random()))
-                .join(" ")}
-            </div>
-          ))}
+          {/* Animated circuit pulses - data flowing along the lines */}
+          <div className="absolute top-[15%] left-[10%] w-[5px] h-[5px] bg-electric-blue rounded-full shadow-[0_0_10px_5px_rgba(77,148,255,0.6)] animate-circuit-pulse-horizontal"></div>
+          <div
+            className="absolute top-[30%] left-[25%] w-[5px] h-[5px] bg-mint-green rounded-full shadow-[0_0_10px_5px_rgba(100,255,218,0.6)] animate-circuit-pulse-diagonal"
+            style={{ animationDelay: "1s" }}
+          ></div>
+          <div
+            className="absolute top-[15%] left-[10%] w-[5px] h-[5px] bg-electric-blue rounded-full shadow-[0_0_10px_5px_rgba(77,148,255,0.6)] animate-circuit-pulse-vertical"
+            style={{ animationDelay: "0.5s" }}
+          ></div>
+          <div
+            className="absolute top-[50%] right-[10%] w-[5px] h-[5px] bg-mint-green rounded-full shadow-[0_0_10px_5px_rgba(100,255,218,0.6)] animate-circuit-pulse-horizontal-reverse"
+            style={{ animationDelay: "1.5s" }}
+          ></div>
         </div>
-      </div>
+      )}
 
-      {/* Electronic component decorative elements */}
-      <div className="absolute top-[10%] left-[5%] w-16 h-8 border-2 border-mint-green rounded-md opacity-20 flex items-center justify-center text-[8px] text-mint-green">
-        R220Ω
-      </div>
-      <div className="absolute bottom-[15%] right-[8%] w-12 h-12 border-2 border-electric-blue rounded-full opacity-20 flex items-center justify-center text-[8px] text-electric-blue">
-        10μF
-      </div>
-      <div className="absolute top-[25%] right-[12%] border-l-2 border-t-2 border-b-2 border-amber w-8 h-6 opacity-20 after:content-[''] after:absolute after:border-r-2 after:border-t-2 after:border-b-2 after:border-amber after:right-0 after:top-0 after:bottom-0  text-[10px] flex items-center justify-center text-amber"> 22 Ω</div>
+      {/* Floating electronic particles - only on large screens */}
+      {isLargeScreen && (
+        <div
+          ref={particlesRef}
+          className="absolute inset-0 -z-5 overflow-hidden pointer-events-none"
+        ></div>
+      )}
+
+      {/* Animated binary code backdrop - subtle tech effect - only on large screens */}
+      {isLargeScreen && (
+        <div className="absolute inset-0 -z-6 overflow-hidden opacity-5">
+          <div className="animate-binary-fall text-[10px] leading-none text-electric-blue font-mono whitespace-nowrap">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <div
+                key={i}
+                style={{ animationDelay: `${i * 0.3}s` }}
+                className="whitespace-pre"
+              >
+                {Array.from({ length: 200 })
+                  .map(() => Math.round(Math.random()))
+                  .join(" ")}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Electronic component decorative elements - only on large screens */}
+      {isLargeScreen && (
+        <>
+          <div className="absolute top-[10%] left-[5%] w-16 h-8 border-2 border-mint-green rounded-md opacity-20 flex items-center justify-center text-[8px] text-mint-green">
+            R220Ω
+          </div>
+          <div className="absolute bottom-[15%] right-[8%] w-12 h-12 border-2 border-electric-blue rounded-full opacity-20 flex items-center justify-center text-[8px] text-electric-blue">
+            10μF
+          </div>
+          <div className="absolute top-[25%] right-[12%] border-l-2 border-t-2 border-b-2 border-amber w-8 h-6 opacity-20 after:content-[''] after:absolute after:border-r-2 after:border-t-2 after:border-b-2 after:border-amber after:right-0 after:top-0 after:bottom-0 text-[10px] flex items-center justify-center text-amber">
+            22 Ω
+          </div>
+        </>
+      )}
 
       {/* Main content with parallax effect */}
       <div
@@ -200,22 +229,32 @@ const HeroSection = () => {
         }`}
         style={getParallaxStyle(0.2)}
       >
-        {/* Hexagon shape accent */}
-        <div className="absolute -top-10 -left-10 w-20 h-20 flex items-center justify-center">
-          <div className="w-full h-full bg-gradient-to-br from-electric-blue via-mint-green to-electric-blue rotate-45 rounded-xl shadow-lg"></div>
-          <span className="absolute text-navy text-2xl">⚡</span>
-        </div>
+        {/* Hexagon shape accent - only on large screens */}
+        {isLargeScreen && (
+          <div className="absolute -top-10 -left-10 w-20 h-20 flex items-center justify-center">
+            <div className="w-full h-full bg-gradient-to-br from-electric-blue via-mint-green to-electric-blue rotate-45 rounded-xl shadow-lg"></div>
+            <span className="absolute text-navy text-2xl">⚡</span>
+          </div>
+        )}
 
         {/* Animated gradient title */}
         <h1
           className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 relative"
           style={getParallaxStyle(0.3)}
         >
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-mint-green via-electric-blue to-mint-green animate-gradient-x">
+          <span
+            className={`bg-clip-text text-transparent bg-gradient-to-r from-mint-green via-electric-blue to-mint-green ${
+              isLargeScreen ? "animate-gradient-x" : ""
+            }`}
+          >
             Electronics Engineering
           </span>
           <br />
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-electric-blue via-amber to-mint-green animate-gradient-x animation-delay-1000">
+          <span
+            className={`bg-clip-text text-transparent bg-gradient-to-r from-electric-blue via-amber to-mint-green ${
+              isLargeScreen ? "animate-gradient-x animation-delay-1000" : ""
+            }`}
+          >
             Student Showcase
           </span>
           <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-36 h-1 bg-gradient-to-r from-transparent via-mint-green to-transparent rounded-full"></div>
@@ -345,17 +384,19 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Animated scroll indicator - more sophisticated */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-        <div className="relative flex flex-col items-center justify-center cursor-pointer group">
-          <span className="text-mint-green text-xs mb-2 opacity-70 group-hover:opacity-100 transition-opacity">
-            Scroll to discover
-          </span>
-          <div className="w-6 h-10 border-2 border-mint-green/50 rounded-full flex justify-center p-1">
-            <div className="w-1 h-2 bg-mint-green rounded-full animate-scroll-down"></div>
+      {/* Animated scroll indicator - only on large screens */}
+      {isLargeScreen && (
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+          <div className="relative flex flex-col items-center justify-center cursor-pointer group">
+            <span className="text-mint-green text-xs mb-2 opacity-70 group-hover:opacity-100 transition-opacity">
+              Scroll to discover
+            </span>
+            <div className="w-6 h-10 border-2 border-mint-green/50 rounded-full flex justify-center p-1">
+              <div className="w-1 h-2 bg-mint-green rounded-full animate-scroll-down"></div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Add keyframes for custom animations */}
       <style jsx>{`
