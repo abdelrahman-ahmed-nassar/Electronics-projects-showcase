@@ -25,7 +25,7 @@ interface Team {
 // Teams Page Component
 const TeamsPage = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [activeFilter, setActiveFilter] = useState<string>("All");
+  const [activeFilters, setActiveFilters] = useState<string[]>(["All"]);
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,15 +91,19 @@ const TeamsPage = () => {
     }
 
     // Apply specialty filter
-    if (activeFilter !== "All") {
-      result = result.filter(
-        (team) =>
-          team.specialty &&
-          team.specialty
-            .split(",")
-            .map((s) => s.trim().toLowerCase())
-            .includes(activeFilter.toLowerCase())
-      );
+    if (!activeFilters.includes("All")) {
+      result = result.filter((team) => {
+        if (!team.specialty) return false;
+
+        const teamSpecialties = team.specialty.split(",").map((s) => s.trim());
+
+        // Check if any of the selected filters match any of the team's specialties
+        return activeFilters.some((filter) =>
+          teamSpecialties.some(
+            (specialty) => specialty.toLowerCase() === filter.toLowerCase()
+          )
+        );
+      });
     }
 
     // Apply sorting
@@ -122,14 +126,35 @@ const TeamsPage = () => {
     }
 
     return result;
-  }, [teams, searchTerm, activeFilter, sortOption]);
+  }, [teams, searchTerm, activeFilters, sortOption]);
 
   const toggleTag = (tag: string) => {
-    setActiveFilter(tag);
+    if (tag === "All") {
+      // If clicking "All", clear other filters and just select "All"
+      setActiveFilters(["All"]);
+    } else {
+      // If a filter is already active, remove it
+      if (activeFilters.includes(tag)) {
+        const newFilters = activeFilters.filter((filter) => filter !== tag);
+        // If removing the last non-All filter, add "All" back
+        if (newFilters.length === 0) {
+          setActiveFilters(["All"]);
+        } else {
+          // Remove "All" when selecting specific filters
+          setActiveFilters(newFilters.filter((filter) => filter !== "All"));
+        }
+      } else {
+        // Add this filter and remove "All" if present
+        setActiveFilters([
+          ...activeFilters.filter((filter) => filter !== "All"),
+          tag,
+        ]);
+      }
+    }
   };
 
   const clearFilters = () => {
-    setActiveFilter("All");
+    setActiveFilters(["All"]);
     setSearchTerm("");
   };
 
@@ -213,7 +238,7 @@ const TeamsPage = () => {
                 <div className="bg-white/5 rounded-lg p-5 sticky top-28">
                   <div className="flex justify-between items-center mb-5">
                     <h3 className="text-xl m-0 text-mint-green">Filters</h3>
-                    {activeFilter !== "All" && (
+                    {!activeFilters.includes("All") && (
                       <button
                         onClick={clearFilters}
                         className="text-sm text-electric-blue hover:text-mint-green"
@@ -224,16 +249,21 @@ const TeamsPage = () => {
                   </div>
 
                   <div>
-                    <h4 className="text-md mb-3 text-white/80">Specialties</h4>
+                    <h4 className="text-md mb-3 text-white/80">
+                      Specialties{" "}
+                      <span className="text-sm text-electric-blue">
+                        (select multiple)
+                      </span>
+                    </h4>
                     <div className="flex flex-col gap-2">
                       {availableSpecialties.map((specialty) => (
                         <label
                           key={specialty}
-                          className="flex items-center gap-2 cursor-pointer"
+                          className="flex items-center gap-2 cursor-pointer hover:bg-white/5 p-1 rounded transition-colors"
                         >
                           <input
                             type="checkbox"
-                            checked={activeFilter === specialty}
+                            checked={activeFilters.includes(specialty)}
                             onChange={() => toggleTag(specialty)}
                             className="rounded border-electric-blue/50 text-mint-green focus:ring-mint-green"
                           />
