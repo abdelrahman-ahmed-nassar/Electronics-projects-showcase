@@ -2,13 +2,25 @@
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 
+// Define props interface with statistics
+interface HeroSectionProps {
+  statistics: {
+    totalTeams: number;
+    totalProjects: number;
+    teamsWithAchievements: number;
+  };
+}
+
 // Hero Section Component
-const HeroSection = () => {
+const HeroSection = ({ statistics }: HeroSectionProps) => {
   const [animateCircuit, setAnimateCircuit] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const particlesRef = useRef<HTMLDivElement>(null);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
+
+  // Extract statistics from props
+  const { totalTeams, totalProjects, teamsWithAchievements } = statistics;
 
   useEffect(() => {
     // Check if we're in a browser environment
@@ -349,7 +361,7 @@ const HeroSection = () => {
           </Link>
         </div>
 
-        {/* Tech stat counters */}
+        {/* Tech stat counters with real data from database */}
         <div
           className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 text-center"
           style={getParallaxStyle(0.1)}
@@ -357,27 +369,27 @@ const HeroSection = () => {
           <div className="bg-navy/50 rounded-lg p-4 border border-electric-blue/20 backdrop-blur-sm">
             <div
               className="text-4xl font-bold text-electric-blue mb-2 counter"
-              data-target="150"
+              data-target={totalProjects}
             >
-              150+
+              {totalProjects}+
             </div>
             <div className="text-white/70">Student Projects</div>
           </div>
           <div className="bg-navy/50 rounded-lg p-4 border border-mint-green/20 backdrop-blur-sm">
             <div
               className="text-4xl font-bold text-mint-green mb-2 counter"
-              data-target="45"
+              data-target={totalTeams}
             >
-              45+
+              {totalTeams}+
             </div>
             <div className="text-white/70">Research Teams</div>
           </div>
           <div className="bg-navy/50 rounded-lg p-4 border border-amber/20 backdrop-blur-sm">
             <div
               className="text-4xl font-bold text-amber mb-2 counter"
-              data-target="12"
+              data-target={teamsWithAchievements}
             >
-              12+
+              {teamsWithAchievements}+
             </div>
             <div className="text-white/70">Award Winners</div>
           </div>

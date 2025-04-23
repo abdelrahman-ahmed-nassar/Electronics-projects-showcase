@@ -7,6 +7,9 @@ import TeamsSection from "./_components/layout/FeaturedTeamsSection";
 import {
   getFeaturedProjects,
   getFeaturedTeams,
+  getTeamsCount,
+  getProjectsCount,
+  getTeamsWithAchievementsCount,
 } from "@/utils/supabase/data-services";
 
 // Main App Component
@@ -19,10 +22,21 @@ const Page = async () => {
     projectCounts,
   } = await getFeaturedTeams();
 
+  // Fetch statistics data
+  const totalTeams = await getTeamsCount();
+  const totalProjects = await getProjectsCount();
+  const teamsWithAchievements = await getTeamsWithAchievementsCount();
+
   return (
     <>
       <CircuitBackground />
-      <HeroSection />
+      <HeroSection
+        statistics={{
+          totalTeams,
+          totalProjects,
+          teamsWithAchievements,
+        }}
+      />
       <FeaturedProjects projects={featuredProjects} />
       <TeamsSection
         teams={featuredTeams}

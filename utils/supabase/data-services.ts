@@ -609,3 +609,77 @@ export async function getCompleteTeamData(teamId: number): Promise<{
 
   return { team, members, projects };
 }
+
+/**
+ * STATISTICS OPERATIONS
+ */
+
+/**
+ * Calculates the total number of teams in the database
+ * @returns Promise<number> - The total count of teams
+ */
+export async function getTeamsCount(): Promise<number> {
+  try {
+    const supabase = await getSupabaseClient();
+    const { count, error } = await supabase
+      .from("teams")
+      .select("*", { count: "exact", head: true });
+
+    if (error) {
+      throw new Error(`Error counting teams: ${error.message}`);
+    }
+
+    return count || 0;
+  } catch (error) {
+    console.error("Error getting teams count:", error);
+    return 0;
+  }
+}
+
+/**
+ * Calculates the total number of projects in the database
+ * @returns Promise<number> - The total count of projects
+ */
+export async function getProjectsCount(): Promise<number> {
+  try {
+    const supabase = await getSupabaseClient();
+    const { count, error } = await supabase
+      .from("projects")
+      .select("*", { count: "exact", head: true });
+
+    if (error) {
+      throw new Error(`Error counting projects: ${error.message}`);
+    }
+
+    return count || 0;
+  } catch (error) {
+    console.error("Error getting projects count:", error);
+    return 0;
+  }
+}
+
+/**
+ * Calculates the number of teams with achievements
+ * @returns Promise<number> - The count of teams with achievements
+ */
+export async function getTeamsWithAchievementsCount(): Promise<number> {
+  try {
+    const supabase = await getSupabaseClient();
+    const { count, error } = await supabase
+      .from("teams")
+      .select("*", { count: "exact", head: true })
+      .not("achievements", "is", null)
+      .gt("achievements", "[]"); // Teams with non-empty achievements array
+
+    if (error) {
+      throw new Error(
+        `Error counting teams with achievements: ${error.message}`
+      );
+    }
+
+    return count || 0;
+  } catch (error) {
+    console.error("Error getting teams with achievements count:", error);
+    return 0;
+  }
+}
