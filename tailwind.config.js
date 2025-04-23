@@ -7,6 +7,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-geist-sans)"],
+        mono: ["var(--font-geist-mono)"],
+        orbitron: ["var(--font-orbitron)"],
+        exo: ["var(--font-exo2)"],
+      },
       colors: {
         navy: "#0a192f",
         "electric-blue": "#4d94ff",
@@ -86,6 +92,7 @@ module.exports = {
         "data-transfer": "data-transfer 1.5s linear infinite",
         "circuit-flow": "circuit-flow 10s linear infinite",
         glow: "glow 2s ease-in-out infinite alternate",
+        "text-glow": "text-glow 2s ease-in-out infinite alternate",
       },
       keyframes: {
         progress: {
@@ -111,6 +118,14 @@ module.exports = {
             boxShadow:
               "0 0 10px rgba(0, 210, 255, 0.8), 0 0 20px rgba(0, 210, 255, 0.4)",
             opacity: "1",
+          },
+        },
+        "text-glow": {
+          "0%": {
+            textShadow: "0 0 4px rgba(100, 255, 218, 0.5)",
+          },
+          "100%": {
+            textShadow: "0 0 8px rgba(100, 255, 218, 0.8)",
           },
         },
       },
