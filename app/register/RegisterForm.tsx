@@ -1,29 +1,21 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 import { toast } from "react-toastify";
 import { translateSupabaseErrors } from "../_lib/helpers/translateSupabaseErrors";
-import { useAuth } from "../_lib/context/AuthenticationContext";
-import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
-import { UserInterface } from "../Types";
-
-const LoginForm = ({
+const RegisterForm = ({
   submitHandler,
 }: {
   submitHandler: (
     formData: FormData
-  ) => Promise<{ success: boolean; userData?: UserInterface; error?: string }>;
+  ) => Promise<{ success: boolean; message?: string; error?: string }>;
 }) => {
-  const searchParams = useSearchParams();
-
-  const redirectPath = searchParams.get("redirect") || "/";
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { login: updateAuthContext } = useAuth();
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -34,28 +26,56 @@ const LoginForm = ({
       const result = await submitHandler(formData);
 
       if (!result.success) {
-        // Handle other errors
-        toast.error(translateSupabaseErrors(result.error || "Login error"));
-
+        // Handle registration errors
+        toast.error(
+          translateSupabaseErrors(result.error || "Registration failed")
+        );
         setIsLoading(false);
         return;
       }
 
-      // Login successful - update auth context with complete user data
-      if (result.userData) {
-        updateAuthContext(result.userData, redirectPath);
-      } else {
-        toast.error("Failed to retrieve user data");
-        setIsLoading(false);
-      }
+      // Registration successful but awaiting admin verification
+      setRegistrationSuccess(true);
+      toast.success(
+        result.message ||
+          "Registration successful. Your account needs to be verified by an administrator before you can log in."
+      );
+
+      // Reset form
+      setEmail("");
+      setPassword("");
     } catch (e) {
-      console.error("Login error:", e);
-      toast.error("An error occurred while trying to log in.");
-      setIsLoading(false);
+      console.error("Registration error:", e);
+      toast.error("An error occurred while trying to register.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Show success message if registration is complete
+  if (registrationSuccess) {
+    return (
+      <div className="p-6 space-y-6 text-center">
+        <div className="text-mint-green text-2xl font-bold mb-4">
+          Registration Successful!
+        </div>
+        <p className="text-white mb-6">
+          Your account has been created but needs to be verified by an
+          administrator before you can log in.
+        </p>
+        <p className="text-gray-400 mb-6">
+          Please check back later or contact the administrator for verification
+          status.
+        </p>
+        <Link
+          href="/login"
+          className="inline-block py-3 px-6 bg-electric-blue text-white border-none rounded font-bold cursor-pointer transition-all hover:bg-mint-green hover:text-navy hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          Return to Login
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="p-6 space-y-6">
@@ -98,10 +118,11 @@ const LoginForm = ({
           className="w-full px-3 py-2 bg-navy border border-electric-blue/30 rounded focus:outline-none focus:ring-2 focus:ring-mint-green focus:border-transparent"
           placeholder="••••••••"
           required
+          minLength={8}
         />
       </div>
 
-      {/* show password  input*/}
+      {/* Show password input */}
       <div>
         <input
           type="checkbox"
@@ -119,18 +140,22 @@ const LoginForm = ({
         disabled={isLoading}
         className="w-full py-3 px-6 bg-mint-green text-navy border-none rounded font-bold cursor-pointer transition-all hover:bg-electric-blue hover:text-white hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:transform-none"
       >
-        {isLoading ? "Signing in..." : "Sign In"}
+        {isLoading ? "Registering..." : "Register"}
       </button>
+      {/* Admin approval notice */}
+      <p className="text-gray-400 text-xs">
+        New accounts require administrator approval before you can log in.
+      </p>
 
-      {/* Register Link */}
+      {/* Login Link */}
       <div className="text-center mt-4">
         <p className="text-gray-400">
-          Do&apos;t have an account?{" "}
+          Already have an account?{" "}
           <Link
-            href="/register"
-            className="text-electric-blue hover:text-mint-green"
+            href="/login"
+            className="text-mint-green hover:text-electric-blue"
           >
-            Register
+            Log in
           </Link>
         </p>
       </div>
@@ -138,4 +163,4 @@ const LoginForm = ({
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

@@ -200,6 +200,34 @@ const DesktopLoginMenu = () => {
             {/* Animation pulse line */}
             <div className="absolute bottom-0 left-0 w-0 group-hover:w-full h-[1px] bg-gradient-to-r from-transparent via-mint-green/60 to-transparent transition-all duration-500"></div>
           </Link>
+          <Link
+            href="/register"
+            className="py-1.5 px-4 bg-transparent text-electric-blue border border-electric-blue/40 rounded-sm text-xs tracking-wider cursor-pointer transition-all relative group overflow-hidden no-underline"
+            style={{ boxShadow: "0 0 8px rgba(100, 255, 218, 0.1)" }}
+          >
+            {/* Background circuit pattern effect */}
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+              style={{
+                backgroundImage: `radial-gradient(circle at 10px 10px, rgba(100, 255, 218, 0.8) 1px, transparent 0)`,
+                backgroundSize: "8px 8px",
+              }}
+            ></div>
+
+            {/* Glow effect on hover */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-electric-blue/10"></div>
+
+            {/* Text with techno styling */}
+            <div className="relative flex items-center justify-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-electric-blue/80 group-hover:bg-electric-blue transition-all"></span>
+              <span style={{ textShadow: "0 0 4px rgba(100, 255, 218, 0.4)" }}>
+                REGISTER
+              </span>
+            </div>
+
+            {/* Animation pulse line */}
+            <div className="absolute bottom-0 left-0 w-0 group-hover:w-full h-[1px] bg-gradient-to-r from-transparent via-electric-blue/60 to-transparent transition-all duration-500"></div>
+          </Link>
         </>
       )}
     </div>

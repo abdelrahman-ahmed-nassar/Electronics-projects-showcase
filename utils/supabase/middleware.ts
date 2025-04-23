@@ -41,6 +41,7 @@ export async function updateSession(request: NextRequest) {
   // Define which routes are public (don't require authentication)
   const publicRoutes = [
     "/login",
+    "/register",
     "/contact",
     "/auth",
     "/",

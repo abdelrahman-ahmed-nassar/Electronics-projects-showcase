@@ -70,7 +70,7 @@ const SecondaryNav = ({ children }: { children: React.ReactNode }) => {
           <div className="h-16 w-16 flex-shrink-0 rounded-full bg-dark-700 border-2 border-primary-400 text-primary-400 flex items-center justify-center ml-5 shadow-inner transform transition-transform duration-300 hover:scale-105 hover:border-primary-400/80 hover:shadow-primary-400/20">
             <CgProfile className="text-2xl" />
           </div>
-          <h1 className="text-xl md:text-2xl font-bold text-white tracking-wide">
+          <h1 className="ml-4 text-xl md:text-2xl font-bold text-white tracking-wide">
             User Profile
           </h1>
         </div>

@@ -98,6 +98,6 @@ export const translateSupabaseErrors = (error: string) => {
     case "weak_password":
       return "Weak password.";
     default:
-      return "Unexpected error.";
+      return error;
   }
 };

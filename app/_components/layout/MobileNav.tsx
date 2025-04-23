@@ -290,6 +290,7 @@ const MobileNav = () => {
                 </button>
               </div>
             ) : (
+              <>
               <Link
                 href="/login"
                 className="py-2 px-4 bg-navy text-electric-blue border border-electric-blue/50 rounded-sm text-center text-xs tracking-wider cursor-pointer transition-all hover:bg-electric-blue/10 no-underline flex items-center justify-center gap-2 group"
@@ -301,6 +302,18 @@ const MobileNav = () => {
                 <span className="w-2 h-2 rounded-full bg-electric-blue/80 group-hover:bg-electric-blue transition-all"></span>
                 LOGIN
               </Link>
+              <Link
+                href="/register"
+                className="py-2 px-4 bg-navy text-mint-green border border-mint-green/50 rounded-sm text-center text-xs tracking-wider cursor-pointer transition-all hover:bg-mint-green/10 no-underline flex items-center justify-center gap-2 group"
+                style={{
+                  boxShadow: "0 0 8px rgba(100, 255, 218, 0.2)",
+                }}
+                onClick={closeMenu}
+              >
+                <span className="w-2 h-2 rounded-full bg-mint-green/80 group-hover:bg-mint-green transition-all"></span>
+                REGISTER
+              </Link>
+            </>
             )}
           </div>
 
