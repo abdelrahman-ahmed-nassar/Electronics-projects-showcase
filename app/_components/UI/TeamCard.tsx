@@ -68,9 +68,7 @@ const TeamCard = ({ team }: { team: Team }) => {
       <div className="px-5 pb-5 flex flex-col gap-3">
       {/* Projects Link */}
       <div className="text-sm text-electric-blue text-center">
-        <Link href={`/projects?team=${team.id}`}>
-        View {team.projectCount} Projects
-        </Link>
+        {team.projectCount} Projects
       </div>
 
       {/* View Team Profile Button */}
