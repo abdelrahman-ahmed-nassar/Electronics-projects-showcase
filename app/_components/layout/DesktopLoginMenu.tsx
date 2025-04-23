@@ -109,29 +109,87 @@ const DesktopLoginMenu = () => {
   };
 
   return (
-    <div className="flex items-center gap-4 ml-8">
+    <div className="flex items-center gap-4">
       {isAuthenticated ? (
         <>
           <button
-            className="py-2 px-4 bg-transparent text-red-500 border border-red-500 rounded text-sm cursor-pointer transition-all hover:bg-red-500/10"
+            className="py-1.5 px-4 bg-transparent text-red-400 border border-red-500/40 rounded-sm text-xs tracking-wider cursor-pointer transition-all relative group overflow-hidden"
             onClick={handleLogoutAction}
+            style={{ boxShadow: '0 0 8px rgba(255, 51, 102, 0.1)' }}
           >
-            Log Out
+            {/* Background circuit pattern effect */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+              style={{
+                backgroundImage: `radial-gradient(circle at 10px 10px, rgba(255, 51, 102, 0.8) 1px, transparent 0)`,
+                backgroundSize: '8px 8px',
+              }}
+            ></div>
+            
+            {/* Glow effect on hover */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-red-500/10"></div>
+            
+            {/* Text with techno styling */}
+            <div className="relative flex items-center justify-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500/80 group-hover:bg-red-500 transition-all"></span>
+              <span style={{ textShadow: '0 0 4px rgba(255, 51, 102, 0.4)' }}>LOG_OUT</span>
+            </div>
+            
+            {/* Top highlight line */}
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700"></div>
           </button>
+          
           <Link
             href="/profile"
-            className="py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10 no-underline"
+            className="py-1.5 px-4 bg-transparent text-electric-blue border border-electric-blue/40 rounded-sm text-xs tracking-wider cursor-pointer transition-all relative group overflow-hidden no-underline"
+            style={{ boxShadow: '0 0 8px rgba(77, 148, 255, 0.1)' }}
           >
-            Profile
+            {/* Background circuit pattern effect */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+              style={{
+                backgroundImage: `radial-gradient(circle at 10px 10px, rgba(77, 148, 255, 0.8) 1px, transparent 0)`,
+                backgroundSize: '8px 8px',
+              }}
+            ></div>
+            
+            {/* Glow effect on hover */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-electric-blue/10"></div>
+            
+            {/* Text with techno styling */}
+            <div className="relative flex items-center justify-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-electric-blue/80 group-hover:bg-electric-blue transition-all"></span>
+              <span style={{ textShadow: '0 0 4px rgba(77, 148, 255, 0.4)' }}>PROFILE</span>
+            </div>
+            
+            {/* Bottom highlight line */}
+            <div className="absolute bottom-0 right-0 w-full h-[1px] bg-gradient-to-r from-transparent via-electric-blue/50 to-transparent transform translate-x-full group-hover:translate-x-0 transition-transform duration-700"></div>
           </Link>
         </>
       ) : (
         <>
           <Link
             href="/login"
-            className="py-2 px-4 bg-transparent text-electric-blue border border-electric-blue rounded text-sm cursor-pointer transition-all hover:bg-electric-blue/10 no-underline"
+            className="py-1.5 px-4 bg-transparent text-mint-green border border-mint-green/40 rounded-sm text-xs tracking-wider cursor-pointer transition-all relative group overflow-hidden no-underline"
+            style={{ boxShadow: '0 0 8px rgba(100, 255, 218, 0.1)' }}
           >
-            Log In
+            {/* Background circuit pattern effect */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+              style={{
+                backgroundImage: `radial-gradient(circle at 10px 10px, rgba(100, 255, 218, 0.8) 1px, transparent 0)`,
+                backgroundSize: '8px 8px',
+              }}
+            ></div>
+            
+            {/* Glow effect on hover */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-mint-green/10"></div>
+            
+            {/* Text with techno styling */}
+            <div className="relative flex items-center justify-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-mint-green/80 group-hover:bg-mint-green transition-all"></span>
+              <span style={{ textShadow: '0 0 4px rgba(100, 255, 218, 0.4)' }}>LOGIN</span>
+            </div>
+            
+            {/* Animation pulse line */}
+            <div className="absolute bottom-0 left-0 w-0 group-hover:w-full h-[1px] bg-gradient-to-r from-transparent via-mint-green/60 to-transparent transition-all duration-500"></div>
           </Link>
         </>
       )}

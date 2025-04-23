@@ -82,6 +82,10 @@ module.exports = {
       },
       animation: {
         progress: "progress 1.5s ease-in-out infinite",
+        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "data-transfer": "data-transfer 1.5s linear infinite",
+        "circuit-flow": "circuit-flow 10s linear infinite",
+        "glow": "glow 2s ease-in-out infinite alternate",
       },
       keyframes: {
         progress: {
@@ -89,6 +93,27 @@ module.exports = {
           "50%": { width: "70%" },
           "100%": { width: "100%" },
         },
+        "data-transfer": {
+          "0%": { left: "-10%", opacity: "0.8" },
+          "100%": { left: "100%", opacity: "0.2" },
+        },
+        "circuit-flow": {
+          "0%": { backgroundPosition: "0% 0%" },
+          "100%": { backgroundPosition: "100% 100%" },
+        },
+        "glow": {
+          "0%": { 
+            boxShadow: "0 0 5px rgba(0, 210, 255, 0.5), 0 0 10px rgba(0, 210, 255, 0.2)", 
+            opacity: "0.8" 
+          },
+          "100%": { 
+            boxShadow: "0 0 10px rgba(0, 210, 255, 0.8), 0 0 20px rgba(0, 210, 255, 0.4)", 
+            opacity: "1" 
+          },
+        },
+      },
+      backgroundImage: {
+        'circuit-pattern': "url('/images/circuit-pattern.svg')",
       },
     },
   },
