@@ -148,7 +148,7 @@ const MobileNav = () => {
       {/* Mobile Navigation Overlay with Tech Pattern */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-navy/70 backdrop-blur-md z-30"
+          className="fixed inset-0 bg-navy/70 backdrop-blur-md z-40"
           onClick={toggleMobileMenu}
           style={{
             backgroundImage: `
@@ -156,20 +156,54 @@ const MobileNav = () => {
               linear-gradient(to right, rgba(0, 210, 255, 0.07) 1px, transparent 1px),
               linear-gradient(to bottom, rgba(0, 210, 255, 0.07) 1px, transparent 1px)`,
             backgroundSize: "40px 40px, 20px 20px, 20px 20px",
+            backgroundAttachment: "fixed", // This ensures the background stays fixed during scroll
           }}
         ></div>
       )}
 
       {/* Futuristic Mobile Navigation Menu */}
       <nav
-        className={`fixed top-0 right-0 bg-navy/95 h-full w-72 shadow-lg z-40 transform transition-transform duration-300 lg:hidden ${
+        className={`fixed top-0 right-0 bg-navy/95 h-full w-72 shadow-lg z-50 transform transition-transform duration-300 lg:hidden ${
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{
           borderLeft: "1px solid rgba(0, 210, 255, 0.2)",
           boxShadow: "0 0 15px rgba(0, 210, 255, 0.15)",
+          backgroundImage: `
+            radial-gradient(circle at 20px 20px, rgba(0, 255, 216, 0.05) 2px, transparent 0),
+            linear-gradient(to right, rgba(0, 210, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(0, 210, 255, 0.03) 1px, transparent 1px)`,
+          backgroundSize: "30px 30px, 15px 15px, 15px 15px",
+          backgroundAttachment: "fixed",
         }}
       >
+        {/* Close button with futuristic design */}
+        <button
+          onClick={closeMenu}
+          className="absolute top-4 right-4 p-2 z-[60] cursor-pointer rounded-sm border border-electric-blue/30 bg-navy/90 transition-all hover:bg-electric-blue/10"
+          style={{
+            boxShadow: "0 0 8px rgba(0, 210, 255, 0.15)",
+            position: "absolute",
+            zIndex: 60,
+          }}
+          aria-label="Close menu"
+        >
+          <div className="relative w-5 h-5 flex items-center justify-center">
+            <span
+              className="absolute w-5 h-0.5 bg-mint-green transform rotate-45"
+              style={{ boxShadow: "0 0 4px rgba(100, 255, 218, 0.8)" }}
+            ></span>
+            <span
+              className="absolute w-5 h-0.5 bg-electric-blue transform -rotate-45"
+              style={{ boxShadow: "0 0 4px rgba(77, 148, 255, 0.8)" }}
+            ></span>
+            <div
+              className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-mint-green animate-pulse"
+              style={{ boxShadow: "0 0 6px rgba(100, 255, 218, 0.8)" }}
+            ></div>
+          </div>
+        </button>
+
         {/* Circuit board border effect */}
         <div className="absolute h-full w-[1px] left-0 overflow-hidden">
           <div className="absolute h-full w-full bg-gradient-to-b from-electric-blue/20 via-mint-green/40 to-electric-blue/20"></div>
@@ -302,12 +336,17 @@ interface MobileNavItemProps {
   closeMenu: () => void;
 }
 
-const MobileNavItem = ({ href, label, isActive, closeMenu }: MobileNavItemProps) => {
+const MobileNavItem = ({
+  href,
+  label,
+  isActive,
+  closeMenu,
+}: MobileNavItemProps) => {
   return (
     <li className="relative">
       <Link
         href={href}
-        className={`text-xs tracking-wider block py-2.5 relative transition-all duration-300 flex items-center gap-3 group
+        className={`text-xs tracking-wider py-2.5 relative transition-all duration-300 flex items-center gap-3 group
           ${
             isActive ? "text-mint-green" : "text-white hover:text-electric-blue"
           }`}

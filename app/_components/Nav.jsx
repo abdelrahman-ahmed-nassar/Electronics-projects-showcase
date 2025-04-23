@@ -29,10 +29,9 @@ const Nav = () => {
 
   return (
     <header
-      className={`fixed w-full top-0 left-0 transition-all duration-300 z-50 
-        ${scrolled ? "py-1.5 bg-navy/90 backdrop-blur-md" : "py-2 bg-navy/85"}`}
+      className={`fixed w-full top-0 left-0 transition-all duration-300 z-50 py-1.5 bg-navy/90 backdrop-blur-md" : "py-2 bg-navy/85"`}
       style={{
-        boxShadow: scrolled ? "0 4px 12px rgba(0, 255, 216, 0.15)" : "none",
+        boxShadow: "0 4px 12px rgba(0, 255, 216, 0.15)",
         borderBottom: "1px solid rgba(0, 210, 255, 0.2)",
       }}
     >
