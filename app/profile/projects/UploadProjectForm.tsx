@@ -3,7 +3,7 @@
 import { useState, ChangeEvent, FormEvent, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ProjectInterface } from "@/app/Types";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
 import { useAuth } from "@/app/_lib/context/AuthenticationContext";
@@ -19,12 +19,13 @@ export default function UploadProjectForm() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [teamChecked, setTeamChecked] = useState(false);
+  const [tagInput, setTagInput] = useState(""); // New state for tag input
 
   const [formData, setFormData] = useState<ProjectFormData>({
     title: "",
     description: "",
     image: "",
-    tags: [""],
+    tags: [],
     period: "",
     link: "",
     teamId: user?.team || null,
@@ -63,6 +64,25 @@ export default function UploadProjectForm() {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  // Add a new tag to the tags array
+  const handleAddTag = () => {
+    if (tagInput.trim() !== "") {
+      setFormData((prev) => ({
+        ...prev,
+        tags: [...(prev.tags || []), tagInput.trim()],
+      }));
+      setTagInput("");
+    }
+  };
+
+  // Remove a tag from the tags array
+  const handleRemoveTag = (tagToRemove: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      tags: (prev.tags || []).filter((tag) => tag !== tagToRemove),
     }));
   };
 
@@ -147,6 +167,8 @@ export default function UploadProjectForm() {
       const projectData = {
         ...formData,
         teamId: user.team,
+        // Ensure tags is an array
+        tags: Array.isArray(formData.tags) ? formData.tags : [],
       };
 
       const response = await fetch("/api/projects", {
@@ -199,18 +221,6 @@ export default function UploadProjectForm() {
   if (user && !user.team) {
     return (
       <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
         <div className="text-center py-8">
           <h2 className="text-2xl font-bold text-white mb-4">
             Unable to Upload Project
@@ -232,19 +242,6 @@ export default function UploadProjectForm() {
 
   return (
     <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
-
       <h1 className="text-2xl font-bold text-white mb-6">Upload New Project</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -328,23 +325,46 @@ export default function UploadProjectForm() {
 
         <div>
           <label className="block text-gray-300 font-bold mb-1" htmlFor="tags">
-            Tags (comma-separated)
+            Tags
           </label>
-          <input
-            type="text"
-            id="tags"
-            name="tags"
-            value={Array.isArray(formData.tags) ? formData.tags.join(", ") : ""}
-            onChange={(e) => {
-              const tagsArray = e.target.value
-                .split(",")
-                .map((tag) => tag.trim())
-                .filter((tag) => tag.length > 0);
-              setFormData((prev) => ({ ...prev, tags: tagsArray }));
-            }}
-            className="bg-gray-700 text-white px-3 py-2 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="e.g. Robotics, IoT, Embedded Systems"
-          />
+          <div className="flex items-center mb-2">
+            <input
+              type="text"
+              id="tags"
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyPress={(e) =>
+                e.key === "Enter" && (e.preventDefault(), handleAddTag())
+              }
+              className="bg-gray-700 text-white px-3 py-2 border border-gray-600 rounded-l-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Add a tag and press Enter or Add"
+            />
+            <button
+              type="button"
+              onClick={handleAddTag}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-r-lg transition-colors"
+            >
+              Add
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {formData.tags &&
+              formData.tags.map((tag, index) => (
+                <div
+                  key={index}
+                  className=" inline-flex items-center bg-blue-500/5 text-blue-400 px-3 py-1.5 rounded-full text-sm"
+                >
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveTag(tag)}
+                    className="ml-1.5 text-blue-400 hover:text-red-500 focus:outline-none"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+          </div>
         </div>
 
         <div>

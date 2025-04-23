@@ -17,13 +17,14 @@ export async function POST(request: Request) {
   try {
     const rawData = await request.json();
 
-    // Convert the comma-separated tags string into a string array
-    // Trim whitespace from each tag and filter out empty strings
+    // Process tags based on whether they're already an array or a string that needs to be split
     const tagsArray = rawData.tags
-      ? rawData.tags
-          .split(",")
-          .map((tag: string) => tag.trim())
-          .filter((tag: string) => tag !== "")
+      ? Array.isArray(rawData.tags)
+        ? rawData.tags.filter((tag: string) => tag.trim() !== "")
+        : rawData.tags
+            .split(",")
+            .map((tag: string) => tag.trim())
+            .filter((tag: string) => tag !== "")
       : null;
 
     const projectData: Omit<ProjectInterface, "id" | "created_at"> = {
