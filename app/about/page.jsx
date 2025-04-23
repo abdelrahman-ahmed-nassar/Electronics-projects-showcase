@@ -2,7 +2,11 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-
+import LabImage from "@/public/images/elec-lab.jpg";
+import drMehanna from "@/public/images/dr-mehanna.jpg";
+import drAly from "@/public/images/Aly-El-Semary.png";
+import drAshraf from "@/public/images/ashraf.png";
+import farag from "@/public/images/farag.jpg";
 
 const About = () => {
   return (
@@ -106,13 +110,13 @@ const MissionSection = () => {
                 build the future of technology."
               </p>
               <p className="text-right text-mint-green mt-2 mb-0">
-                — Dr. Ahmed Nasser, Dean
+                — Dr. Mohamed Ahmed Mehanna, Dean
               </p>
             </div>
           </div>
           <div className="flex-1 min-w-[300px] h-[400px] bg-[#172a45] rounded-lg overflow-hidden relative">
-            <img
-              src="/api/placeholder/600/400"
+            <Image
+              src={LabImage}
               alt="Electronics laboratory with students working"
               className="w-full h-full object-cover"
             />
@@ -352,28 +356,28 @@ const FacilitiesSection = () => {
 const TeamSection = () => {
   const facultyMembers = [
     {
-      name: "Dr. Ahmed Nasser",
+      name: "Dr. Mohamed Ahmed Mehanna",
       position: "Dean",
       specialty: "Power Electronics",
-      image: "/api/placeholder/200/200",
+      image: drMehanna,
     },
     {
-      name: "Dr. Fatima El-Sherif",
-      position: "Head of Research",
-      specialty: "Biomedical Instrumentation",
-      image: "/api/placeholder/200/200",
+      name: "Prof. Aly Al-Semary",
+      position: "Head of department",
+      specialty: "Systems and computers engineering",
+      image: drAly ,
     },
     {
-      name: "Prof. Mahmoud Ibrahim",
-      position: "Department Chair",
-      specialty: "Embedded Systems",
-      image: "/api/placeholder/200/200",
+      name: "Prof. Ashraf El Marakby",
+      position: "Professor Doctor",
+      specialty: "Systems and computers engineering",
+      image: drAshraf,
     },
     {
-      name: "Dr. Laila Mostafa",
-      position: "Associate Professor",
-      specialty: "Signal Processing",
-      image: "/api/placeholder/200/200",
+      name: "Dr. Mahmoud Farag Elgabry Farag",
+      position: "Head of department",
+      specialty: "Preparatory Year",
+      image: farag ,
     },
   ];
 
@@ -390,7 +394,7 @@ const TeamSection = () => {
               className="bg-white/5 rounded-lg overflow-hidden border border-electric-blue/20 hover:border-electric-blue transition-all hover:-translate-y-1 hover:shadow-xl text-center"
             >
               <div className="h-48 overflow-hidden">
-                <img
+                <Image
                   src={member.image}
                   alt={member.name}
                   className="w-full h-full object-cover"

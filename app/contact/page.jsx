@@ -11,8 +11,6 @@ const Contact = () => {
       <ContactHero />
       <ContactFormSection />
       <ContactInfoSection />
-      <MapSection />
-      <FaqSection />
     </>
   );
 };
@@ -395,113 +393,7 @@ const ContactInfoSection = () => {
   );
 };
 
-// Map Section
-const MapSection = () => {
-  return (
-    <section className="py-16 px-5 bg-white/[0.02]">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl text-center mb-10 text-mint-green">Find Us</h2>
 
-        <div className="bg-white/5 rounded-lg p-2 border border-electric-blue/20 overflow-hidden">
-          {/* This would be replaced with an actual map component. 
-              Using a placeholder image for demonstration */}
-          <div className="w-full h-96 bg-navy relative">
-            <img
-              src="/api/placeholder/1200/400"
-              alt="Map location of Al Azhar Computer Engineering College"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="bg-navy/80 p-4 rounded-lg text-center">
-                <p className="text-mint-green font-bold">Map Placeholder</p>
-                <p className="text-white/80 text-sm">
-                  Al Azhar University Campus, Cairo, Egypt
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-8 bg-white/5 rounded-lg p-6 border border-electric-blue/20">
-          <h3 className="text-xl text-white mb-4">
-            Transportation & Directions
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="text-electric-blue font-medium mb-2">
-                By Public Transport
-              </h4>
-              <ul className="space-y-2 text-white/80">
-                <li>Metro: Line 3 to Al Azhar Station, then 10 minute walk</li>
-                <li>
-                  Bus: Routes 112, 450, 621 stop directly at the campus entrance
-                </li>
-                <li>Microbuses available from Ramses and Tahrir Squares</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-electric-blue font-medium mb-2">By Car</h4>
-              <ul className="space-y-2 text-white/80">
-                <li>From Downtown: 25 minutes via Salah Salem Road</li>
-                <li>From Giza: 40 minutes via 6th October Bridge</li>
-                <li>Visitor parking available at the south entrance</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// FAQ Section for Contact Page
-const FaqSection = () => {
-  const faqs = [
-    {
-      question: "What are the best hours to visit the campus?",
-      answer:
-        "The campus is open Sunday through Thursday from 8:00 AM to 4:00 PM. For the best experience, we recommend visiting between 10:00 AM and 2:00 PM when most labs are active and faculty members are available.",
-    },
-    {
-      question: "Do I need to schedule an appointment for a campus tour?",
-      answer:
-        "Yes, we recommend scheduling campus tours at least 3 days in advance using our contact form. This ensures we can provide you with a guided tour that focuses on your areas of interest.",
-    },
-    {
-      question: "How quickly can I expect a response to my inquiry?",
-      answer:
-        "We aim to respond to all inquiries within 1-2 business days. For urgent matters, we recommend calling our main office directly.",
-    },
-    {
-      question: "Can I meet with specific faculty members during my visit?",
-      answer:
-        "Yes, meetings with faculty members can be arranged with advance notice. Please specify which department or faculty member you'd like to meet in your tour request.",
-    },
-  ];
-
-  return (
-    <section className="py-16 px-5">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl text-center mb-10 text-mint-green">
-          Frequently Asked Questions
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="bg-white/5 rounded-lg p-6 border border-electric-blue/20"
-            >
-              <h3 className="text-xl text-white mb-3">{faq.question}</h3>
-              <p className="text-white/80">{faq.answer}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 // Footer Component
 
