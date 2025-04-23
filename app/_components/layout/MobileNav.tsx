@@ -192,7 +192,12 @@ const MobileNav = () => {
 
         <div className="px-6 py-4">
           <ul className="flex flex-col gap-4 list-none p-0 m-0 mb-12">
-            <MobileNavItem href="/" label="HOME" isActive={pathname === "/"} closeMenu={closeMenu} />
+            <MobileNavItem
+              href="/"
+              label="HOME"
+              isActive={pathname === "/"}
+              closeMenu={closeMenu}
+            />
             <MobileNavItem
               href="/projects"
               label="PROJECTS"
@@ -290,13 +295,22 @@ const MobileNav = () => {
 };
 
 // Mobile navigation item with tech effects
-const MobileNavItem = ({ href, label, isActive, closeMenu }) => {
+interface MobileNavItemProps {
+  href: string;
+  label: string;
+  isActive: boolean;
+  closeMenu: () => void;
+}
+
+const MobileNavItem = ({ href, label, isActive, closeMenu }: MobileNavItemProps) => {
   return (
     <li className="relative">
       <Link
         href={href}
         className={`text-xs tracking-wider block py-2.5 relative transition-all duration-300 flex items-center gap-3 group
-          ${isActive ? "text-mint-green" : "text-white hover:text-electric-blue"}`}
+          ${
+            isActive ? "text-mint-green" : "text-white hover:text-electric-blue"
+          }`}
         style={{
           textShadow: isActive ? "0 0 6px rgba(0, 255, 216, 0.6)" : "none",
         }}
