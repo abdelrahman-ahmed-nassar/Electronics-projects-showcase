@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { getProjectDisplayById } from "@/utils/supabase/data-services";
 import { ProjectDisplayInterface } from "@/app/Types";
 
@@ -46,13 +45,14 @@ export default async function ProjectPage({
         <div className="w-full h-[40vh] relative bg-gradient-to-b from-black/50 to-navy">
           {project.image ? (
             <div className="absolute inset-0 opacity-50">
-              <Image
-                src={project.image}
-                alt={project.title || "Project image"}
-                fill
-                style={{ objectFit: "cover" }}
-                priority
-              />
+              <div
+                className="h-[300px] bg-[#172a45] bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${
+                    project.image || "/public/images/default-project-image.png"
+                  })`,
+                }}
+              ></div>
             </div>
           ) : (
             <div className="absolute inset-0 bg-gradient-to-r from-electric-blue/30 to-magenta/30"></div>
@@ -155,13 +155,14 @@ export default async function ProjectPage({
                   Project Gallery
                 </h2>
                 <div className="bg-white/5 border border-electric-blue/20 rounded-lg overflow-hidden">
-                  <Image
-                    src={project.image}
-                    alt={project.title || "Project image"}
-                    width={1000}
-                    height={600}
-                    className="w-full h-auto"
-                  />
+                  <div
+                    className="h-[600px] w-[1000px] max-w-full max-h-full bg-[#172a45] bg-cover bg-center"
+                    style={{
+                      backgroundImage: `url(${
+                        project.image || "/public/images/default-project-image.png"
+                      })`,
+                    }}
+                  ></div>
                 </div>
               </div>
             )}
@@ -223,7 +224,6 @@ export default async function ProjectPage({
                         d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                       ></path>
                     </svg>
-                    
                     View Project Resources
                   </Link>
                 </div>
@@ -260,16 +260,15 @@ export default async function ProjectPage({
                               href={`/students/${member.id}`}
                               className="w-10 h-10 bg-navy-light rounded-full overflow-hidden flex-shrink-0 block"
                             >
-                              <Image
-                                src={
-                                  member.image ||
-                                  "/images/default-user-profile-image.svg"
-                                }
-                                alt={member.name || "Team member"}
-                                width={40}
-                                height={40}
-                                className="w-full h-full object-cover"
-                              />
+                              <div
+                                className="h-[40px] w-[40px] bg-[#172a45] bg-cover bg-center"
+                                style={{
+                                  backgroundImage: `url(${
+                                    member.image ||
+                                    "/public/images/default-user-profile-image.svg"
+                                  })`,
+                                }}
+                              ></div>
                             </Link>
                             <div>
                               <Link
