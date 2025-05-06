@@ -37,7 +37,10 @@ export default async function TeamPage({
                 {/* Team Logo/Image */}
                 <div className="w-32 h-32 md:w-48 md:h-48 bg-navy-light rounded-xl overflow-hidden border-4 border-electric-blue flex-shrink-0">
                   <Image
-                    src={team.image || "/images/default-team-image.png"}
+                    src={
+                      team.image ||
+                      "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/teams-images//default-team-image.png"
+                    }
                     alt={team.name || "Team profile"}
                     width={200}
                     height={200}
@@ -284,7 +287,7 @@ export default async function TeamPage({
                               <Image
                                 src={
                                   member.avatarImage ||
-                                  "/images/default-user-profile-image.svg"
+                                  "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg"
                                 }
                                 alt={member.name || "Team member"}
                                 width={48}
@@ -362,7 +365,7 @@ export default async function TeamPage({
                     <div className="py-3 flex justify-between">
                       <span className="text-white/70">Achievements</span>
                       <span className="text-white">
-                        {team?.achievements?.split(",").length || 0} 
+                        {team?.achievements?.split(",").length || 0}
                       </span>
                     </div>
                   </div>

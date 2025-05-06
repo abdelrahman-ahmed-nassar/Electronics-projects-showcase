@@ -295,7 +295,7 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
                                   <Image
                                     src={
                                       member.image ||
-                                      "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg"
+                                      "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg"
                                     }
                                     alt={member.name}
                                     className="w-full h-full object-cover"
@@ -416,7 +416,7 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
                               height={32}
                               src={
                                 member.image ||
-                                "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg"
+                                "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg"
                               }
                               alt={member.name}
                               className="w-full h-full object-cover"

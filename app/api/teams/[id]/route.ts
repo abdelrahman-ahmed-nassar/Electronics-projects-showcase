@@ -33,7 +33,7 @@ export async function GET(
         ...team,
         image:
           team.image ||
-          "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/teams-images//default-team-image.png",
+          "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/teams-images//default-team-image.png",
         specialty: team.specialty || "Unspecified",
       },
       members: members || [],

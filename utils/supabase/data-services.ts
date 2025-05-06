@@ -212,7 +212,7 @@ export async function getProjectsForDisplay(): Promise<
                   role: member.role || member.specialization || "Team Member",
                   image:
                     member.avatarImage ||
-                    "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
+                    "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
                   id: member.id || "Unknown ID",
                 })),
               };
@@ -232,7 +232,7 @@ export async function getProjectsForDisplay(): Promise<
           period: project.period || null,
           image:
             project.image ||
-            "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/projects-images//default-team-image.png",
+            "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/projects-images//default-team-image.png",
           tags: project.tags || [],
           dateCreated: project.created_at,
           link: project.link || null,
@@ -289,7 +289,7 @@ export async function getProjectDisplayById(
               role: member.role || member.specialization || "Team Member",
               image:
                 member.avatarImage ||
-                "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
+                "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
               id: member.id || "Unknown ID",
             })),
           };
@@ -308,7 +308,7 @@ export async function getProjectDisplayById(
       description: project.description || "No description available",
       image:
         project.image ||
-        "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/projects-images//default-project-image.png",
+        "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/projects-images//default-project-image.png",
       tags: project.tags || [],
       dateCreated: project.created_at,
       link: project.link || null,
@@ -435,7 +435,7 @@ export async function getFeaturedProjects(): Promise<
                   role: member.role || member.specialization || "Team Member",
                   image:
                     member.avatarImage ||
-                    "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
+                    "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
                   id: member.id || "Unknown ID",
                 })),
               };
@@ -455,7 +455,7 @@ export async function getFeaturedProjects(): Promise<
           period: project.period || null,
           image:
             project.image ||
-            "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/projects-images//default-project-image.png",
+            "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/projects-images//default-project-image.png",
           tags: project.tags || [],
           dateCreated: project.created_at,
           link: project.link || null,
@@ -579,7 +579,7 @@ export async function getStudentsForDisplay(): Promise<
             description: project.description || "No description available",
           })),
           image:
-            profile.avatarImage || "/images/default-user-profile-image.svg",
+            profile.avatarImage || "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
         };
       })
     );

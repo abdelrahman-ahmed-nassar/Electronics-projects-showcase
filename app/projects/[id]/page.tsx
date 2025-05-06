@@ -263,7 +263,7 @@ export default async function ProjectPage({
                               <Image
                                 src={
                                   member.image ||
-                                  "/images/default-user-profile-image.svg"
+                                  "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg"
                                 }
                                 alt={member.name || "Team member"}
                                 width={40}
