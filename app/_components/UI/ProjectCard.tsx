@@ -13,7 +13,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         className="h-[200px] bg-[#172a45] bg-cover bg-center"
         style={{
           backgroundImage: `url(${
-            false || "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/projects-images//default-project-image.png"
+            project.image || "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/projects-images//default-project-image.png"
           })`,
         }}
       ></div>
