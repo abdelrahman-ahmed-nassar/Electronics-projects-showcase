@@ -283,7 +283,7 @@ const TeamsPage = () => {
                       Showing {filteredTeams.length} of {teams.length} teams
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {filteredTeams.map((team: Team) => (
+                      {filteredTeams.map((team: Team, index: number) => (
                         <div
                           key={team.id}
                           className="bg-white/5 rounded-lg overflow-hidden border border-electric-blue/20 hover:border-electric-blue transition-all"
@@ -296,6 +296,8 @@ const TeamsPage = () => {
                               className="w-full h-full object-cover"
                               width={1200}
                               height={200}
+                              sizes="(max-width: 768px) 100vw, 600px"
+                              priority={index === 0}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                             {/* Display specialties as separate tags */}
@@ -345,6 +347,7 @@ const TeamsPage = () => {
                                         className="w-full h-full object-cover"
                                         width={32}
                                         height={32}
+                                        sizes="32px"
                                       />
                                     </div>
                                   ))}
@@ -407,6 +410,7 @@ const TeamsPage = () => {
                                             className="w-full h-full object-cover"
                                             width={48}
                                             height={48}
+                                            sizes="48px"
                                           />
                                         </div>
                                         <div>

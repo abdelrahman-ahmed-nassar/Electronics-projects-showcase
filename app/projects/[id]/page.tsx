@@ -51,6 +51,7 @@ export default async function ProjectPage({
                 alt={project.title || "Project image"}
                 fill
                 style={{ objectFit: "cover" }}
+                sizes="100vw"
                 priority
               />
             </div>
@@ -161,6 +162,7 @@ export default async function ProjectPage({
                     width={1000}
                     height={600}
                     className="w-full h-auto"
+                    sizes="(max-width: 1024px) 100vw, 66vw"
                   />
                 </div>
               </div>
@@ -269,6 +271,7 @@ export default async function ProjectPage({
                                 width={40}
                                 height={40}
                                 className="w-full h-full object-cover"
+                                sizes="40px"
                               />
                             </Link>
                             <div>

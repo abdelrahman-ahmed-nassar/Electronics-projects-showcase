@@ -197,6 +197,7 @@ const ProfileSettingsPage = () => {
                     src={previewImage || formData.avatarImage}
                     alt="Profile preview"
                     fill
+                    sizes="96px"
                     className="object-cover"
                   />
                 ) : (
