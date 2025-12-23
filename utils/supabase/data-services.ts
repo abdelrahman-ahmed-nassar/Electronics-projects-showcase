@@ -175,13 +175,44 @@ export async function getAllProjects(): Promise<ProjectInterface[]> {
  * Transform projects for client display
  * This returns projects in the format expected by the client UI
  */
-export async function getProjectsForDisplay(): Promise<
-  ProjectDisplayInterface[]
-> {
+export async function getProjectsForDisplay(
+  startDate?: string | null,
+  endDate?: string | null
+): Promise<ProjectDisplayInterface[]> {
   try {
-    const projects = await getAllProjects();
+    // If either startDate or endDate provided, use a filtered query instead
+    const supabase = await getSupabaseClient();
+    let projectRows: any[] = [];
+
+    if (startDate || endDate) {
+      let query = supabase.from("projects").select("*");
+
+      if (startDate) {
+        // include projects created on or after the start of the startDate (inclusive)
+        // normalize to start of day in UTC to avoid timezone mismatches
+        const startIso = new Date(`${startDate}T00:00:00.000Z`).toISOString();
+        query = query.gte("created_at", startIso);
+      }
+      if (endDate) {
+        // include projects created on or before the end of the endDate (inclusive)
+        // normalize to end of day in UTC so the entire day is included
+        const endIso = new Date(`${endDate}T23:59:59.999Z`).toISOString();
+        query = query.lte("created_at", endIso);
+      }
+
+      const { data, error } = await query;
+      if (error) {
+        throw new Error(`Error fetching projects: ${error.message}`);
+      }
+
+      projectRows = data || [];
+    } else {
+      const projects = await getAllProjects();
+      projectRows = projects;
+    }
+
     const transformedProjects = await Promise.all(
-      projects.map(async (project) => {
+      projectRows.map(async (project) => {
         // Get team information if teamId exists
         let teamInfo: {
           name: string;
@@ -404,7 +435,7 @@ export async function getFeaturedProjects(): Promise<
 
     // Use existing function to transform to display format
     const transformedProjects = await Promise.all(
-      (data || []).map(async (project) => {
+      (data || []).map(async (project: any) => {
         // Get team information if teamId exists
         let teamInfo: {
           name: string;
@@ -498,7 +529,7 @@ export async function getFeaturedTeams(): Promise<{
     const projectCounts: Record<number, number> = {};
 
     await Promise.all(
-      teams.map(async (team) => {
+      teams.map(async (team: any) => {
         try {
           // Get team members
           const teamMembers = await getProfilesByTeam(team.id);
@@ -579,7 +610,8 @@ export async function getStudentsForDisplay(): Promise<
             description: project.description || "No description available",
           })),
           image:
-            profile.avatarImage || "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
+            profile.avatarImage ||
+            "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
         };
       })
     );

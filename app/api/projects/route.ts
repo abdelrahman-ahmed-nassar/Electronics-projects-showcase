@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { uploadProject } from "@/utils/supabase/data-services";
+import {
+  uploadProject,
+  getProjectsForDisplay,
+} from "@/utils/supabase/data-services";
 import { createClient } from "@/utils/supabase/server"; // Import the standard server client
 import { ProjectInterface } from "@/app/Types";
 
@@ -59,6 +62,24 @@ export async function POST(request: Request) {
         : "Failed to upload project due to an unknown server error";
     // Check if the error is a Supabase AuthError or PostgrestError for more details
     // if (error && typeof error === 'object' && 'code' in error) { ... }
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
+  }
+}
+
+export async function GET(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const startDate = url.searchParams.get("startDate");
+    const endDate = url.searchParams.get("endDate");
+
+    // Fetch projects with optional date range filtering
+    const projects = await getProjectsForDisplay(startDate, endDate);
+
+    return NextResponse.json(projects, { status: 200 });
+  } catch (error) {
+    console.error("API Route GET /api/projects error:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to fetch projects";
     return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }

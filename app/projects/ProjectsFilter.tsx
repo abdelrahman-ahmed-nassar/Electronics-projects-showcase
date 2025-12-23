@@ -23,7 +23,10 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
   const [activeProject, setActiveProject] =
     useState<ProjectDisplayInterface | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+  const [dateError, setDateError] = useState<string | null>(null);
 
   // Extract all unique tags from projects
   const allTags = [
@@ -103,6 +106,54 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
     setSearchQuery("");
   };
 
+  // Fetch projects from API with optional date range
+  const fetchProjectsByDate = async (
+    start?: string | null,
+    end?: string | null
+  ) => {
+    try {
+      setIsLoading(true);
+
+      const params = new URLSearchParams();
+      if (start) params.set("startDate", start);
+      if (end) params.set("endDate", end);
+
+      const url = `/api/projects${
+        params.toString() ? `?${params.toString()}` : ""
+      }`;
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch projects: ${res.status}`);
+      }
+      const data: ProjectDisplayInterface[] = await res.json();
+
+      setProjects(data);
+      setFilteredProjects(data);
+    } catch (error) {
+      console.error("Error fetching projects by date:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const applyDateFilter = () => {
+    // Validate dates
+    setDateError(null);
+    if (startDate && endDate && startDate > endDate) {
+      setDateError("Start date must be before or equal to end date.");
+      return;
+    }
+
+    fetchProjectsByDate(startDate, endDate);
+  };
+
+  const clearDateFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setDateError(null);
+    fetchProjectsByDate();
+  };
+
   const openProjectModal = (project: ProjectDisplayInterface) => {
     setActiveProject(project);
     setIsModalOpen(true);
@@ -121,7 +172,9 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
       month: "long",
       day: "numeric",
     };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    // Use an explicit locale so server and client render the same string
+    // (avoids hydration mismatches when server and client locales differ)
+    return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
   return (
@@ -186,7 +239,7 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
       <section className="py-10 px-5">
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
-          <div className="lg:w-1/4">
+          <div className="lg:w-1/3">
             <div className="bg-white/5 rounded-lg p-5 sticky top-28">
               <div className="flex justify-between items-center mb-5">
                 <h3 className="text-xl m-0 text-mint-green">Filters</h3>
@@ -198,6 +251,47 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
                     Clear All
                   </button>
                 )}
+              </div>
+
+              <div className="mb-4">
+                <h4 className="text-md mb-3 text-white/80">
+                  Created date range
+                </h4>
+                <div className="flex gap-2 mb-2">
+                  <input
+                    type="date"
+                    value={startDate || ""}
+                    onChange={(e) => setStartDate(e.target.value || null)}
+                    className="w-1/2 py-2 px-3 bg-white/5 border border-electric-blue/30 rounded text-white"
+                    aria-label="Start date"
+                  />
+                  <input
+                    type="date"
+                    value={endDate || ""}
+                    onChange={(e) => setEndDate(e.target.value || null)}
+                    className="w-1/2 py-2 px-3 bg-white/5 border border-electric-blue/30 rounded text-white"
+                    aria-label="End date"
+                  />
+                </div>
+                {dateError && (
+                  <div className="text-sm text-red-400 mb-2">{dateError}</div>
+                )}
+                <div className="flex gap-2">
+                  <button
+                    onClick={applyDateFilter}
+                    disabled={isLoading}
+                    className="py-2 px-3 bg-electric-blue text-white rounded text-sm disabled:opacity-60"
+                  >
+                    Apply
+                  </button>
+                  <button
+                    onClick={clearDateFilter}
+                    disabled={isLoading && !startDate && !endDate}
+                    className="py-2 px-3 bg-white/5 text-white rounded text-sm"
+                  >
+                    Clear
+                  </button>
+                </div>
               </div>
 
               <div>
