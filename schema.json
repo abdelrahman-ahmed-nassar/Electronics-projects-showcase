@@ -1404,15 +1404,6 @@
     "Relationship": "FK → teams.id"
   },
   {
-    "Table": "public.profiles",
-    "Column": "yearId",
-    "Data Type": "smallint",
-    "Nullable": "YES",
-    "Default": null,
-    "Key": "",
-    "Relationship": ""
-  },
-  {
     "Table": "public.projects",
     "Column": "created_at",
     "Data Type": "timestamp with time zone",

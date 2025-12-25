@@ -99,10 +99,6 @@ export const validateForm = (formData, setErrors) => {
     isValid = false;
   }
 
-  if (formData.yearId === null) {
-    newErrors.yearId = "يرجى اختيار الصف الدراسي";
-    isValid = false;
-  }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!formData.email.trim()) {

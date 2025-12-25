@@ -64,7 +64,6 @@ export async function GET() {
       name: profile?.name,
       phone: profile?.phone,
       nationalId: profile?.nationalId,
-      yearId: profile?.yearId,
       avatarImage: profile?.avatarImage,
       isGraduated: profile?.isGraduated,
       about: profile?.about,

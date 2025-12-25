@@ -142,7 +142,6 @@ const ProfileSettingsPage = () => {
         ...formData,
         avatarImage: imageUrl,
         team: formData.team ? parseInt(formData.team, 10) : null,
-        yearId: user?.yearId || null,
       };
 
       const response = await fetch("/api/profile/update", {

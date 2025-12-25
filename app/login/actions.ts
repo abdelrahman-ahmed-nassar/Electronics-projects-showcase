@@ -15,24 +15,6 @@ export async function login(formData: FormData) {
     password: formData.get("password") as string,
   };
 
-  ////////////////////////
-
-  console.log("Login data:", { email: loginData.email, passwordProvided: !!loginData.password });
-  try {
-    const { error, data } = await supabase.auth.signInWithPassword(loginData);
-    console.log(data)
-    console.log("Auth response:", error ? { error } : { success: true });
-    // ...existing code...
-  } catch (e) {
-    console.error("Unexpected exception during auth:", e);
-    // Handle the error appropriately
-  }
-  
-
-
-
-
-
 
   /////////////
   const { error, data } = await supabase.auth.signInWithPassword(loginData);

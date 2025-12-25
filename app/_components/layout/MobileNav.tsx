@@ -21,8 +21,6 @@ const MobileNav = () => {
           "Content-Type": "application/json",
         },
       });
-      const result = await response.json();
-      console.log("Server-side session clearing result:", result);
     } catch (serverError) {
       console.error("Error clearing session server-side:", serverError);
     }

@@ -5,7 +5,6 @@ export interface UserInterface {
   id: string; // uuid
   name: string | null; // text
   email?: string | null; // Added based on common usage, adjust if not in your actual auth schema
-  yearId: number | null; // int2
   phone: string | null; // text
   nationalId: string | null; // text
   avatarImage: string | null; // text

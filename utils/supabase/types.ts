@@ -5,7 +5,6 @@ export type Database = {
         Row: {
           id: string; // uuid
           name: string | null;
-          yearId: number | null; // int2 (smallint)
           phone: string | null;
           nationalId: string | null; 
           avatarImage: string | null;
@@ -19,7 +18,6 @@ export type Database = {
         Insert: {
           id?: string; // uuid
           name?: string | null;
-          yearId?: number | null;
           phone?: string | null;
           nationalId?: string | null;
           avatarImage?: string | null;
@@ -33,7 +31,6 @@ export type Database = {
         Update: {
           id?: string;
           name?: string | null;
-          yearId?: number | null;
           phone?: string | null;
           nationalId?: string | null;
           avatarImage?: string | null;

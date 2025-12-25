@@ -36,7 +36,6 @@ export async function POST(request: Request) {
         .update({
           name: profileData.name || null,
           phone: profileData.phone || null,
-          yearId: profileData.yearId || null,
           nationalId: profileData.nationalId || null,
           avatarImage: profileData.avatarImage || null,
           isGraduated:
@@ -67,7 +66,6 @@ export async function POST(request: Request) {
             id: user.id, // Important: use the auth user id
             name: profileData.name || null,
             phone: profileData.phone || null,
-            yearId: profileData.yearId || null,
             nationalId: profileData.nationalId || null,
             avatarImage: profileData.avatarImage || null,
             isGraduated:
