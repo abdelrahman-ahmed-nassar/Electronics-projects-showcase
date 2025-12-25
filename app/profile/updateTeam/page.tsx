@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/_lib/context/AuthenticationContext";
 import { TeamInterface, ProjectInterface } from "@/app/Types";
@@ -62,20 +62,10 @@ const UpdateTeamPage = () => {
   const [imageUploading, setImageUploading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  // Fetch team data when component mounts
-  useEffect(() => {
-    if (!user?.team) {
-      toast.info("You are not a member of any team");
-      router.push("/profile");
-      return;
-    }
-
-    fetchTeamData();
-    fetchTeamProjects();
-  }, [user, router]);
+  // Fetch team data when component mounts (moved below fetch callbacks)
 
   // Fetch the user's team data
-  const fetchTeamData = async () => {
+  const fetchTeamData = useCallback(async () => {
     if (!user?.team) return;
 
     try {
@@ -134,10 +124,10 @@ const UpdateTeamPage = () => {
     } finally {
       setIsLoading((prev) => ({ ...prev, team: false }));
     }
-  };
+  }, [user?.team]);
 
   // Fetch team projects
-  const fetchTeamProjects = async () => {
+  const fetchTeamProjects = useCallback(async () => {
     if (!user?.team) return;
 
     try {
@@ -178,7 +168,19 @@ const UpdateTeamPage = () => {
     } finally {
       setIsLoading((prev) => ({ ...prev, projects: false }));
     }
-  };
+  }, [user?.team]);
+
+  // Fetch team data when component mounts
+  useEffect(() => {
+    if (!user?.team) {
+      toast.info("You are not a member of any team");
+      router.push("/profile");
+      return;
+    }
+
+    fetchTeamData();
+    fetchTeamProjects();
+  }, [user?.team, router, fetchTeamData, fetchTeamProjects]);
 
   // Handle selecting a project to view/delete
   const handleSelectProject = (project: ProjectInterface) => {
