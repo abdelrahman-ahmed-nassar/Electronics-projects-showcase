@@ -3,7 +3,7 @@
 import { useState, ChangeEvent, FormEvent, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { TeamInterface } from "@/app/Types";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
 
@@ -63,12 +63,17 @@ export default function UploadTeamForm() {
     try {
       setImageUploading(true);
 
-      const formData = new FormData();
-      formData.append("image", file);
+      const uploadFormData = new FormData();
+      uploadFormData.append("image", file);
+
+      // Pass the old image URL if one exists
+      if (formData.image) {
+        uploadFormData.append("oldImageUrl", formData.image);
+      }
 
       const response = await fetch("/api/upload-team-image", {
         method: "POST",
-        body: formData,
+        body: uploadFormData,
       });
 
       if (!response.ok) {
@@ -139,18 +144,6 @@ export default function UploadTeamForm() {
 
   return (
     <div className="bg-gray-800 p-4 sm:p-5 md:p-6 rounded-lg shadow-lg w-full max-w-3xl mx-auto">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
 
       <h1 className="text-xl sm:text-2xl font-bold text-white mb-5">
         Create New Team

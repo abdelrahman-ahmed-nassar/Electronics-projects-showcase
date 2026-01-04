@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { translateSupabaseErrors } from "@/app/_lib/helpers/translateSupabaseErrors";
 
@@ -233,18 +233,6 @@ const ChangePasswordPage = () => {
           {isLoading ? "Updating..." : "Update Password"}
         </button>
       </form>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
     </div>
   );
 };

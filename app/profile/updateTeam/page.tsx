@@ -243,12 +243,17 @@ const UpdateTeamPage = () => {
     try {
       setImageUploading(true);
 
-      const formData = new FormData();
-      formData.append("image", file);
+      const uploadFormData = new FormData();
+      uploadFormData.append("image", file);
+
+      // Pass the old image URL if one exists
+      if (formData.image) {
+        uploadFormData.append("oldImageUrl", formData.image);
+      }
 
       const response = await fetch("/api/upload-team-image", {
         method: "POST",
-        body: formData,
+        body: uploadFormData,
       });
 
       if (!response.ok) {

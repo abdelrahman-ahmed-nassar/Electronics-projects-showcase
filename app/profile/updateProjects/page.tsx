@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/_lib/context/AuthenticationContext";
 import { ProjectInterface } from "@/app/Types";
 import Link from "next/link";
 import Image from "next/image";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 type ProjectFormData = Omit<ProjectInterface, "id" | "created_at">;
@@ -14,6 +14,7 @@ type ProjectFormData = Omit<ProjectInterface, "id" | "created_at">;
 const UpdateProjectsPage = () => {
   const router = useRouter();
   const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // State for projects list and selected project
   const [userProjects, setUserProjects] = useState<ProjectInterface[]>([]);
@@ -25,6 +26,8 @@ const UpdateProjectsPage = () => {
     deleteProject: false,
   });
   const [error, setError] = useState<string | null>(null);
+  const [imageUploading, setImageUploading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   // Form data state
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -119,6 +122,10 @@ const UpdateProjectsPage = () => {
       isFeatured: project.isFeatured || false,
     });
     setTagInput("");
+    setImagePreview(null); // Reset image preview when selecting a project
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   // Handle form input changes
@@ -158,6 +165,76 @@ const UpdateProjectsPage = () => {
       ...prev,
       tags: (prev.tags || []).filter((tag) => tag !== tagToRemove),
     }));
+  };
+
+  // Handle image change and upload
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type and size
+    const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    if (!validTypes.includes(file.type)) {
+      toast.error("Please upload a valid image file (JPEG, PNG, GIF, or WebP)");
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      toast.error("Image size should not exceed 5MB");
+      return;
+    }
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // Upload the image
+    try {
+      setImageUploading(true);
+
+      const uploadFormData = new FormData();
+      uploadFormData.append("image", file);
+
+      // Pass the old image URL if one exists
+      if (formData.image) {
+        uploadFormData.append("oldImageUrl", formData.image);
+      }
+
+      const response = await fetch("/api/upload-image", {
+        method: "POST",
+        body: uploadFormData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to upload image");
+      }
+
+      const { imageUrl } = await response.json();
+
+      // Update form data with the new image URL
+      setFormData((prev) => ({
+        ...prev,
+        image: imageUrl,
+      }));
+
+      toast.success("Image uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to upload image"
+      );
+      setImagePreview(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } finally {
+      setImageUploading(false);
+    }
   };
 
   // Handle submitting the form to update a project
@@ -273,8 +350,6 @@ const UpdateProjectsPage = () => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <ToastContainer position="top-right" />
-
       <h1 className="text-3xl font-bold mb-8 text-dark-800 dark:text-white">
         Manage Your Projects
       </h1>
@@ -418,6 +493,67 @@ const UpdateProjectsPage = () => {
                       placeholder="Describe your project"
                       required
                     />
+                  </div>
+
+                  <div className="w-full">
+                    <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2 text-sm">
+                      Project Image
+                    </label>
+                    <div className="flex flex-col space-y-3">
+                      {(imagePreview || formData.image) && (
+                        <div className="relative w-full h-48 bg-gray-100 dark:bg-dark-700 rounded-lg overflow-hidden">
+                          <Image
+                            src={imagePreview || formData.image || ""}
+                            alt="Project preview"
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+                      <div className="flex items-center space-x-3">
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          onChange={handleImageChange}
+                          accept="image/*"
+                          className="hidden"
+                          id="project-image-upload"
+                        />
+                        <label
+                          htmlFor="project-image-upload"
+                          className={`px-4 py-2 rounded-lg cursor-pointer transition-colors ${
+                            imageUploading
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : "bg-electric-blue hover:bg-electric-blue/90 text-white"
+                          }`}
+                        >
+                          {imageUploading
+                            ? "Uploading..."
+                            : formData.image
+                            ? "Change Image"
+                            : "Upload Image"}
+                        </label>
+                        {formData.image && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setFormData((prev) => ({ ...prev, image: null }));
+                              setImagePreview(null);
+                              if (fileInputRef.current) {
+                                fileInputRef.current.value = "";
+                              }
+                            }}
+                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                          >
+                            Remove Image
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Max file size: 5MB. Supported formats: JPEG, PNG, GIF,
+                        WebP
+                      </p>
+                    </div>
                   </div>
 
                   <div className="w-full">

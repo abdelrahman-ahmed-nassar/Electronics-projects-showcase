@@ -38,16 +38,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${orbitron.variable} ${exo2.variable}`}>
         <ToastContainer
-          position="top-center"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={true}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
         />
         <AuthenticationProvider>
           <Header>

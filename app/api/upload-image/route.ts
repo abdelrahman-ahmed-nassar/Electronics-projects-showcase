@@ -1,12 +1,19 @@
 import { NextResponse } from "next/server";
-import { createServiceClient } from "@/utils/supabase/server-service";
-import { v4 as uuidv4 } from "uuid";
+import {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} from "@/utils/cloudinary/upload";
+import {
+  extractPublicIdFromUrl,
+  isDefaultCloudinaryImage,
+} from "@/utils/cloudinary/helpers";
 
 export async function POST(request: Request) {
   try {
     // Get the form data with the file
     const formData = await request.formData();
     const imageFile = formData.get("image") as File;
+    const oldImageUrl = formData.get("oldImageUrl") as string | null;
 
     if (!imageFile) {
       return NextResponse.json(
@@ -15,29 +22,31 @@ export async function POST(request: Request) {
       );
     }
 
-    // Generate a unique filename to avoid collisions
-    const fileExtension = imageFile.name.split(".").pop();
-    const fileName = `${uuidv4()}.${fileExtension}`;
+    // Delete old image from Cloudinary if it exists and is not a default image
+    if (oldImageUrl && !isDefaultCloudinaryImage(oldImageUrl)) {
+      const publicId = extractPublicIdFromUrl(oldImageUrl);
+      if (publicId) {
+        await deleteFromCloudinary(publicId);
+      }
+    }
 
-    // Upload to Supabase Storage
-    const supabase = createServiceClient();
-    const { data, error } = await supabase.storage
-      .from("projects-images")
-      .upload(fileName, imageFile);
-      
+    // Upload to Cloudinary
+    const result = await uploadToCloudinary(imageFile, "projects");
 
-    if (error || !data) {
-      console.error("Storage upload error:", error);
+    if (result.error) {
+      console.error("Cloudinary upload error:", result.error);
       return NextResponse.json(
-        { message: `Error uploading image: ${error.message}` },
+        { message: `Error uploading image: ${result.error}` },
         { status: 500 }
       );
     }
 
-    // Construct the public URL for the uploaded image
-    const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/projects-images/${fileName}`;
-
-    return NextResponse.json({ imageUrl });
+    // Return the full Cloudinary URL (will be stored in database)
+    return NextResponse.json({
+      imageUrl: result.url,
+      publicId: result.publicId,
+      publicUrl: result.url,
+    });
   } catch (error) {
     console.error("Image upload error:", error);
     return NextResponse.json(

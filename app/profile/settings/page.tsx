@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/app/_lib/context/AuthenticationContext";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { TeamInterface } from "@/app/Types";
 import Image from "next/image";
@@ -95,11 +95,17 @@ const ProfileSettingsPage = () => {
     }
   };
 
-  const uploadImage = async (file: File): Promise<string | null> => {
+  const uploadImage = async (
+    file: File,
+    oldImageUrl?: string
+  ): Promise<string | null> => {
     setUploadingImage(true);
     try {
       const formData = new FormData();
       formData.append("image", file);
+      if (oldImageUrl) {
+        formData.append("oldImageUrl", oldImageUrl);
+      }
 
       const response = await fetch("/api/upload-profile-image", {
         method: "POST",
@@ -130,7 +136,8 @@ const ProfileSettingsPage = () => {
       let imageUrl = formData.avatarImage;
       if (fileInputRef.current?.files?.[0]) {
         const uploadedImageUrl = await uploadImage(
-          fileInputRef.current.files[0]
+          fileInputRef.current.files[0],
+          user?.avatarImage || null || undefined // Pass the old image URL
         );
         if (uploadedImageUrl) {
           imageUrl = uploadedImageUrl;
@@ -173,7 +180,6 @@ const ProfileSettingsPage = () => {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <ToastContainer />
       <h1 className="text-2xl font-bold mb-6 text-dark-800 dark:text-white">
         Profile Settings
       </h1>

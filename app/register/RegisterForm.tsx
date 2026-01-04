@@ -11,6 +11,7 @@ const RegisterForm = ({
     formData: FormData
   ) => Promise<{ success: boolean; message?: string; error?: string }>;
 }) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +43,7 @@ const RegisterForm = ({
       );
 
       // Reset form
+      setName("");
       setEmail("");
       setPassword("");
     } catch (e) {
@@ -60,12 +62,8 @@ const RegisterForm = ({
           Registration Successful!
         </div>
         <p className="text-white mb-6">
-          Your account has been created but needs to be verified by an
-          administrator before you can log in.
-        </p>
-        <p className="text-gray-400 mb-6">
-          Please check back later or contact the administrator for verification
-          status.
+          Your account has been created successfully! You can now log in with
+          your credentials.
         </p>
         <Link
           href="/login"
@@ -79,6 +77,26 @@ const RegisterForm = ({
 
   return (
     <form onSubmit={handleSubmit} className="p-6 space-y-6">
+      {/* Name Field */}
+      <div>
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-white mb-2"
+        >
+          Full Name
+        </label>
+        <input
+          id="name"
+          type="text"
+          name="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full px-3 py-2 bg-navy border border-electric-blue/30 rounded focus:outline-none focus:ring-2 focus:ring-mint-green focus:border-transparent"
+          placeholder="John Doe"
+          required
+        />
+      </div>
+
       {/* Email Field */}
       <div>
         <label
@@ -142,9 +160,10 @@ const RegisterForm = ({
       >
         {isLoading ? "Registering..." : "Register"}
       </button>
-      {/* Admin approval notice */}
+      {/* Account creation notice */}
       <p className="text-gray-400 text-xs">
-        New accounts require administrator approval before you can log in.
+        Your account will be created and ready to use immediately after
+        registration.
       </p>
 
       {/* Login Link */}

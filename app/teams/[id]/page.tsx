@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getCompleteTeamData } from "@/utils/supabase/data-services";
 import { UserInterface, ProjectInterface } from "@/app/Types";
 import CircuitBackground from "@/app/_components/UI/CircuitBackground";
+import { CLOUDINARY_DEFAULTS } from "@/utils/cloudinary/helpers";
 
 // Team Profile Page
 export default async function TeamPage({
@@ -37,10 +38,7 @@ export default async function TeamPage({
                 {/* Team Logo/Image */}
                 <div className="w-32 h-32 md:w-48 md:h-48 bg-navy-light rounded-xl overflow-hidden border-4 border-electric-blue flex-shrink-0">
                   <Image
-                    src={
-                      team.image ||
-                      "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/teams-images//default-team-image.png"
-                    }
+                    src={team.image || CLOUDINARY_DEFAULTS.team}
                     alt={team.name || "Team profile"}
                     width={200}
                     height={200}

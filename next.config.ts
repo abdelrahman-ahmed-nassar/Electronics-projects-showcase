@@ -6,40 +6,9 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "wefmacormdggmnrgoqqv.supabase.co",
+        hostname: "res.cloudinary.com",
         port: "",
-        pathname: "/storage/v1/object/public/projects-images/**",
-      },
-      {
-        protocol: "https",
-        hostname: "wefmacormdggmnrgoqqv.supabase.co",
-        port: "",
-        pathname: "/storage/v1/object/public/projects-images//**",
-      },
-      {
-        protocol: "https",
-        hostname: "wefmacormdggmnrgoqqv.supabase.co",
-        port: "",
-        pathname: "/storage/v1/object/public/profiles-images//**",
-      },
-      {
-        protocol: "https",
-        hostname: "wefmacormdggmnrgoqqv.supabase.co",
-        port: "",
-        pathname: "/storage/v1/object/public/profiles-images/**",
-      },
-
-      {
-        protocol: "https",
-        hostname: "wefmacormdggmnrgoqqv.supabase.co",
-        port: "",
-        pathname: "/storage/v1/object/public/teams-images//**",
-      },
-      {
-        protocol: "https",
-        hostname: "wefmacormdggmnrgoqqv.supabase.co",
-        port: "",
-        pathname: "/storage/v1/object/public/teams-images/**",
+        pathname: "/dqsxec8gx/**",
       },
     ],
   },

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getTeamById, getProfilesByTeam } from "@/utils/supabase/data-services";
 import { createServiceClient } from "@/utils/supabase/server-service";
 import { createClient } from "@/utils/supabase/server";
+import { CLOUDINARY_DEFAULTS } from "@/utils/cloudinary/helpers";
 
 export async function GET(
   request: Request,
@@ -31,9 +32,7 @@ export async function GET(
     const response = {
       team: {
         ...team,
-        image:
-          team.image ||
-          "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/teams-images//default-team-image.png",
+        image: team.image || CLOUDINARY_DEFAULTS.team,
         specialty: team.specialty || "Unspecified",
       },
       members: members || [],

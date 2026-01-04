@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ProjectDisplayInterface } from "../Types";
 import Image from "next/image";
+import { CLOUDINARY_DEFAULTS } from "@/utils/cloudinary/helpers";
 
 interface ProjectsFilterProps {
   initialProjects: ProjectDisplayInterface[];
@@ -389,7 +390,7 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
                                   <Image
                                     src={
                                       member.image ||
-                                      "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg"
+                                      CLOUDINARY_DEFAULTS.profile
                                     }
                                     alt={member.name}
                                     className="w-full h-full object-cover"
@@ -510,7 +511,7 @@ const ProjectsFilter: React.FC<ProjectsFilterProps> = ({ initialProjects }) => {
                               height={32}
                               src={
                                 member.image ||
-                                "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg"
+                                CLOUDINARY_DEFAULTS.profile
                               }
                               alt={member.name}
                               className="w-full h-full object-cover"

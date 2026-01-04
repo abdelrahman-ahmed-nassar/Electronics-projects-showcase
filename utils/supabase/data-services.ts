@@ -7,6 +7,7 @@ import {
   StudentDisplayInterface,
 } from "@/app/Types";
 import { Database } from "@/utils/supabase/types";
+import { CLOUDINARY_DEFAULTS } from "@/utils/cloudinary/helpers";
 
 // Define types for database row shapes
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
@@ -241,9 +242,7 @@ export async function getProjectsForDisplay(
                 members: members.map((member) => ({
                   name: member.name || "Unknown",
                   role: member.role || member.specialization || "Team Member",
-                  image:
-                    member.avatarImage ||
-                    "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
+                  image: member.avatarImage || CLOUDINARY_DEFAULTS.profile,
                   id: member.id || "Unknown ID",
                 })),
               };
@@ -261,9 +260,7 @@ export async function getProjectsForDisplay(
           title: project.title || "Untitled Project",
           description: project.description || "No description available",
           period: project.period || null,
-          image:
-            project.image ||
-            "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/projects-images//default-team-image.png",
+          image: project.image || CLOUDINARY_DEFAULTS.project,
           tags: project.tags || [],
           dateCreated: project.created_at,
           link: project.link || null,
@@ -318,9 +315,7 @@ export async function getProjectDisplayById(
             members: members.map((member) => ({
               name: member.name || "Unknown",
               role: member.role || member.specialization || "Team Member",
-              image:
-                member.avatarImage ||
-                "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
+              image: member.avatarImage || CLOUDINARY_DEFAULTS.profile,
               id: member.id || "Unknown ID",
             })),
           };
@@ -337,9 +332,7 @@ export async function getProjectDisplayById(
       id: project.id,
       title: project.title || "Untitled Project",
       description: project.description || "No description available",
-      image:
-        project.image ||
-        "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/projects-images//default-project-image.png",
+      image: project.image || CLOUDINARY_DEFAULTS.project,
       tags: project.tags || [],
       dateCreated: project.created_at,
       link: project.link || null,
@@ -464,9 +457,7 @@ export async function getFeaturedProjects(): Promise<
                 members: members.map((member) => ({
                   name: member.name || "Unknown",
                   role: member.role || member.specialization || "Team Member",
-                  image:
-                    member.avatarImage ||
-                    "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg",
+                  image: member.avatarImage || CLOUDINARY_DEFAULTS.profile,
                   id: member.id || "Unknown ID",
                 })),
               };
@@ -484,9 +475,7 @@ export async function getFeaturedProjects(): Promise<
           title: project.title || "Untitled Project",
           description: project.description || "No description available",
           period: project.period || null,
-          image:
-            project.image ||
-            "https://wefmacormdggmnrgoqqv.supabase.co/storage/v1/object/public/projects-images//default-project-image.png",
+          image: project.image || CLOUDINARY_DEFAULTS.project,
           tags: project.tags || [],
           dateCreated: project.created_at,
           link: project.link || null,
