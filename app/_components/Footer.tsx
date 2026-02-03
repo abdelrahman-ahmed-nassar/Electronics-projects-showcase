@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 const Footer = () => {
   return (
@@ -38,6 +37,17 @@ const Footer = () => {
         </div>
         <div className="text-white/50 text-sm">
           &copy; 2025 ElectroShowcase. All rights reserved.
+        </div>
+        <div className="text-white/50 text-sm mt-2">
+          Made by{" "}
+          <a
+            href="https://www.learn-shift.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-mint-green hover:text-electric-blue transition-colors"
+          >
+            Learn Shift
+          </a>
         </div>
       </div>
     </footer>
