@@ -8,6 +8,13 @@
       "when": 1791729123816,
       "tag": "0000_sloppy_jane_foster",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791754113306,
+      "tag": "0001_yellow_beast",
+      "breakpoints": true
     }
   ]
 }

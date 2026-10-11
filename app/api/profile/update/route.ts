@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { profiles } from "@/db/schema";
+import { user } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 export async function POST(request: Request) {
@@ -14,28 +15,37 @@ export async function POST(request: Request) {
 
     const profileData = await request.json();
 
-    const updates: Partial<typeof profiles.$inferInsert> = {};
+    const updates: Partial<typeof user.$inferInsert> = {};
     if ("name" in profileData) updates.name = profileData.name || null;
     if ("phone" in profileData) updates.phone = profileData.phone || null;
     if ("nationalId" in profileData) updates.nationalId = profileData.nationalId || null;
-    if ("avatarImage" in profileData) updates.avatarImage = profileData.avatarImage || null;
+    if ("avatarImage" in profileData || "image" in profileData) {
+      updates.image = profileData.avatarImage || profileData.image || null;
+    }
     if ("isGraduated" in profileData) updates.isGraduated = Boolean(profileData.isGraduated);
     if ("about" in profileData) updates.about = profileData.about || null;
     if ("skills" in profileData) updates.skills = profileData.skills || null;
     if ("specialization" in profileData) updates.specialization = profileData.specialization || null;
     if ("role" in profileData) updates.role = profileData.role || null;
-    if ("team" in profileData) updates.team = profileData.team || null;
+    if ("team" in profileData || "teamId" in profileData) {
+      updates.teamId = profileData.team ?? profileData.teamId ?? null;
+    }
 
     const [result] = await db
-      .insert(profiles)
-      .values({ id: session.user.id, ...updates })
-      .onConflictDoUpdate({
-        target: profiles.id,
-        set: Object.keys(updates).length > 0 ? updates : { id: session.user.id },
-      })
+      .update(user)
+      .set(updates)
+      .where(eq(user.id, session.user.id))
       .returning();
 
-    return NextResponse.json({ profile: result });
+    const responseProfile = result
+      ? {
+          ...result,
+          avatarImage: result.image,
+          team: result.teamId,
+        }
+      : null;
+
+    return NextResponse.json({ profile: responseProfile });
   } catch (error) {
     console.error("Error updating profile:", error);
     return NextResponse.json(

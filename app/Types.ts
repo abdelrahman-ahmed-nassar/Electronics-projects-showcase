@@ -2,19 +2,23 @@
  * Interface for user profiles
  */
 export interface UserInterface {
-  id: string; // uuid
-  name: string | null; // text
-  email?: string | null; // Added based on common usage, adjust if not in your actual auth schema
-  phone: string | null; // text
-  nationalId: string | null; // text
-  avatarImage: string | null; // text
-  isGraduated: boolean | null; // bool
-  about: string | null; // text
-  skills: string | null; // text array (as requested)
-  specialization: string | null; // text
-  role: string | null; // text
-  team: number | null; // int8
-  projects: ProjectInterface[] | null;
+  id: string;
+  name: string | null;
+  email?: string | null;
+  image?: string | null;
+  avatarImage: string | null; // Compatibility alias for image
+  phone: string | null;
+  nationalId: string | null;
+  isGraduated: boolean | null;
+  about: string | null;
+  skills: string | null;
+  specialization: string | null;
+  role: string | null;
+  teamId?: number | null;
+  team: number | null; // Compatibility alias for teamId
+  projects?: ProjectInterface[] | null;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export interface StudentDisplayInterface {

@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   bigint,
   boolean,
@@ -7,18 +8,43 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 
-export const user = pgTable("user", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("emailVerified").default(false).notNull(),
+export const teams = pgTable("teams", {
+  id: bigint("id", { mode: "number" }).generatedByDefaultAsIdentity().primaryKey(),
+  createdAt: timestamp("createdAt", { withTimezone: true }).defaultNow().notNull(),
+  name: text("name"),
+  description: text("description"),
+  achievements: text("achievements"),
+  specialty: text("specialty"),
   image: text("image"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt")
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
+  isFeatured: boolean("isFeatured").default(false),
 });
+
+export const user = pgTable(
+  "user",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    email: text("email").notNull().unique(),
+    emailVerified: boolean("emailVerified").default(false).notNull(),
+    image: text("image"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+    phone: text("phone"),
+    nationalId: text("nationalId"),
+    isGraduated: boolean("isGraduated").default(false).notNull(),
+    about: text("about"),
+    specialization: text("specialization"),
+    role: text("role"),
+    skills: text("skills"),
+    teamId: bigint("teamId", { mode: "number" }).references(() => teams.id, {
+      onDelete: "set null",
+    }),
+  },
+  (table) => [index("user_teamId_idx").on(table.teamId)]
+);
 
 export const session = pgTable(
   "session",
@@ -79,35 +105,6 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
-export const teams = pgTable("teams", {
-  id: bigint("id", { mode: "number" }).generatedByDefaultAsIdentity().primaryKey(),
-  createdAt: timestamp("createdAt", { withTimezone: true }).defaultNow().notNull(),
-  name: text("name"),
-  description: text("description"),
-  achievements: text("achievements"),
-  specialty: text("specialty"),
-  image: text("image"),
-  isFeatured: boolean("isFeatured").default(false),
-});
-
-export const profiles = pgTable("profiles", {
-  id: text("id")
-    .primaryKey()
-    .references(() => user.id, { onDelete: "cascade" }),
-  name: text("name"),
-  phone: text("phone"),
-  nationalId: text("nationalId"),
-  avatarImage: text("avatarImage"),
-  isGraduated: boolean("isGraduated").default(false),
-  about: text("about"),
-  specialization: text("specialization"),
-  role: text("role"),
-  team: bigint("team", { mode: "number" }).references(() => teams.id, {
-    onDelete: "set null",
-  }),
-  skills: text("skills"),
-});
-
 export const projects = pgTable("projects", {
   id: bigint("id", { mode: "number" }).generatedByDefaultAsIdentity().primaryKey(),
   created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
@@ -122,3 +119,40 @@ export const projects = pgTable("projects", {
   }),
   isFeatured: boolean("isFeatured").default(false),
 });
+
+// --- DRIZZLE RELATIONS (Relational Query API) ---
+
+export const userRelations = relations(user, ({ one, many }) => ({
+  team: one(teams, {
+    fields: [user.teamId],
+    references: [teams.id],
+  }),
+  accounts: many(account),
+  sessions: many(session),
+}));
+
+export const accountRelations = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id],
+  }),
+}));
+
+export const sessionRelations = relations(session, ({ one }) => ({
+  user: one(user, {
+    fields: [session.userId],
+    references: [user.id],
+  }),
+}));
+
+export const teamsRelations = relations(teams, ({ many }) => ({
+  members: many(user),
+  projects: many(projects),
+}));
+
+export const projectsRelations = relations(projects, ({ one }) => ({
+  team: one(teams, {
+    fields: [projects.teamId],
+    references: [teams.id],
+  }),
+}));

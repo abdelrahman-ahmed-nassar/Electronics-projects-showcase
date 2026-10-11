@@ -35,10 +35,11 @@ export const AuthenticationProvider: React.FC<{
 
   const user = useMemo<User | null>(() => {
     if (!sessionUser) return null;
+    const u = sessionUser as unknown as Partial<User> & typeof sessionUser;
     return {
-      id: sessionUser.id,
-      email: sessionUser.email,
-      name: sessionUser.name,
+      ...u,
+      avatarImage: u.avatarImage || u.image || null,
+      team: u.team ?? u.teamId ?? null,
       ...profileOverride,
     } as User;
   }, [sessionUser, profileOverride]);

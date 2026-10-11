@@ -3,7 +3,6 @@
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
-import { getProfileById } from "@/utils/db/data-services";
 
 export async function logoutUser() {
   try {
@@ -25,14 +24,13 @@ export async function getCurrentUser() {
     return { success: false, user: null };
   }
 
-  const profile = await getProfileById(session.user.id);
-
+  const u = session.user;
   return {
     success: true,
     user: {
-      id: session.user.id,
-      email: session.user.email,
-      ...profile,
+      ...u,
+      avatarImage: u.avatarImage || u.image || null,
+      team: u.team ?? u.teamId ?? null,
     },
   };
 }

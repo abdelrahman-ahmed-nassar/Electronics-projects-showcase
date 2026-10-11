@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { getProfileById } from "@/utils/db/data-services";
 import { UserInterface } from "@/app/Types";
 
 export async function login(formData: FormData) {
@@ -23,22 +22,12 @@ export async function login(formData: FormData) {
     return { success: false, error: errorCode };
   }
 
-  const userId = result.user.id;
-  let userData: Partial<UserInterface> = {
-    id: userId,
-    email: result.user.email,
+  const u = result.user as unknown as Partial<UserInterface> & typeof result.user;
+  const userData: Partial<UserInterface> = {
+    ...u,
+    avatarImage: u.avatarImage || u.image || null,
+    team: u.team ?? u.teamId ?? null,
   };
-
-  try {
-    const profile = await getProfileById(userId);
-    if (profile) {
-      userData = { ...userData, ...profile, id: userId };
-    } else {
-      console.log("No profile found for user ID:", userId);
-    }
-  } catch (err) {
-    console.error("Error fetching user profile:", err);
-  }
 
   revalidatePath("/", "layout");
 

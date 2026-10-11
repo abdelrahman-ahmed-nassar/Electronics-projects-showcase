@@ -1,6 +1,6 @@
 import { and, count, eq, gte, isNotNull, lte, ne } from "drizzle-orm";
 import { db } from "@/db";
-import { profiles, projects, teams } from "@/db/schema";
+import { projects, teams, user } from "@/db/schema";
 import {
   UserInterface,
   TeamInterface,
@@ -13,7 +13,7 @@ import {
   resolveImageUrl,
 } from "@/utils/cloudinary/helpers";
 
-type ProfileRow = typeof profiles.$inferSelect;
+type UserRow = typeof user.$inferSelect;
 type ProjectRow = typeof projects.$inferSelect;
 type TeamRow = typeof teams.$inferSelect;
 
@@ -30,9 +30,10 @@ const toProject = (row: ProjectRow): ProjectInterface => ({
   isFeatured: row.isFeatured ?? false,
 });
 
-const toProfile = (row: ProfileRow): UserInterface => ({
+const toProfile = (row: UserRow): UserInterface => ({
   ...row,
-  avatarImage: resolveImageUrl(row.avatarImage),
+  avatarImage: resolveImageUrl(row.image),
+  team: row.teamId,
   projects: null,
 });
 
@@ -42,7 +43,7 @@ const toProfile = (row: ProfileRow): UserInterface => ({
  */
 
 export async function getAllProfiles(): Promise<UserInterface[]> {
-  const rows = await db.select().from(profiles);
+  const rows = await db.select().from(user);
   return rows.map(toProfile);
 }
 
@@ -51,16 +52,16 @@ export async function getProfileById(
 ): Promise<UserInterface | null> {
   const [data] = await db
     .select()
-    .from(profiles)
-    .where(eq(profiles.id, id))
+    .from(user)
+    .where(eq(user.id, id))
     .limit(1);
 
   if (!data) return null;
 
   let teamProjects: ProjectInterface[] = [];
-  if (data.team) {
+  if (data.teamId) {
     try {
-      teamProjects = await getProjectsByTeam(data.team);
+      teamProjects = await getProjectsByTeam(data.teamId);
     } catch (error) {
       console.error(`Error fetching team projects: ${error}`);
     }
@@ -74,8 +75,8 @@ export async function getProfilesByTeam(
 ): Promise<UserInterface[]> {
   const rows = await db
     .select()
-    .from(profiles)
-    .where(eq(profiles.team, teamId));
+    .from(user)
+    .where(eq(user.teamId, teamId));
   return rows.map(toProfile);
 }
 
@@ -335,35 +336,36 @@ export async function getStudentsForDisplay(): Promise<
   StudentDisplayInterface[]
 > {
   try {
-    const profileRows: ProfileRow[] = await db.select().from(profiles);
+    const userRows: UserRow[] = await db.select().from(user);
     const allProjects = await getAllProjects();
     const allTeams = await getAllTeams();
 
-    return profileRows.map((profile) => {
-      const teamInfo = profile.team
-        ? allTeams.find((team) => team.id === profile.team)
+    return userRows.map((student) => {
+      const studentTeamId = student.teamId;
+      const teamInfo = studentTeamId
+        ? allTeams.find((team) => team.id === studentTeamId)
         : null;
 
-      const studentProjects = profile.team
-        ? allProjects.filter((project) => project.teamId === profile.team)
+      const studentProjects = studentTeamId
+        ? allProjects.filter((project) => project.teamId === studentTeamId)
         : [];
 
       return {
-        id: profile.id,
-        name: profile.name || "Unknown Student",
-        level: profile.isGraduated ? "Graduate" : "Undergraduate",
-        specialization: profile.specialization || "General Electronics",
+        id: student.id,
+        name: student.name || "Unknown Student",
+        level: student.isGraduated ? "Graduate" : "Undergraduate",
+        specialization: student.specialization || "General Electronics",
         team: teamInfo?.name || "Independent",
-        role: profile.role || "Team Member",
-        bio: profile.about || "No bio available",
-        skills: profile.skills || "",
+        role: student.role || "Team Member",
+        bio: student.about || "No bio available",
+        skills: student.skills || "",
         projects: studentProjects.map((project) => ({
           id: project.id,
           title: project.title || "Untitled Project",
-          role: profile.role || "Contributor",
+          role: student.role || "Contributor",
           description: project.description || "No description available",
         })),
-        image: resolveImageUrl(profile.avatarImage) || CLOUDINARY_DEFAULTS.profile,
+        image: resolveImageUrl(student.image) || CLOUDINARY_DEFAULTS.profile,
       };
     });
   } catch (error) {
