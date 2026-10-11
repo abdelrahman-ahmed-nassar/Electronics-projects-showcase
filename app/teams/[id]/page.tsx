@@ -6,6 +6,8 @@ import { UserInterface, ProjectInterface } from "@/app/Types";
 import CircuitBackground from "@/app/_components/UI/CircuitBackground";
 import { CLOUDINARY_DEFAULTS } from "@/utils/cloudinary/helpers";
 
+export const dynamic = "force-dynamic";
+
 // Team Profile Page
 export default async function TeamPage({
   params,

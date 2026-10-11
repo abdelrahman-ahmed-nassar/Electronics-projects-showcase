@@ -9,6 +9,8 @@ import {
   getProjectsByTeam,
 } from "@/utils/db/data-services";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const allTeams = await getAllTeams();
@@ -64,7 +66,11 @@ export async function GET() {
       })
     );
 
-    return NextResponse.json(teamsWithData);
+    return NextResponse.json(teamsWithData, {
+      headers: {
+        "Cache-Control": "no-store, max-age=0",
+      },
+    });
   } catch (error) {
     console.error("Error fetching teams:", error);
     return NextResponse.json(

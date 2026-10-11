@@ -7,6 +7,8 @@ import {
 import { auth } from "@/lib/auth";
 import { ProjectInterface } from "@/app/Types";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
 
@@ -65,7 +67,12 @@ export async function GET(request: Request) {
 
     const projects = await getProjectsForDisplay(startDate, endDate);
 
-    return NextResponse.json(projects, { status: 200 });
+    return NextResponse.json(projects, {
+      status: 200,
+      headers: {
+        "Cache-Control": "no-store, max-age=0",
+      },
+    });
   } catch (error) {
     console.error("API Route GET /api/projects error:", error);
     const errorMessage =

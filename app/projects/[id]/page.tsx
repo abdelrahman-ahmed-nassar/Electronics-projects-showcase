@@ -4,6 +4,8 @@ import Image from "next/image";
 import { getProjectDisplayById } from "@/utils/db/data-services";
 import { ProjectDisplayInterface } from "@/app/Types";
 
+export const dynamic = "force-dynamic";
+
 // Format date to more readable format
 const formatDate = (dateString: string) => {
   const options: Intl.DateTimeFormatOptions = {

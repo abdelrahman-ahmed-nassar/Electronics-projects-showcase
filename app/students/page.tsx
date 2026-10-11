@@ -1,6 +1,8 @@
 import { getStudentsForDisplay } from "@/utils/db/data-services";
 import StudentsFilter from "./StudentsFilter";
 
+export const dynamic = "force-dynamic";
+
 // Circuit Board Background Pattern Component
 import CircuitBackground from "../_components/UI/CircuitBackground";
 

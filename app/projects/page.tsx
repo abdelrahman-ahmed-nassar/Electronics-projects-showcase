@@ -1,6 +1,8 @@
 import { getProjectsForDisplay } from "@/utils/db/data-services";
 import ProjectsFilter from "./ProjectsFilter";
 
+export const dynamic = "force-dynamic";
+
 // Server component for projects page
 export default async function ProjectsPage() {
   // Fetch projects data from the server

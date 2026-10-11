@@ -40,7 +40,9 @@ const TeamsPage = () => {
     const fetchTeams = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/teams");
+        const response = await fetch("/api/teams", {
+          cache: "no-store",
+        });
 
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);

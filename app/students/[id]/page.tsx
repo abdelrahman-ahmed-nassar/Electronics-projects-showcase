@@ -4,6 +4,8 @@ import Image from "next/image";
 import { getProfileById, getTeamById } from "@/utils/db/data-services";
 import { TeamInterface } from "@/app/Types";
 
+export const dynamic = "force-dynamic";
+
 // Define a team type with members for the UI
 interface TeamWithMembers extends TeamInterface {
   members?: Array<{ name: string; id: string }>;

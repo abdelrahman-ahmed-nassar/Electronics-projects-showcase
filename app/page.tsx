@@ -12,6 +12,8 @@ import {
   getTeamsWithAchievementsCount,
 } from "@/utils/db/data-services";
 
+export const dynamic = "force-dynamic";
+
 // Main App Component
 const Page = async () => {
   // Fetch real data for featured projects and teams
