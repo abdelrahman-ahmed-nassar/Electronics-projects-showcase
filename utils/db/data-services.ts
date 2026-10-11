@@ -8,7 +8,10 @@ import {
   ProjectDisplayInterface,
   StudentDisplayInterface,
 } from "@/app/Types";
-import { CLOUDINARY_DEFAULTS } from "@/utils/cloudinary/helpers";
+import {
+  CLOUDINARY_DEFAULTS,
+  resolveImageUrl,
+} from "@/utils/cloudinary/helpers";
 
 type ProfileRow = typeof profiles.$inferSelect;
 type ProjectRow = typeof projects.$inferSelect;
@@ -16,13 +19,21 @@ type TeamRow = typeof teams.$inferSelect;
 
 const toTeam = (row: TeamRow): TeamInterface => ({
   ...row,
+  image: resolveImageUrl(row.image),
   createdAt: row.createdAt.toISOString(),
 });
 
 const toProject = (row: ProjectRow): ProjectInterface => ({
   ...row,
+  image: resolveImageUrl(row.image),
   created_at: row.created_at.toISOString(),
   isFeatured: row.isFeatured ?? false,
+});
+
+const toProfile = (row: ProfileRow): UserInterface => ({
+  ...row,
+  avatarImage: resolveImageUrl(row.avatarImage),
+  projects: null,
 });
 
 
@@ -32,7 +43,7 @@ const toProject = (row: ProjectRow): ProjectInterface => ({
 
 export async function getAllProfiles(): Promise<UserInterface[]> {
   const rows = await db.select().from(profiles);
-  return rows.map((profile) => ({ ...profile, projects: null }));
+  return rows.map(toProfile);
 }
 
 export async function getProfileById(
@@ -55,7 +66,7 @@ export async function getProfileById(
     }
   }
 
-  return { ...data, projects: teamProjects };
+  return { ...toProfile(data), projects: teamProjects };
 }
 
 export async function getProfilesByTeam(
@@ -65,7 +76,7 @@ export async function getProfilesByTeam(
     .select()
     .from(profiles)
     .where(eq(profiles.team, teamId));
-  return rows.map((profile) => ({ ...profile, projects: null }));
+  return rows.map(toProfile);
 }
 
 /**
@@ -123,7 +134,7 @@ async function buildTeamInfo(teamId: number | null, projectId: number) {
         members: members.map((member) => ({
           name: member.name || "Unknown",
           role: member.role || member.specialization || "Team Member",
-          image: member.avatarImage || CLOUDINARY_DEFAULTS.profile,
+          image: resolveImageUrl(member.avatarImage) || CLOUDINARY_DEFAULTS.profile,
           id: member.id || "Unknown ID",
         })),
       };
@@ -352,7 +363,7 @@ export async function getStudentsForDisplay(): Promise<
           role: profile.role || "Contributor",
           description: project.description || "No description available",
         })),
-        image: profile.avatarImage || CLOUDINARY_DEFAULTS.profile,
+        image: resolveImageUrl(profile.avatarImage) || CLOUDINARY_DEFAULTS.profile,
       };
     });
   } catch (error) {

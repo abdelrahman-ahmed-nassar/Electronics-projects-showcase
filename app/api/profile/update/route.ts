@@ -14,24 +14,25 @@ export async function POST(request: Request) {
 
     const profileData = await request.json();
 
-    const values = {
-      name: profileData.name || null,
-      phone: profileData.phone || null,
-      nationalId: profileData.nationalId || null,
-      avatarImage: profileData.avatarImage || null,
-      isGraduated:
-        profileData.isGraduated !== undefined ? profileData.isGraduated : false,
-      about: profileData.about || null,
-      skills: profileData.skills || null,
-      specialization: profileData.specialization || null,
-      role: profileData.role || null,
-      team: profileData.team || null,
-    };
+    const updates: Partial<typeof profiles.$inferInsert> = {};
+    if ("name" in profileData) updates.name = profileData.name || null;
+    if ("phone" in profileData) updates.phone = profileData.phone || null;
+    if ("nationalId" in profileData) updates.nationalId = profileData.nationalId || null;
+    if ("avatarImage" in profileData) updates.avatarImage = profileData.avatarImage || null;
+    if ("isGraduated" in profileData) updates.isGraduated = Boolean(profileData.isGraduated);
+    if ("about" in profileData) updates.about = profileData.about || null;
+    if ("skills" in profileData) updates.skills = profileData.skills || null;
+    if ("specialization" in profileData) updates.specialization = profileData.specialization || null;
+    if ("role" in profileData) updates.role = profileData.role || null;
+    if ("team" in profileData) updates.team = profileData.team || null;
 
     const [result] = await db
       .insert(profiles)
-      .values({ id: session.user.id, ...values })
-      .onConflictDoUpdate({ target: profiles.id, set: values })
+      .values({ id: session.user.id, ...updates })
+      .onConflictDoUpdate({
+        target: profiles.id,
+        set: Object.keys(updates).length > 0 ? updates : { id: session.user.id },
+      })
       .returning();
 
     return NextResponse.json({ profile: result });

@@ -1,4 +1,7 @@
 import React, { Suspense } from "react";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import LoginForm from "./LoginForm";
 import { login } from "./actions";
 import CircuitBackground from "../_components/UI/CircuitBackground";
@@ -13,10 +16,10 @@ const LoginFormSkeleton = () => (
   </div>
 );
 
-// Mark this as a static page since it doesn't need to fetch data on each request
-export const dynamic = "force-static";
+const LoginPage = async () => {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (session) redirect("/");
 
-const LoginPage = () => {
   return (
     <div className="font-sans m-0 p-0 bg-navy text-white min-h-screen flex flex-col">
       <CircuitBackground />

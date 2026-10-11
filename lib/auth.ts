@@ -1,6 +1,8 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { verifyPassword } from "better-auth/crypto";
 import { nextCookies } from "better-auth/next-js";
+import bcrypt from "bcryptjs";
 import { db } from "@/db";
 import * as schema from "@/db/schema";
 
@@ -13,6 +15,12 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: false,
     minPasswordLength: 8,
+    password: {
+      verify: async ({ hash, password }) => {
+        if (hash.startsWith("$2")) return bcrypt.compare(password, hash);
+        return verifyPassword({ hash, password });
+      },
+    },
   },
   databaseHooks: {
     user: {

@@ -13,12 +13,21 @@ export function isCloudinaryPublicId(
   return true;
 }
 
-// Helper to get Cloudinary default image public IDs
+const CLOUDINARY_UPLOAD_BASE = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+// Full delivery URLs so they are valid `src` values for next/image
 export const CLOUDINARY_DEFAULTS = {
-  profile: "profiles/default-user-profile",
-  team: "teams/default-team-image",
-  project: "projects/default-project-image",
+  profile: `${CLOUDINARY_UPLOAD_BASE}/profiles/default-user-profile`,
+  team: `${CLOUDINARY_UPLOAD_BASE}/teams/default-team-image`,
+  project: `${CLOUDINARY_UPLOAD_BASE}/projects/default-project-image`,
 } as const;
+
+// Stored values may be full URLs, root-relative paths, or bare Cloudinary public IDs
+export function resolveImageUrl(value: string | null | undefined): string | null {
+  if (!value) return null;
+  if (/^(https?:\/\/|\/)/.test(value)) return value;
+  return `${CLOUDINARY_UPLOAD_BASE}/${value}`;
+}
 
 // Helper to extract public ID from Cloudinary URL
 export function extractPublicIdFromUrl(url: string): string | null {

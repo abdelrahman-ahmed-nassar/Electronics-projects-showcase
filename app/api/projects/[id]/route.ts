@@ -41,21 +41,27 @@ export async function PUT(
 
     const projectData = await request.json();
 
-    if (!(await findProject(id))) {
+    const existing = await findProject(id);
+    if (!existing) {
       return NextResponse.json({ message: "Project not found" }, { status: 404 });
+    }
+
+    const updates: Partial<typeof projects.$inferInsert> = {};
+    if ("title" in projectData) updates.title = projectData.title || null;
+    if ("description" in projectData) updates.description = projectData.description || null;
+    if ("image" in projectData) updates.image = projectData.image || null;
+    if ("tags" in projectData) updates.tags = projectData.tags || [];
+    if ("period" in projectData) updates.period = projectData.period || null;
+    if ("link" in projectData) updates.link = projectData.link || null;
+    if ("isFeatured" in projectData) updates.isFeatured = Boolean(projectData.isFeatured);
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json(existing);
     }
 
     const [updatedProject] = await db
       .update(projects)
-      .set({
-        title: projectData.title || null,
-        description: projectData.description || null,
-        image: projectData.image || null,
-        tags: projectData.tags || [],
-        period: projectData.period || null,
-        link: projectData.link || null,
-        isFeatured: projectData.isFeatured || false,
-      })
+      .set(updates)
       .where(eq(projects.id, id))
       .returning();
 

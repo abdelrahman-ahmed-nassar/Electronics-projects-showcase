@@ -23,12 +23,6 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isAuthenticated = Boolean(getSessionCookie(request));
 
-  if (isAuthenticated && (pathname === "/login" || pathname === "/register")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
-  }
-
   const isPublicRoute =
     publicRoutes.some(
       (route) =>

@@ -1,8 +1,14 @@
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import SecondaryNav from "@/app/_components/layout/SecondaryNav";
+import { auth } from "@/lib/auth";
 
 import { ReactNode } from "react";
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect("/login?redirect=/profile");
+
   return (
     <div className="mt-10 h-full w-full px-5 pb-10 md:pb-20 ">
       <div className="h-72 rounded-lg bg-courseBannerGradient"></div>

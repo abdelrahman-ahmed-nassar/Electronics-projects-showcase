@@ -69,19 +69,20 @@ export async function PUT(
     }
 
     const teamData = await request.json();
+    const id = parseInt(teamId, 10);
 
-    const [data] = await db
-      .update(teams)
-      .set({
-        name: teamData.name || null,
-        description: teamData.description || null,
-        specialty: teamData.specialty || null,
-        achievements: teamData.achievements || null,
-        image: teamData.image || null,
-        isFeatured: teamData.isFeatured || false,
-      })
-      .where(eq(teams.id, parseInt(teamId, 10)))
-      .returning();
+    const updates: Partial<typeof teams.$inferInsert> = {};
+    if ("name" in teamData) updates.name = teamData.name || null;
+    if ("description" in teamData) updates.description = teamData.description || null;
+    if ("specialty" in teamData) updates.specialty = teamData.specialty || null;
+    if ("achievements" in teamData) updates.achievements = teamData.achievements || null;
+    if ("image" in teamData) updates.image = teamData.image || null;
+    if ("isFeatured" in teamData) updates.isFeatured = Boolean(teamData.isFeatured);
+
+    const [data] =
+      Object.keys(updates).length > 0
+        ? await db.update(teams).set(updates).where(eq(teams.id, id)).returning()
+        : await db.select().from(teams).where(eq(teams.id, id)).limit(1);
 
     if (!data) {
       return NextResponse.json(
