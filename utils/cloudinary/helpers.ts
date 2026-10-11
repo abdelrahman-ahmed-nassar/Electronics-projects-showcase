@@ -17,7 +17,7 @@ const CLOUDINARY_UPLOAD_BASE = `https://res.cloudinary.com/${process.env.NEXT_PU
 
 // Full delivery URLs so they are valid `src` values for next/image
 export const CLOUDINARY_DEFAULTS = {
-  profile: `${CLOUDINARY_UPLOAD_BASE}/profiles/default-user-profile`,
+  profile: "/images/default-user-profile-image.svg",
   team: `${CLOUDINARY_UPLOAD_BASE}/teams/default-team-image`,
   project: `${CLOUDINARY_UPLOAD_BASE}/projects/default-project-image`,
 } as const;
@@ -25,6 +25,7 @@ export const CLOUDINARY_DEFAULTS = {
 // Stored values may be full URLs, root-relative paths, or bare Cloudinary public IDs
 export function resolveImageUrl(value: string | null | undefined): string | null {
   if (!value) return null;
+  if (value.includes("default-user-profile")) return CLOUDINARY_DEFAULTS.profile;
   if (/^(https?:\/\/|\/)/.test(value)) return value;
   return `${CLOUDINARY_UPLOAD_BASE}/${value}`;
 }
