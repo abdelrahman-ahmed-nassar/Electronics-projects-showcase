@@ -1,93 +1,38 @@
 import { NextResponse } from "next/server";
-import { createServiceClient } from "@/utils/supabase/server-service";
-import { createClient } from "@/utils/supabase/server";
+import { headers } from "next/headers";
+import { db } from "@/db";
+import { profiles } from "@/db/schema";
+import { auth } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
-    // First, authenticate the user
-    const standardClient = await createClient();
-    const {
-      data: { user },
-    } = await standardClient.auth.getUser();
+    const session = await auth.api.getSession({ headers: await headers() });
 
-    if (!user) {
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get profile data from request body
     const profileData = await request.json();
 
-    // Use service client for admin operations
-    const serviceClient = createServiceClient();
+    const values = {
+      name: profileData.name || null,
+      phone: profileData.phone || null,
+      nationalId: profileData.nationalId || null,
+      avatarImage: profileData.avatarImage || null,
+      isGraduated:
+        profileData.isGraduated !== undefined ? profileData.isGraduated : false,
+      about: profileData.about || null,
+      skills: profileData.skills || null,
+      specialization: profileData.specialization || null,
+      role: profileData.role || null,
+      team: profileData.team || null,
+    };
 
-    // Check if profile exists
-    const { data: existingProfile } = await serviceClient
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
-
-    let result;
-
-    if (existingProfile) {
-      // Update existing profile
-      const { data, error } = await serviceClient
-        .from("profiles")
-        .update({
-          name: profileData.name || null,
-          phone: profileData.phone || null,
-          nationalId: profileData.nationalId || null,
-          avatarImage: profileData.avatarImage || null,
-          isGraduated:
-            profileData.isGraduated !== undefined
-              ? profileData.isGraduated
-              : false,
-          about: profileData.about || null,
-          skills: profileData.skills || null, // Use the properly formatted array
-          specialization: profileData.specialization || null,
-          role: profileData.role || null,
-          team: profileData.team || null,
-        })
-        .eq("id", user.id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Profile update error:", error);
-        throw error;
-      }
-      result = data;
-    } else {
-      // Create new profile
-      const { data, error } = await serviceClient
-        .from("profiles")
-        .insert([
-          {
-            id: user.id, // Important: use the auth user id
-            name: profileData.name || null,
-            phone: profileData.phone || null,
-            nationalId: profileData.nationalId || null,
-            avatarImage: profileData.avatarImage || null,
-            isGraduated:
-              profileData.isGraduated !== undefined
-                ? profileData.isGraduated
-                : false,
-            about: profileData.about || null,
-            skills: profileData.skills || null, // Use the properly formatted array
-            specialization: profileData.specialization || null,
-            role: profileData.role || null,
-            team: profileData.team || null,
-          },
-        ])
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Profile creation error:", error);
-        throw error;
-      }
-      result = data;
-    }
+    const [result] = await db
+      .insert(profiles)
+      .values({ id: session.user.id, ...values })
+      .onConflictDoUpdate({ target: profiles.id, set: values })
+      .returning();
 
     return NextResponse.json({ profile: result });
   } catch (error) {

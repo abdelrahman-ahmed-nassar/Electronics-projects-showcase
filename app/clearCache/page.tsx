@@ -101,23 +101,6 @@ export default function ClearCache() {
     setIsClearing(true);
 
     try {
-      // First call our server-side endpoint to clear HTTP-only cookies
-      // This is crucial for production environments
-      try {
-        const response = await fetch("/api/auth/clear-session", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const result = await response.json();
-        console.log("Server-side session clearing result:", result);
-      } catch (serverError) {
-        console.error("Error clearing session server-side:", serverError);
-        // Continue with client-side clearing even if server-side fails
-      }
-
       // Clear localStorage
       if (typeof window !== "undefined" && window.localStorage) {
         window.localStorage.clear();

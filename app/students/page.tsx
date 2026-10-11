@@ -1,4 +1,4 @@
-import { getStudentsForDisplay } from "@/utils/supabase/data-services";
+import { getStudentsForDisplay } from "@/utils/db/data-services";
 import StudentsFilter from "./StudentsFilter";
 
 // Circuit Board Background Pattern Component

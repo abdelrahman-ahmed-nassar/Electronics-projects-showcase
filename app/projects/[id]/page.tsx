@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { getProjectDisplayById } from "@/utils/supabase/data-services";
+import { getProjectDisplayById } from "@/utils/db/data-services";
 import { ProjectDisplayInterface } from "@/app/Types";
 
 // Format date to more readable format
@@ -264,7 +264,7 @@ export default async function ProjectPage({
                               <Image
                                 src={
                                   member.image ||
-                                  "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg"
+                                  "/images/default-user-profile-image.svg"
                                 }
                                 alt={member.name || "Team member"}
                                 width={40}

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 
 const Contact = () => {
@@ -52,7 +51,7 @@ const ContactHero = () => {
       </h1>
       <p className="text-lg md:text-xl max-w-3xl mb-8 z-10 text-white/80">
         Have questions about our programs, student projects, or facilities?
-        We're here to help you connect with the right people.
+        We&apos;re here to help you connect with the right people.
       </p>
       <div className="flex gap-4 flex-wrap justify-center">
         <Link

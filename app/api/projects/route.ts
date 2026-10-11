@@ -1,26 +1,22 @@
 import { NextResponse } from "next/server";
+import { headers } from "next/headers";
 import {
   uploadProject,
   getProjectsForDisplay,
-} from "@/utils/supabase/data-services";
-import { createClient } from "@/utils/supabase/server"; // Import the standard server client
+} from "@/utils/db/data-services";
+import { auth } from "@/lib/auth";
 import { ProjectInterface } from "@/app/Types";
 
 export async function POST(request: Request) {
-  // Use the standard server client to read the user session from cookies
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await auth.api.getSession({ headers: await headers() });
 
-  if (!user) {
+  if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const rawData = await request.json();
 
-    // Process tags based on whether they're already an array or a string that needs to be split
     const tagsArray = rawData.tags
       ? Array.isArray(rawData.tags)
         ? rawData.tags.filter((tag: string) => tag.trim() !== "")
@@ -34,13 +30,11 @@ export async function POST(request: Request) {
       title: rawData.title || null,
       description: rawData.description || null,
       image: rawData.image || null,
-      tags: tagsArray, // Use the processed array
+      tags: tagsArray,
       period: rawData.period || null,
       link: rawData.link || null,
       teamId: rawData.teamId ? parseInt(rawData.teamId, 10) : null,
-      isFeatured: rawData.isFeatured || false, // Add the missing isFeatured property
-      // Optional: Add user_id if linking projects to users
-      // user_id: user.id, // You can now reliably add the user ID
+      isFeatured: rawData.isFeatured || false,
     };
 
     if (!projectData.title || !projectData.description) {
@@ -50,7 +44,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // uploadProject internally uses createServiceClient (service role) for the insert
     const newProject = await uploadProject(projectData);
 
     return NextResponse.json(newProject, { status: 201 });
@@ -60,8 +53,6 @@ export async function POST(request: Request) {
       error instanceof Error
         ? error.message
         : "Failed to upload project due to an unknown server error";
-    // Check if the error is a Supabase AuthError or PostgrestError for more details
-    // if (error && typeof error === 'object' && 'code' in error) { ... }
     return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }
@@ -72,7 +63,6 @@ export async function GET(request: Request) {
     const startDate = url.searchParams.get("startDate");
     const endDate = url.searchParams.get("endDate");
 
-    // Fetch projects with optional date range filtering
     const projects = await getProjectsForDisplay(startDate, endDate);
 
     return NextResponse.json(projects, { status: 200 });

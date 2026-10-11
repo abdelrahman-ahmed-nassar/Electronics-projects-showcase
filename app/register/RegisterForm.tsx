@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { translateSupabaseErrors } from "../_lib/helpers/translateSupabaseErrors";
+import { translateAuthErrors } from "../_lib/helpers/translateAuthErrors";
 import Link from "next/link";
 
 const RegisterForm = ({
@@ -29,17 +29,16 @@ const RegisterForm = ({
       if (!result.success) {
         // Handle registration errors
         toast.error(
-          translateSupabaseErrors(result.error || "Registration failed")
+          translateAuthErrors(result.error || "Registration failed")
         );
         setIsLoading(false);
         return;
       }
 
-      // Registration successful but awaiting admin verification
       setRegistrationSuccess(true);
       toast.success(
         result.message ||
-          "Registration successful. Your account needs to be verified by an administrator before you can log in."
+          "Registration successful. You can now log in with your credentials."
       );
 
       // Reset form

@@ -11,21 +11,7 @@ const DesktopLoginMenu = () => {
   const { isAuthenticated, logout } = useAuth();
   const router = useRouter();
 
-  const clearAllStorageAndCookies = async () => {
-    // First call server-side endpoint to clear HTTP-only cookies
-    try {
-      const response = await fetch("/api/auth/clear-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(response)
-      
-    } catch (serverError) {
-      console.error("Error clearing session server-side:", serverError);
-    }
-
+  const clearAllStorageAndCookies = () => {
     // Clear localStorage
     if (typeof window !== "undefined" && window.localStorage) {
       window.localStorage.clear();
@@ -100,10 +86,8 @@ const DesktopLoginMenu = () => {
   };
 
   const handleLogoutAction = async () => {
-    // Clear all storage and cookies before logout
-    await clearAllStorageAndCookies();
-
     await handleLogout(logout, () => {
+      clearAllStorageAndCookies();
       router.push("/login");
     });
   };

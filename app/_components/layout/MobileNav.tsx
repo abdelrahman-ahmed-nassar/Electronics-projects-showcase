@@ -13,19 +13,7 @@ const MobileNav = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const clearAllStorageAndCookies = async () => {
-    try {
-      const response = await fetch("/api/auth/clear-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(response);
-    } catch (serverError) {
-      console.error("Error clearing session server-side:", serverError);
-    }
-
+  const clearAllStorageAndCookies = () => {
     if (typeof window !== "undefined" && window.localStorage) {
       window.localStorage.clear();
     }
@@ -84,9 +72,8 @@ const MobileNav = () => {
   const handleLogoutAction = async () => {
     if (mobileMenuOpen) setMobileMenuOpen(() => !mobileMenuOpen);
 
-    await clearAllStorageAndCookies();
-
     await handleLogout(logout, () => {
+      clearAllStorageAndCookies();
       router.push("/login");
     });
   };

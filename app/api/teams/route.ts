@@ -1,53 +1,37 @@
 import { NextResponse } from "next/server";
+import { headers } from "next/headers";
+import { db } from "@/db";
+import { teams } from "@/db/schema";
+import { auth } from "@/lib/auth";
 import {
   getAllTeams,
   getProfilesByTeam,
   getProjectsByTeam,
-} from "@/utils/supabase/data-services";
-import { createClient } from "@/utils/supabase/server";
-import { createServiceClient } from "@/utils/supabase/server-service";
+} from "@/utils/db/data-services";
 
 export async function GET() {
   try {
-    // Get all teams from the database
-    const teams = await getAllTeams();
+    const allTeams = await getAllTeams();
 
-    // For each team, get members and projects
     const teamsWithData = await Promise.all(
-      teams.map(async (team) => {
+      allTeams.map(async (team) => {
         try {
-          // Get team members
           const members = await getProfilesByTeam(team.id);
-
-          // Get team projects
           const projects = await getProjectsByTeam(team.id);
 
-          // Handle achievements - stored as comma-separated values
-          let achievementsList: string[] = [];
-
-          if (team.achievements) {
-            // Check if it's already an array
-            if (Array.isArray(team.achievements)) {
-              achievementsList = team.achievements;
-            }
-            // Handle string format
-            else if (typeof team.achievements === "string") {
-              // Split by commas and trim each value
-              achievementsList = team.achievements
+          let achievementsList: string[] = team.achievements
+            ? team.achievements
                 .split(",")
                 .map((a) => a.trim())
-                .filter((a) => a.length > 0);
-            }
-          }
+                .filter((a) => a.length > 0)
+            : [];
 
-          // Ensure each team has at least one achievement for display purposes
           if (achievementsList.length === 0) {
             achievementsList = [
               "Established research team in electronics engineering",
             ];
           }
 
-          // Transform members to the format expected by the UI
           const formattedMembers = members.map((member) => ({
             name: member.name || "Unknown",
             role: member.role || member.specialization || "Team Member",
@@ -56,7 +40,6 @@ export async function GET() {
               member.avatarImage || "/images/default-user-profile-image.svg",
           }));
 
-          // Return the team with enhanced data
           return {
             ...team,
             achievements: achievementsList,
@@ -92,21 +75,15 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    // First, authenticate the user
-    const standardClient = await createClient();
-    const {
-      data: { user },
-    } = await standardClient.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Get team data from request body
     const teamData = await request.json();
 
-    // Validate required fields
     if (!teamData.name || !teamData.description) {
       return NextResponse.json(
         { message: "Name and description are required" },
@@ -114,31 +91,16 @@ export async function POST(request: Request) {
       );
     }
 
-    // Use service client for admin operations
-    const serviceClient = createServiceClient();
-
-    // Insert new team
-    const { data, error } = await serviceClient
-      .from("teams")
-      .insert([
-        {
-          name: teamData.name,
-          description: teamData.description,
-          achievements: teamData.achievements || null,
-          specialty: teamData.specialty || null,
-          image: teamData.image || null,
-        },
-      ])
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Team creation error:", error);
-      return NextResponse.json(
-        { message: `Error creating team: ${error.message}` },
-        { status: 500 }
-      );
-    }
+    const [data] = await db
+      .insert(teams)
+      .values({
+        name: teamData.name,
+        description: teamData.description,
+        achievements: teamData.achievements || null,
+        specialty: teamData.specialty || null,
+        image: teamData.image || null,
+      })
+      .returning();
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {

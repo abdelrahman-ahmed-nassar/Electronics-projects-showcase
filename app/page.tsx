@@ -10,7 +10,7 @@ import {
   getTeamsCount,
   getProjectsCount,
   getTeamsWithAchievementsCount,
-} from "@/utils/supabase/data-services";
+} from "@/utils/db/data-services";
 
 // Main App Component
 const Page = async () => {

@@ -1,67 +1,26 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { getProfileById } from "@/utils/supabase/data-services";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+import { getProfileById } from "@/utils/db/data-services";
 
 export async function GET() {
-  const supabase = await createClient();
+  const cacheHeaders = {
+    "Cache-Control": "private, max-age=60, stale-while-revalidate=300",
+  };
+
   try {
-    // Add strong cache-control headers to prevent excessive requests
-    const headers = {
-      // Cache for 1 minute on client side
-      "Cache-Control": "private, max-age=60, stale-while-revalidate=300",
-    };
-
-    // First get the session
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    if (sessionError) {
-      console.error("Session error:", sessionError);
-      return NextResponse.json(
-        { user: null },
-        {
-          status: 200,
-          headers,
-        }
-      );
-    }
+    const session = await auth.api.getSession({ headers: await headers() });
 
     if (!session) {
-      return NextResponse.json(
-        { user: null },
-        {
-          status: 200,
-          headers,
-        }
-      );
+      return NextResponse.json({ user: null }, { status: 200, headers: cacheHeaders });
     }
 
-    // Then get the user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+    const profile = await getProfileById(session.user.id);
 
-    if (userError || !user) {
-      return NextResponse.json(
-        { user: null },
-        {
-          status: 200,
-          headers,
-        }
-      );
-    }
-
-    // Use getProfileById from data-services instead of direct Supabase query
-    const profile = await getProfileById(user.id);
-
-    // Combine user data
     const userData = {
-      id: user.id,
-      email: user.email, // Email comes from auth, not profiles table
-      name: profile?.name,
+      id: session.user.id,
+      email: session.user.email,
+      name: profile?.name ?? session.user.name,
       phone: profile?.phone,
       nationalId: profile?.nationalId,
       avatarImage: profile?.avatarImage,
@@ -73,21 +32,14 @@ export async function GET() {
       skills: profile?.skills,
     };
 
-    return NextResponse.json(
-      { user: userData },
-      {
-        headers,
-      }
-    );
+    return NextResponse.json({ user: userData }, { headers: cacheHeaders });
   } catch (error) {
     console.error("Session API error:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       {
         status: 500,
-        headers: {
-          "Cache-Control": "no-store",
-        },
+        headers: { "Cache-Control": "no-store" },
       }
     );
   }

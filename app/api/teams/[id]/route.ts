@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
-import { getTeamById, getProfilesByTeam } from "@/utils/supabase/data-services";
-import { createServiceClient } from "@/utils/supabase/server-service";
-import { createClient } from "@/utils/supabase/server";
+import { headers } from "next/headers";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { teams } from "@/db/schema";
+import { auth } from "@/lib/auth";
+import { getTeamById, getProfilesByTeam } from "@/utils/db/data-services";
 import { CLOUDINARY_DEFAULTS } from "@/utils/cloudinary/helpers";
 
 export async function GET(
@@ -18,17 +21,14 @@ export async function GET(
       );
     }
 
-    // Get team data
-    const team = await getTeamById(parseInt(teamId));
+    const team = await getTeamById(parseInt(teamId, 10));
 
     if (!team) {
       return NextResponse.json({ error: "Team not found" }, { status: 404 });
     }
 
-    // Get team members
-    const members = await getProfilesByTeam(parseInt(teamId));
+    const members = await getProfilesByTeam(parseInt(teamId, 10));
 
-    // Format the response
     const response = {
       team: {
         ...team,
@@ -62,26 +62,17 @@ export async function PUT(
       );
     }
 
-    // First, authenticate the user
-    const standardClient = await createClient();
-    const {
-      data: { user },
-    } = await standardClient.auth.getUser();
+    const session = await auth.api.getSession({ headers: await headers() });
 
-    if (!user) {
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get team data from request body
     const teamData = await request.json();
 
-    // Use service client for admin operations
-    const serviceClient = createServiceClient();
-
-    // Update team
-    const { data, error } = await serviceClient
-      .from("teams")
-      .update({
+    const [data] = await db
+      .update(teams)
+      .set({
         name: teamData.name || null,
         description: teamData.description || null,
         specialty: teamData.specialty || null,
@@ -89,15 +80,13 @@ export async function PUT(
         image: teamData.image || null,
         isFeatured: teamData.isFeatured || false,
       })
-      .eq("id", teamId)
-      .select()
-      .single();
+      .where(eq(teams.id, parseInt(teamId, 10)))
+      .returning();
 
-    if (error) {
-      console.error("Team update error:", error);
+    if (!data) {
       return NextResponse.json(
-        { error: `Failed to update team: ${error.message}` },
-        { status: 500 }
+        { error: "Failed to update team: not found" },
+        { status: 404 }
       );
     }
 

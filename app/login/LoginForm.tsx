@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { translateSupabaseErrors } from "../_lib/helpers/translateSupabaseErrors";
+import { translateAuthErrors } from "../_lib/helpers/translateAuthErrors";
 import { useAuth } from "../_lib/context/AuthenticationContext";
 import { useSearchParams } from "next/navigation";
 
@@ -35,7 +35,7 @@ const LoginForm = ({
 
       if (!result.success) {
         // Handle other errors
-        toast.error(translateSupabaseErrors(result.error || "Login error"));
+        toast.error(translateAuthErrors(result.error || "Login error"));
 
         setIsLoading(false);
         return;

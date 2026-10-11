@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { getCompleteTeamData } from "@/utils/supabase/data-services";
+import { getCompleteTeamData } from "@/utils/db/data-services";
 import { UserInterface, ProjectInterface } from "@/app/Types";
 import CircuitBackground from "@/app/_components/UI/CircuitBackground";
 import { CLOUDINARY_DEFAULTS } from "@/utils/cloudinary/helpers";
@@ -285,7 +285,7 @@ export default async function TeamPage({
                               <Image
                                 src={
                                   member.avatarImage ||
-                                  "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg"
+                                  "/images/default-user-profile-image.svg"
                                 }
                                 alt={member.name || "Team member"}
                                 width={48}

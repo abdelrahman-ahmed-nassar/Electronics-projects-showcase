@@ -105,9 +105,9 @@ const MissionSection = () => {
             </p>
             <div className="bg-electric-blue/10 border-l-4 border-electric-blue p-5 rounded">
               <p className="text-lg italic text-white m-0">
-                "We believe in learning by creating, experimenting, and
-                implementing. Our students don't just study electronics—they
-                build the future of technology."
+                &ldquo;We believe in learning by creating, experimenting, and
+                implementing. Our students don&apos;t just study electronics—they
+                build the future of technology.&rdquo;
               </p>
               <p className="text-right text-mint-green mt-2 mb-0">
                 — Dr. Mohamed Ahmed Mehanna, Dean

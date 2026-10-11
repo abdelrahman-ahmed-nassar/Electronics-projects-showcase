@@ -1,4 +1,3 @@
-import Link from "next/link";
 import React, { Suspense } from "react";
 import LoginForm from "./LoginForm";
 import { login } from "./actions";

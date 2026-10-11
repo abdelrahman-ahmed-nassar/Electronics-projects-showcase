@@ -1,20 +1,19 @@
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
-import { createClient } from "@/utils/supabase/server";
+import { auth } from "@/lib/auth";
 import TestClient from "./Test";
 
 export default async function PrivatePage() {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
     redirect("/login");
   }
 
   return (
     <>
       <TestClient />
-      <p>Hello {data.user.email} , client</p>
+      <p>Hello {session.user.email} , client</p>
     </>
   );
 }

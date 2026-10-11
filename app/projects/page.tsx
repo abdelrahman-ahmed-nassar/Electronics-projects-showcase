@@ -1,4 +1,4 @@
-import { getProjectsForDisplay } from "@/utils/supabase/data-services";
+import { getProjectsForDisplay } from "@/utils/db/data-services";
 import ProjectsFilter from "./ProjectsFilter";
 
 // Server component for projects page

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { getProfileById, getTeamById } from "@/utils/supabase/data-services";
+import { getProfileById, getTeamById } from "@/utils/db/data-services";
 import { TeamInterface } from "@/app/Types";
 
 // Define a team type with members for the UI
@@ -62,7 +62,7 @@ export default async function ProjectPage({
                     <Image
                       src={
                         student.avatarImage ||
-                        "https://ajplnleilpczkgumlwyl.supabase.co/storage/v1/object/public/profiles-images//default-user-profile.svg"
+                        "/images/default-user-profile-image.svg"
                       }
                       alt={student.name || "Student profile"}
                       width={200}

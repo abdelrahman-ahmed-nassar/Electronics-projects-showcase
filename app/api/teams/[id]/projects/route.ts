@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getProjectsByTeam } from "@/utils/supabase/data-services";
+import { getProjectsByTeam } from "@/utils/db/data-services";
 
 export async function GET(
   request: Request,
@@ -15,10 +15,8 @@ export async function GET(
       );
     }
 
-    // Get team projects
     const projects = await getProjectsByTeam(parseInt(teamId, 10));
 
-    // Return 404 if no projects were found for this team
     if (!projects || projects.length === 0) {
       return NextResponse.json(
         { message: "No projects found for this team" },

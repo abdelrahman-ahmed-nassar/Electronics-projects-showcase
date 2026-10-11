@@ -59,7 +59,7 @@ export default function UploadTeamForm() {
     };
     reader.readAsDataURL(file);
 
-    // Upload the image to Supabase
+    // Upload the image to Cloudinary
     try {
       setImageUploading(true);
 

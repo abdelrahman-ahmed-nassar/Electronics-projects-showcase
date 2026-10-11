@@ -26,7 +26,7 @@ export default function NotFound() {
 
           {/* Description */}
           <p className="text-gray-300 max-w-md">
-            The page you're looking for seems to have a broken connection. Our
+            The page you&apos;re looking for seems to have a broken connection. Our
             debugging team is on it!
           </p>
 
